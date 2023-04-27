@@ -22,7 +22,8 @@ public class Background_Manager : MonoBehaviour
 
     public void Update()
     {
-        vis_marker = Vector3.Lerp(vis_marker, vis_goal.position, lerp_speed * Time.deltaTime);
+        //vis_marker = Vector3.Lerp(vis_marker, vis_goal.position, lerp_speed * Time.deltaTime);
+        vis_marker = vis_goal.position;
         for (int i = 0; i < layers.Length; i++)
         {
             var _x = (1 + i) * x_mod * vis_marker.x * compress_factor;
