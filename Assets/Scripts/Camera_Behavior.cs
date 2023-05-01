@@ -8,7 +8,7 @@ public class Camera_Behavior : MonoBehaviour
     public GameObject ChaseCamera;
     private Vector3 position;
 
-    public float speed = 1.5f;
+    private float speed = 3.5f;
     // Start is called before the first frame update
     void Start()
     {

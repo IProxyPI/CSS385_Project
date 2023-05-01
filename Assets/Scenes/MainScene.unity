@@ -356,7 +356,7 @@ MonoBehaviour:
   Player1: {fileID: 1916983666}
   Player2: {fileID: 1704182252}
   ChaseCamera: {fileID: 750361936}
-  speed: 0.005
+  speed: 0.5
 --- !u!1 &890933690
 GameObject:
   m_ObjectHideFlags: 0
