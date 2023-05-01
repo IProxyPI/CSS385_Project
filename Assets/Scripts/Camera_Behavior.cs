@@ -8,7 +8,7 @@ public class Camera_Behavior : MonoBehaviour
     public GameObject ChaseCamera;
     private Vector3 position;
 
-    public float speed = 0.005f;
+    public float speed = 1.5f;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,12 +20,7 @@ public class Camera_Behavior : MonoBehaviour
     void Update()
     {
         Vector3 velocity = Vector3.zero;
-        // if (Mathf.Abs(Player1.transform.position.x - Player2.transform.position.x) > 7)
-        // {
         position.x = (Player1.transform.position.x + Player2.transform.position.x) / 2;
-
-        // }
-        //transform.position = Vector3.SmoothDamp(transform.position, position, ref velocity, .4f);
         transform.position = Vector3.Lerp(transform.position, position, speed * Time.deltaTime);
     }
 }
