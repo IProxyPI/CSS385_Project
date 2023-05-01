@@ -4,6 +4,7 @@ public class Fighter : MonoBehaviour
 {
     private float nextMove = 0;
     private bool blocking = false;
+    private bool curBlock = false;
 
     [SerializeField] float _transition = 0.1f;
     [SerializeField] float _attackLength = 1f;
@@ -14,30 +15,32 @@ public class Fighter : MonoBehaviour
     [SerializeField] GameObject _stunPrefab;
     [SerializeField] GameObject _blockPrefab;
 
+    private GameObject block; // Don't exactly know how to implement this like the others for now
+
     // Update is called once per frame
     void Update()
     {
-        UpdateTimer();
+        CheckBlocking();
     }
 
     public bool Action(int action)
     {
-        
-        if (Time.time > nextMove) {
+        Debug.Log("Action");
+        if (Time.time > nextMove)
+        {
             if (action == 0)
             {
                 blocking = true;
-                Block();
             }
             if (action == -1)
             {
                 blocking = false;
-                EndBlock();
             }
             if (!blocking)
             {
                 if (action == 1)
                 {
+                    Debug.Log("Attack");
                     Attack();
                 }
                 if (action == 2)
@@ -55,31 +58,51 @@ public class Fighter : MonoBehaviour
     {
         nextMove = Time.time + _attackLength;
         GameObject attack = Instantiate(_attackPrefab, _origin.position, _origin.rotation);
+        while (true)
+        {
+            if (Time.time > nextMove)
+            {
+                Debug.Log(Time.time + " " + nextMove);
+                Destroy(attack);
+                break;
+            }
+        }
     }
 
     private void Stun()
     {
         nextMove += Time.time + _stunLength;
         GameObject stun = Instantiate(_stunPrefab, _origin.position, _origin.rotation);
+        while (true)
+        {
+            if (Time.time > nextMove)
+            {
+                Destroy(stun);
+                break;
+            }
+        }
     }
 
-    private void Block()
+
+    private void CheckBlocking()
     {
-        GameObject block = Instantiate(_blockPrefab, _origin.position, _origin.rotation);
+        if (blocking)
+        {
+            if (!curBlock)
+            {
+                curBlock = true;
+                block = Instantiate(_blockPrefab, _origin.position, _origin.rotation);
+            }
+        }
+        else
+        {
+            curBlock = false;
+            Destroy(block);
+        }
     }
 
-    private void EndBlock()
-    {
-        // Destroy block object
-    }
-    
     private void Transition()
     {
         nextMove = Time.time + _transition;
-    }
-
-    private void UpdateTimer()
-    {
-
     }
 }

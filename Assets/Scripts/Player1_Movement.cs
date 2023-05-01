@@ -19,6 +19,7 @@ public class Player1_Movement : MonoBehaviour
     {
         step = 0.1f;
         rb = GetComponent<Rigidbody2D>();
+        _moveset = GetComponent<Fighter>();
         actionable = true;
     }
 
@@ -37,17 +38,18 @@ public class Player1_Movement : MonoBehaviour
             }
             if (Input.GetKey(_attack))
             {
-                actionable = false;
+                //actionable = false;
+                Debug.Log("Attack");
                 actionable = _moveset.Action(1);
             }
             if (Input.GetKey(_stun))
             {
-                actionable = false;
+                //actionable = false;
                 actionable = _moveset.Action(2);
             }
             if (Input.GetKeyDown(_block))
             {
-                actionable = false;
+                //actionable = false;
                 _moveset.Action(0);
             }
             if (Input.GetKeyUp(_block))
