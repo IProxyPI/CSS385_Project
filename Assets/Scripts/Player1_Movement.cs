@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Player1_Movement : MonoBehaviour
 {
-    public float step = 0.1f;
+    public float step = 0.05f;
     private Rigidbody2D rb;
 
     [SerializeField] KeyCode _left = KeyCode.A;

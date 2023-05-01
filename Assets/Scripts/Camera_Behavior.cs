@@ -8,7 +8,11 @@ public class Camera_Behavior : MonoBehaviour
     public GameObject ChaseCamera;
     private Vector3 position;
 
+<<<<<<< Updated upstream
     private float speed = 3.5f;
+=======
+    public float speed = 10f;
+>>>>>>> Stashed changes
     // Start is called before the first frame update
     void Start()
     {
