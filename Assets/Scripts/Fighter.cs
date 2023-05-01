@@ -58,13 +58,12 @@ public class Fighter : MonoBehaviour
     {
         nextMove = Time.time + _attackLength;
         GameObject attack = Instantiate(_attackPrefab, _origin.position, _origin.rotation);
-        while (true)
+        while (false)
         {
             if (Time.time > nextMove)
             {
                 Debug.Log(Time.time + " " + nextMove);
                 Destroy(attack);
-                break;
             }
         }
     }
@@ -73,7 +72,7 @@ public class Fighter : MonoBehaviour
     {
         nextMove += Time.time + _stunLength;
         GameObject stun = Instantiate(_stunPrefab, _origin.position, _origin.rotation);
-        while (true)
+        while (false)
         {
             if (Time.time > nextMove)
             {

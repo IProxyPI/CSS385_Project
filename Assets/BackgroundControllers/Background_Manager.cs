@@ -16,6 +16,7 @@ public class Background_Manager : MonoBehaviour
     private float compress_factor = 1f;
     
     private float lerp_speed = 2.5f;
+
     public void Awake()
     {
     }
@@ -31,5 +32,6 @@ public class Background_Manager : MonoBehaviour
             Vector3 v = new Vector3(_x,_y,0);
             layers[i].transform.position = v;
         }
+        
     }
 }

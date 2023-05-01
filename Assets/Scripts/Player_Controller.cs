@@ -25,7 +25,7 @@ public class Player_Controller : MonoBehaviour
     void Start()
     {
         pm = GameObject.Find("Players").GetComponent<Player_Manager>();
-        ch = gameObject.AddComponent<Spearman>() as Spearman;
+//        ch = gameObject.AddComponent<Spearman>() as Spearman;
         rb = GetComponent<Rigidbody2D>();
 
         if (gameObject.name == "DummyPlayer2")
@@ -43,7 +43,7 @@ public class Player_Controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (pm.game_state == 1)
+        if ( true || pm.game_state == 1)
         {
             if (Input.GetKey(input_Forward))
             {
@@ -92,8 +92,10 @@ public class Player_Controller : MonoBehaviour
         // }
         
         // Character Selection Screen Inputs
-        else // (gm.game_state = 0)
+        else if (false)// (gm.game_state = 0)
         {
+            // NOTE // Temporarily disabled
+            
             // If not ready to fight
             if (menu_choice == 0)
             {
@@ -141,6 +143,7 @@ public class Player_Controller : MonoBehaviour
                 Debug.Log("Update() 0, UNDO");
                 menu_choice = 0;
             }
-        }
+           
+        } 
     }
 }
