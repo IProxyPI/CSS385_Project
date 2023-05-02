@@ -4,146 +4,242 @@ using UnityEngine;
 
 public class Player_Controller : MonoBehaviour
 {
-
+    // Used in Start(), scene_select_fighter, scene_fight's pause, and/or scene_select_next
     private Player_Manager pm;
-    public int player = 1;                  // 1 = player 1, 2 = player 2
-    private int character_choice = 0;       // 0 = Spearman, 1 = Ninja
-    private bool character_change = false;
-    public Character ch = null;
-    public int facing_dir = 1;             // 1 = right, -1 = left
-    public int menu_choice = 0;             // 0 = No change
-    
-    private Rigidbody2D rb;
-    private string input_Forward = "s";
-    private string input_Backward = "a";
-    private string input_Attack = "z";
-    private string input_Stun = "x";
-    private string input_Block = "c";
-    private bool actionable = true;
+    public Rigidbody2D rb;
+    public int player = 1;                          // Used in Debug.Log()'s
+    public int facing_dir = 1;                      // 1 = left side facing right; -1 = right side facing left
+    private int character_select = 0;               // 0 = Spearman, 1 = Ninja
+    private bool character_select_change = false;
+    public Character ch;
+    public int menu_select = 0;                     // 0 = scene_fight, 1 = scene_select_fighter, 2 = quit application
+    public bool menu_select_change = false;
+    public int menu_choice = 0;                     // 0 = no change
+    public bool menu_choice_change = false;
+    private float quit_timer = 0;
+    private int quit_timer_limit = 3;
+
+    // Used in scene_fight
+    public int lives = 3;
+    public bool paused = false;
+    public bool actionable = true;
+    public bool hurt = false;
+    private string input_pause = "space";
+    private string input_forward = "s";
+    private string input_backward = "a";
+    private string input_attack = "z";
+    private string input_stun = "x";
+    private string input_block = "c";
 
     // Start is called before the first frame update
     void Start()
     {
         pm = GameObject.Find("Players").GetComponent<Player_Manager>();
-//        ch = gameObject.AddComponent<Spearman>() as Spearman;
+        ch = gameObject.AddComponent<Spearman>() as Spearman;
         rb = GetComponent<Rigidbody2D>();
 
         if (gameObject.name == "DummyPlayer2")
         {
             player = 2;
             facing_dir = -1;
-            input_Forward = "j";
-            input_Backward = "k";
-            input_Attack = "m";
-            input_Stun = ",";
-            input_Block = ".";
+            input_pause = "enter";
+            input_forward = "j";
+            input_backward = "k";
+            input_attack = "m";
+            input_stun = ",";
+            input_block = ".";
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        if ( true || pm.game_state == 1)
+        // Each input function corresponds to a scene.  Ordered by frequency for better performance.
+        if (pm.scene_num == 1 && !paused)
         {
-            if (Input.GetKey(input_Forward))
-            {
-                ch.move_forward = 1;
-            }
-            else
-            {
-                ch.forward_stop = 1;
-            }
+            ReadFightInputs();
+        }
+        else if ((pm.scene_num == 1 && paused) || pm.scene_num == 2)
+        {
+            ReadMenuInputs();
+        }
+        else // (pm.scene_num == 0)
+        {
+            ReadSelectFighterInputs();
+        }
 
-            if (Input.GetKey(input_Backward))
-            {
-                ch.move_backward = 1;
-            }
-            else
-            {
-                ch.backward_stop = 1;
-            }
+    }
 
-            if (actionable)
-            {
-                if (Input.GetKeyDown(input_Attack))
-                {
-                    actionable = false;
-                    ch.attack = 1;  // changed from 0.  represents frame 1 of move, which can be incremented to count what happens each frame in ch?
-                }
-                
-                if (Input.GetKeyDown(input_Stun))
-                {
-                    actionable = false;
-                    ch.stun = 1;
-                }
-                
-                if (Input.GetKeyDown(input_Block))
-                {
-                    actionable = false;
-                    ch.block = 1;
-                }
-            }
+    // No object has a trigger or tags set to true yet since I forget how those work
+    private void OnTriggerEnter(Collider other)
+    {
+        // ch.kneel and/or ch.die = 1; maybe?
+        hurt = true;
+    }
+
+    private void ReadFightInputs()
+    {
+        // Pause
+        if (Input.GetKeyDown(input_pause))
+        {
+            Debug.Log("P" + player + " paused");
+            // Initialize pause menu prefab
+            paused = true;
         }
         
-        // Post-Match inputs
-        // else if (gm.game_state = 2)
-        // {
-        //     // rematch, character select, quit, etc.
-        // }
-        
-        // Character Selection Screen Inputs
-        else if (false)// (gm.game_state = 0)
+        // Movement
+        if (Input.GetKey(input_forward))
         {
-            // NOTE // Temporarily disabled
+            ch.forward = 1;
+        }
+        else if (Input.GetKeyUp(input_forward))
+        {
+            ch.forward_stop = 1;
+        }
+
+        if (Input.GetKey(input_backward))
+        {
+            ch.backward = 1;
+        }
+        else if (Input.GetKeyUp(input_backward))
+        {
+            ch.backward_stop = 1;
+        }
+
+        // Actions
+        if (actionable)
+        {
+            if (Input.GetKeyDown(input_attack))
+            {
+                actionable = false;
+                ch.attack = 1;  // changed from 0.  represents frame 1 of move, which can be incremented to count what happens each frame in ch?
+            }
             
-            // If not ready to fight
-            if (menu_choice == 0)
+            if (Input.GetKeyDown(input_stun))
             {
-                // Change character
-                if (Input.GetKeyDown(input_Forward) || Input.GetKeyDown(input_Backward))
-                {
-                    character_choice = (character_choice + 1) % 2;
-                    character_change = true;
-                }
-                if (character_change)
-                {
-                    // Not sure if this works, but would future-proof code for additional characters if so
-                    // Destroy(gameObject.GetComponent<Character>());
+                actionable = false;
+                ch.stun = 1;
+            }
+            
+            if (Input.GetKey(input_block))
+            {
+                actionable = false;
+                ch.block = 1;
+            }
+            else if (Input.GetKeyUp(input_block))
+            {
+                ch.block_stop = 1;
+                actionable = true;
+            }
+        }
+    }
 
-                    if (character_choice == 0)
-                    {
-                        Debug.Log("P" + (player) + " Selects Spearman");
-                        Destroy(gameObject.GetComponent<Ninja>());
-                        ch = gameObject.AddComponent<Spearman>() as Spearman;
-                    }
-                    else // (character_choice == 1)
-                    {
-                        Debug.Log("P" + (player) + " Selects Ninja");
-                        Destroy(gameObject.GetComponent<Spearman>());
-                        ch = gameObject.AddComponent<Ninja>() as Ninja;
-                    }
-
-                    // See line 102
-                    // ch = gameObject.GetComponent<Character>();
-                    
-                    character_change = false;
-                }
-
-                // Toggle ready to fight
-                if (menu_choice == 0 && Input.GetKeyDown(input_Attack))
-                {
-                    Debug.Log("P" + player + " READY");
-                    menu_choice = 1;
-                }
+    private void ReadMenuInputs()
+    {
+        // Player has not yet chosen a menu option
+        if (menu_choice == 0)
+        {
+            // Player changes their selected menu option
+            // "((menu_select - 1) +/- 1)" is kept unsimplified so the following is readable:
+            //       -1 shift               at the start    enables the modulus operation
+            //     +/-1 in-/decrementation  in the middle
+            //       +1 shift               at the end      returns menu_select to the proper value
+            if (Input.GetKeyDown(input_forward))
+            {
+                menu_select = (((menu_select - 1) + 1) % 3) + 1;
+                menu_select_change = true;
+            }
+            if (Input.GetKeyDown(input_forward))
+            {
+                menu_select = (((menu_select - 1) - 1) % 3) + 1;
+                menu_select_change = true;
             }
 
-            // Untoggle ready to fight and change character
-            else if (/*menu_choice == 1 &&*/ Input.GetKeyDown(input_Stun))
+            // Player chooses their selected menu option
+            if (Input.GetKeyDown(input_attack))
             {
-                Debug.Log("Update() 0, UNDO");
-                menu_choice = 0;
+                menu_choice = menu_select;
             }
-           
-        } 
+        }
+
+        // Player has chosen to vote to rematch in scene_select_next, but wants to undo it
+        else if (/*pm.scene_num == 2 &&*/ menu_choice == 1)
+        {
+            menu_choice = -1;
+        }
+    }
+
+    private void ReadSelectFighterInputs()
+    {
+        // Player has not voted to load scene_fight
+        if (menu_choice == 0)
+        {
+            // Player changes their character
+            if (Input.GetKeyDown(input_forward) || Input.GetKeyDown(input_backward))
+            {
+                character_select = (character_select + 1) % 2;
+                character_select_change = true;
+            }
+            if (character_select_change)
+            {
+                // Not sure if this works, but would future-proof code for additional characters if so
+                // Destroy(gameObject.GetComponent<Character>());
+
+                // This should probably be moved to Player_Manager.cs
+                if (character_select == 0)
+                {
+                    Debug.Log("P" + (player) + " selects Spearman");
+                    Destroy(gameObject.GetComponent<Ninja>());
+                    ch = gameObject.AddComponent<Spearman>() as Spearman;
+                }
+                else // (character_select == 1)
+                {
+                    Debug.Log("P" + (player) + " selects Ninja");
+                    Destroy(gameObject.GetComponent<Spearman>());
+                    ch = gameObject.AddComponent<Ninja>() as Ninja;
+                }
+
+                // See comment in the top line of this if statement's scope
+                // ch = gameObject.GetComponent<Character>();
+                
+                // Resets lock
+                character_select_change = false;
+            }
+
+            // Player votes to load scene_fight
+            if (menu_choice == 0 && Input.GetKeyDown(input_attack))
+            {
+                menu_choice = 1;
+                menu_choice_change = true;
+            }
+        }
+
+        // Player has voted to load_scene fight, but wants to undo it
+        else if (/*menu_choice == 1 &&*/ Input.GetKeyDown(input_stun))
+        {
+            menu_choice = -1;
+            menu_choice_change = true;
+        }
+
+        if (Input.GetKey(input_block))
+        {
+            HeldQuitInput();
+        }
+        else if (Input.GetKeyUp(input_block))
+        {
+            quit_timer = 0;
+        }
+    }
+
+    private void HeldQuitInput()
+    {
+        quit_timer += Time.deltaTime;
+        Debug.Log("P" + player + " quitting out in " + (quit_timer_limit - quit_timer));
+
+        if (quit_timer >= quit_timer_limit)
+        {
+            menu_choice = 3;
+            menu_choice_change = true;
+        }
     }
 }
