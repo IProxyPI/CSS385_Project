@@ -11,6 +11,8 @@ public class TreeBehavior : MonoBehaviour
     public Sprite low_hp = null;
     public Sprite dead = null;
 
+    public ParticleSystem lose_leaves;
+    public ParticleSystem tree_dies;
     public void Awake()
     {
         set_state(2);
@@ -34,6 +36,18 @@ public class TreeBehavior : MonoBehaviour
         else if (state == 0)
         {
             gameObject.GetComponent<SpriteRenderer>().sprite = dead;
+        }
+    }
+
+    public void Trigger_Particles(int p)
+    {
+        if (p == 1)
+        {
+            lose_leaves.Play();
+        }
+        else
+        {
+            tree_dies.Play();
         }
     }
 }

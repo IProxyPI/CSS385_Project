@@ -38,10 +38,12 @@ public class Round_Vis_Manager : MonoBehaviour
         cur_round = 0;
     }
 
+    
+    // QUICK HACK FOR TESTING
+    // delete all this shit later lmao
     private int p1hp = 2;
     private int p2hp = 2;
     
-    // QUICK HACK FOR TESTING
     public void Update()
     {
         if (Input.GetKeyDown(KeyCode.U))

@@ -60,20 +60,20 @@ public class Background_Manager : MonoBehaviour
         p1_trees[_p2_wins].set_state(_p1_hp);
         p2_trees[_p1_wins].set_state(_p2_hp);
 
-        if (_p1_hp != prev_p1_hp)
+        if (_p1_hp != prev_p1_hp && _p1_hp != 2)
         {
-            Trigger_HP_Loss_Effect(p1_trees[_p2_wins]);
+            Trigger_HP_Loss_Effect(p1_trees[_p2_wins], _p1_hp);
             prev_p1_hp = _p1_hp;
         }
-        if (_p2_hp != prev_p2_hp)
+        if (_p2_hp != prev_p2_hp && _p2_hp != 2)
         {
-            Trigger_HP_Loss_Effect(p2_trees[_p1_wins]);
+            Trigger_HP_Loss_Effect(p2_trees[_p1_wins], _p2_hp);
             prev_p2_hp = _p2_hp;
         }
     }
 
-    void Trigger_HP_Loss_Effect( TreeBehavior _tree )
+    void Trigger_HP_Loss_Effect( TreeBehavior _tree, int _new_hp )
     {
-        
+        _tree.Trigger_Particles(_new_hp);
     }
 }
