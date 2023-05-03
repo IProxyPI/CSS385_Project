@@ -19,6 +19,9 @@ public class Background_Manager : MonoBehaviour
     
     [SerializeField] private List<TreeBehavior> p1_trees;
     [SerializeField] private List<TreeBehavior> p2_trees;
+
+    private int prev_p1_hp = 0;
+    private int prev_p2_hp = 0;
     public void Awake()
     {
     }
@@ -39,6 +42,9 @@ public class Background_Manager : MonoBehaviour
 
     public void Reset_Tree_State( int _p1_wins, int _p2_wins )
     {
+        prev_p1_hp = 2;
+        prev_p2_hp = 2;
+        
         var max_trees = 3;
         for (int i = 0; i < max_trees; i++)
         {
@@ -53,5 +59,21 @@ public class Background_Manager : MonoBehaviour
     {
         p1_trees[_p2_wins].set_state(_p1_hp);
         p2_trees[_p1_wins].set_state(_p2_hp);
+
+        if (_p1_hp != prev_p1_hp)
+        {
+            Trigger_HP_Loss_Effect(p1_trees[_p2_wins]);
+            prev_p1_hp = _p1_hp;
+        }
+        if (_p2_hp != prev_p2_hp)
+        {
+            Trigger_HP_Loss_Effect(p2_trees[_p1_wins]);
+            prev_p2_hp = _p2_hp;
+        }
+    }
+
+    void Trigger_HP_Loss_Effect( TreeBehavior _tree )
+    {
+        
     }
 }
