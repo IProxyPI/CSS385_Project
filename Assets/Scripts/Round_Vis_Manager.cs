@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,5 +36,72 @@ public class Round_Vis_Manager : MonoBehaviour
         p1_wins = 0;
         p2_wins = 0;
         cur_round = 0;
+    }
+
+    private int p1hp = 2;
+    private int p2hp = 2;
+    
+    // QUICK HACK FOR TESTING
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.U))
+        {
+            p1hp--;
+            Update_Round_State(p1hp, p2hp);
+        }
+        if (Input.GetKeyDown(KeyCode.I))
+        {
+            p2hp--;
+            Update_Round_State(p1hp, p2hp);
+        }
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            p1hp = 2;
+            p2hp = 2;
+            p1_wins = 0;
+            p2_wins = 0;
+            New_Round();
+        }
+        if (p1hp <= 0)
+        {
+            p1hp = 2;
+            p2hp = 2;
+            p2_wins++;
+            Update_Round_State(p1hp, p2hp);
+        }
+        if (p2hp <= 0)
+        {
+            
+            p1hp = 2;
+            p2hp = 2;
+            p1_wins++;
+            Update_Round_State(p1hp, p2hp);
+        }
+    }
+
+    // Getter and setter methods for stats
+    public int Get_P1_Wins()
+    {
+        return p1_wins;
+    }
+    public int Get_P2_Wins()
+    {
+        return p2_wins;
+    }
+    public int Get_Cur_Round()
+    {
+        return cur_round;
+    }
+    public void Set_P1_Wins( int _p1_wins )
+    {
+        p1_wins = _p1_wins;
+    }
+    public void Set_P2_Wins( int _p2_wins )
+    {
+        p2_wins = _p2_wins;
+    }
+    public void Set_Cur_Round( int _cur_round )
+    {
+        cur_round = _cur_round;
     }
 }
