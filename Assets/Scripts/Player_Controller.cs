@@ -9,9 +9,9 @@ public class Player_Controller : MonoBehaviour
     public Rigidbody2D rb;
     public int player = 1;                          // Used in Debug.Log()'s
     public int facing_dir = 1;                      // 1 = left side facing right; -1 = right side facing left
+    public Character ch;
     private int character_select = 0;               // 0 = Spearman, 1 = Ninja
     private bool character_select_change = false;
-    public Character ch;
     public int menu_select = 0;                     // 0 = scene_fight, 1 = scene_select_fighter, 2 = quit application
     public bool menu_select_change = false;
     public int menu_choice = 0;                     // 0 = no change
@@ -67,7 +67,6 @@ public class Player_Controller : MonoBehaviour
         {
             ReadSelectFighterInputs();
         }
-
     }
 
     // No object has a trigger or tags set to true yet since I forget how those work
@@ -88,48 +87,50 @@ public class Player_Controller : MonoBehaviour
         }
         
         // Movement
-        if (Input.GetKey(input_forward))
+        if (Input.GetKey(input_forward) && ch.forward == 0 && ch.forward_stop == 0)
         {
-            ch.forward = 1;
+            ch.forward = Time.deltaTime;
         }
-        else if (Input.GetKeyUp(input_forward))
+        else if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0)
         {
-            ch.forward_stop = 1;
+            ch.forward_stop = Time.deltaTime;
+            ch.forward = 0;
         }
 
-        if (Input.GetKey(input_backward))
+        if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
         {
-            ch.backward = 1;
+            ch.backward = Time.deltaTime;
         }
-        else if (Input.GetKeyUp(input_backward))
+        else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
         {
-            ch.backward_stop = 1;
+            ch.backward_stop = Time.deltaTime;
+            ch.backward = 0;
         }
 
         // Actions
         if (actionable)
         {
-            if (Input.GetKeyDown(input_attack))
+            if (Input.GetKeyDown(input_attack) && ch.attack == 0)
             {
                 actionable = false;
-                ch.attack = 1;  // changed from 0.  represents frame 1 of move, which can be incremented to count what happens each frame in ch?
+                ch.attack = Time.deltaTime;  // changed from 0.  represents frame 1 of move, which can be incremented to count what happens each frame in ch?
             }
             
-            if (Input.GetKeyDown(input_stun))
+            if (Input.GetKeyDown(input_stun) && ch.stun == 0)
             {
                 actionable = false;
-                ch.stun = 1;
+                ch.stun = Time.deltaTime;
             }
             
-            if (Input.GetKey(input_block))
+            if (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0)
             {
                 actionable = false;
-                ch.block = 1;
+                ch.block = Time.deltaTime;
             }
-            else if (Input.GetKeyUp(input_block))
+            else if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
             {
-                ch.block_stop = 1;
-                actionable = true;
+                ch.block_stop = Time.deltaTime;
+                ch.block = 0;
             }
         }
     }

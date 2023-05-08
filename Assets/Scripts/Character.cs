@@ -13,13 +13,14 @@ public class Character : MonoBehaviour
     public float backward = 0;
     public float backward_stop = 0;
     public float attack = 0;
-    public float attack_end = 5;
+    public float attack_end = 3;
     public float stun = 0;
-    public float stun_end = 5;
+    public float stun_end = 3;
     public float block = 0;
     public float block_stop = 0;
+    public float all_stop_ends = 0.5f;
 
-    private int step = 5;
+    private float step = 0.1f;
     private GameObject attack_prefab;
     private GameObject stun_prefab;
     private GameObject block_prefab;
@@ -44,19 +45,25 @@ public class Character : MonoBehaviour
     void Update()
     {
         // Move forward
-        if (forward > 0 || forward_stop > 0)
+        if (forward > 0)
         {
-            Debug.Log("P" + pc.player + " is moving forward");
             pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
-            IndefiniteActionCounter(forward, forward_stop);
+            forward = IndefiniteActionCounter(forward);
+        }
+        if (forward_stop > 0)
+        {
+            forward_stop = IndefiniteActionStopper(forward_stop);
         }
 
         // Move backward
-        if (backward > 0 || backward_stop > 0)
+        if (backward > 0)
         {
-            Debug.Log("P" + pc.player + " is moving forward");
             pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
-            IndefiniteActionCounter(forward, forward_stop);
+            backward = IndefiniteActionCounter(backward);
+        }
+        if (backward_stop > 0)
+        {
+            backward_stop = IndefiniteActionStopper(backward_stop);
         }
 
         // Attack
@@ -64,7 +71,6 @@ public class Character : MonoBehaviour
         {
             if (!attack_instantiated)
             {
-                Debug.Log("P" + pc.player + " used attack");
                 // instantiate attack_prefab
                 attack_instantiated = true;
             }
@@ -76,7 +82,6 @@ public class Character : MonoBehaviour
         {
             if (!stun_instantiated)
             {
-                Debug.Log("P" + pc.player + " used stun");
                 // instantiate stun_prefab
                 stun_instantiated = true;
             }
@@ -88,36 +93,38 @@ public class Character : MonoBehaviour
         {
             if (!block_instantiated)
             {
-                Debug.Log("P" + pc.player + " used block");
                 // instantiate block_prefab
                 block_instantiated = true;
             }
-            IndefiniteActionCounter(block, block_stop);
+            IndefiniteActionStopper(block_stop);
         }
     }
 
-    private void IndefiniteActionCounter(float action, float action_stop)
+    private float IndefiniteActionCounter(float action)
     {
-        if (action > 0)
+        return action += Time.deltaTime;
+    }
+    
+    private float IndefiniteActionStopper(float action_stop)
+    {
+        // if (block_prefab != null)
+        // {
+        //     // destroy block_prefab
+        //     block_instantiated = false;
+        // }
+        if (action_stop >= all_stop_ends)
         {
-            action += Time.deltaTime;
-        }
-        if (action_stop > 0)
-        {
-            if (block_prefab != null)
-            {
-                // destroy block_prefab
-                block_instantiated = false;
-            }
-            action = 0;
+            return action_stop = 0;
             pc.actionable = true;
         }
+        return action_stop += Time.deltaTime;
     }
 
     private void DefiniteActionCounter (float action, float action_end, GameObject action_prefab, bool action_instantiated)
     {
         if (action > 0)
         {
+            Debug.Log("P" + pc.player + " has been definitely acting for " + action + " seconds");
             action += Time.deltaTime;
             if (action >= action_end)
             {

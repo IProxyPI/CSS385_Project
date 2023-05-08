@@ -5,10 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class Player_Manager : MonoBehaviour
 {
-    public int scene_num = 0;                 // see v(below)v
     [SerializeField] private string scene_0 = "0_Select_Fighter";
     [SerializeField] private string scene_1 = "1_Fight";
     [SerializeField] private string scene_2 = "2_Select_Next";
+    public int scene_num = 0;
     private Player_Controller p1;
     private Player_Controller p2;
     [SerializeField] private string p1_name = "DummyPlayer1";
