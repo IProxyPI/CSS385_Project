@@ -855,7 +855,9 @@ GameObject:
   - component: {fileID: 1704182253}
   - component: {fileID: 1704182256}
   - component: {fileID: 1704182257}
+  - component: {fileID: 1704182262}
   - component: {fileID: 1704182260}
+  - component: {fileID: 1704182261}
   - component: {fileID: 1704182255}
   - component: {fileID: 1704182254}
   m_Layer: 0
@@ -1016,20 +1018,72 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff93f59f33983c478ae435543ebbb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  case_movement: 
   forward: 0
   forward_stop: 0
   backward: 0
   backward_stop: 0
+  case_action: 
   attack: 0
   attack_end: 5
   stun: 0
   stun_end: 5
   block: 0
   block_stop: 0
-  all_stop_ends: 0.5
-  attack_prefab: {fileID: 0}
-  stun_prefab: {fileID: 0}
-  block_prefab: {fileID: 0}
+  _attack_prefab: {fileID: 3917296656748366264, guid: 34583b163711e10449a3d8b32c1d352b, type: 3}
+  _stun_prefab: {fileID: 3917296656748366264, guid: b8ace28de677c4f4a91230d9f30f8708, type: 3}
+  _block_prefab: {fileID: 3917296656748366264, guid: fe60bb97daf77d74987b5ee73f0aba85, type: 3}
+--- !u!114 &1704182261
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704182252}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1fe332af72a68049a1ae80bdd7b2224, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  case_movement: 
+  forward: 0
+  forward_stop: 0
+  backward: 0
+  backward_stop: 0
+  case_action: 
+  attack: 0
+  attack_end: 1
+  stun: 0
+  stun_end: 1
+  block: 0
+  block_stop: 0
+  _attack_prefab: {fileID: 0}
+  _stun_prefab: {fileID: 0}
+  _block_prefab: {fileID: 0}
+--- !u!114 &1704182262
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1704182252}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32286a02dbb14f94c90502d651bff813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  player: 1
+  facing_dir: 1
+  ch: {fileID: 0}
+  menu_select: 0
+  menu_select_change: 0
+  menu_choice: 0
+  menu_choice_change: 0
+  lives: 3
+  paused: 0
+  actionable: 1
+  hurt: 0
 --- !u!1 &1861949816
 GameObject:
   m_ObjectHideFlags: 0
@@ -1174,7 +1228,9 @@ GameObject:
   - component: {fileID: 1916983667}
   - component: {fileID: 1916983670}
   - component: {fileID: 1916983671}
+  - component: {fileID: 1916983676}
   - component: {fileID: 1916983674}
+  - component: {fileID: 1916983675}
   - component: {fileID: 1916983669}
   - component: {fileID: 1916983668}
   m_Layer: 0
@@ -1306,7 +1362,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1916983666}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 236826c1a94c21141bc4129e28c72f25, type: 3}
   m_Name: 
@@ -1330,22 +1386,74 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1916983666}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9ff93f59f33983c478ae435543ebbb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  case_movement: 
   forward: 0
   forward_stop: 0
   backward: 0
   backward_stop: 0
+  case_action: 
   attack: 0
   attack_end: 5
   stun: 0
   stun_end: 5
   block: 0
   block_stop: 0
-  all_stop_ends: 0.5
-  attack_prefab: {fileID: 3917296656748366264, guid: 34583b163711e10449a3d8b32c1d352b, type: 3}
-  stun_prefab: {fileID: 3917296656748366264, guid: b8ace28de677c4f4a91230d9f30f8708, type: 3}
-  block_prefab: {fileID: 3917296656748366264, guid: fe60bb97daf77d74987b5ee73f0aba85, type: 3}
+  _attack_prefab: {fileID: 3917296656748366264, guid: 34583b163711e10449a3d8b32c1d352b, type: 3}
+  _stun_prefab: {fileID: 3917296656748366264, guid: b8ace28de677c4f4a91230d9f30f8708, type: 3}
+  _block_prefab: {fileID: 3917296656748366264, guid: fe60bb97daf77d74987b5ee73f0aba85, type: 3}
+--- !u!114 &1916983675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916983666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1fe332af72a68049a1ae80bdd7b2224, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  case_movement: 
+  forward: 0
+  forward_stop: 0
+  backward: 0
+  backward_stop: 0
+  case_action: 
+  attack: 0
+  attack_end: 1
+  stun: 0
+  stun_end: 1
+  block: 0
+  block_stop: 0
+  _attack_prefab: {fileID: 0}
+  _stun_prefab: {fileID: 0}
+  _block_prefab: {fileID: 0}
+--- !u!114 &1916983676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916983666}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32286a02dbb14f94c90502d651bff813, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 0}
+  player: 1
+  facing_dir: 1
+  ch: {fileID: 0}
+  menu_select: 0
+  menu_select_change: 0
+  menu_choice: 0
+  menu_choice_change: 0
+  lives: 3
+  paused: 0
+  actionable: 1
+  hurt: 0

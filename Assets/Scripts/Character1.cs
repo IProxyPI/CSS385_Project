@@ -46,39 +46,6 @@ public class Character1 : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        switch (case_movement)
-        {
-            case "forward":
-                pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
-                forward = Endless_Animation_Counter(forward);
-                break;
-
-            case "forward_stop":
-                forward_stop = Endless_Animation_Stopper(forward_stop);
-                break;
-            
-            case "backward":
-                pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
-                backward = Endless_Animation_Counter(backward);
-                break;
-            
-            case "backward_stop":
-               backward_stop = Endless_Animation_Stopper(backward_stop);
-               break;
-        }
-
-        switch (case_action)
-        {
-            case "attack":
-                if (!attack_instantiated)
-                {
-                    // instantiate attack_prefab
-                    attack_instantiated = true;
-                }
-                Set_Animation_Counter(attack, attack_end, attack_prefab, attack_instantiated);
-                break;
-
-<<<<<<< HEAD
         // Attack
         if (attack > 0)
         {
@@ -121,38 +88,15 @@ public class Character1 : MonoBehaviour
         if (block_stop > 0)
         {
             block_stop = IndefiniteActionStopper(block_stop);
-=======
-            case "stun":
-                if (!stun_instantiated)
-                {
-                    // instantiate stun_prefab
-                    stun_instantiated = true;
-                }
-                Set_Animation_Counter(stun, stun_end, stun_prefab, stun_instantiated);          
-                break;
-
-            case "block":
-                if (!block_instantiated)
-                {
-                    // instantiate block_prefab
-                    block_instantiated = true;
-                }
-                Endless_Animation_Counter(block);
-                break;
-
-            case "block_stop":
-                block_stop = Endless_Animation_Stopper(block_stop);
-                break;
->>>>>>> 45b0b6d3f43bb7a44efb4db0e7e5f8ebf0994e43
         }
     }
 
-    private float Endless_Animation_Counter(float action)
+    private float IndefiniteActionCounter(float action)
     {
         return action += Time.fixedDeltaTime;
     }
     
-    private float Endless_Animation_Stopper(float action_stop)
+    private float IndefiniteActionStopper(float action_stop)
     {
         // if (block_prefab != null)
         // {
@@ -162,23 +106,13 @@ public class Character1 : MonoBehaviour
         Debug.Log(action_stop);
         if (action_stop >= all_stop_ends)
         {
-<<<<<<< HEAD
             pc.actionable = true;
             return 0;
-=======
-            case_movement = null;
-            pc.actionable = true;
-            return action_stop = 0;
->>>>>>> 45b0b6d3f43bb7a44efb4db0e7e5f8ebf0994e43
         }
         return action_stop += Time.fixedDeltaTime;
     }
 
-<<<<<<< HEAD
     private void DefiniteActionCounter (ref float action, float action_end, GameObject action_prefab, bool action_instantiated)
-=======
-    private void Set_Animation_Counter (float action, float action_end, GameObject action_prefab, bool action_instantiated)
->>>>>>> 45b0b6d3f43bb7a44efb4db0e7e5f8ebf0994e43
     {
         if (action > 0)
         {
