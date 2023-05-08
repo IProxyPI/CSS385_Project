@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_Controller : MonoBehaviour
@@ -85,54 +83,66 @@ public class Player_Controller : MonoBehaviour
             // Initialize pause menu prefab
             paused = true;
         }
-        
-        // Movement
-        if (Input.GetKey(input_forward) && ch.forward == 0 && ch.forward_stop == 0)
-        {
-            ch.forward = Time.deltaTime;
-        }
-        else if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0)
-        {
-            ch.forward_stop = Time.deltaTime;
-            ch.forward = 0;
-        }
 
-        if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
-        {
-            ch.backward = Time.deltaTime;
-        }
-        else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
-        {
-            ch.backward_stop = Time.deltaTime;
-            ch.backward = 0;
-        }
-
-        // Actions
         if (actionable)
         {
+            // Movement
+            if (Input.GetKey(input_forward) && ch.forward == 0 && ch.forward_stop == 0)
+            {
+                ch.forward = Time.fixedDeltaTime;
+            }
+            else if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0)
+            {
+                ch.forward_stop = Time.fixedDeltaTime;
+                ch.forward = 0;
+            }
+
+            if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
+            {
+                ch.backward = Time.fixedDeltaTime;
+            }
+            else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
+            {
+                ch.backward_stop = Time.fixedDeltaTime;
+                ch.backward = 0;
+            }
+
+            // Actions
             if (Input.GetKeyDown(input_attack) && ch.attack == 0)
             {
                 actionable = false;
-                ch.attack = Time.deltaTime;  // changed from 0.  represents frame 1 of move, which can be incremented to count what happens each frame in ch?
+                StopMovement();
+                ch.attack = Time.fixedDeltaTime;  // changed from 0.  represents frame 1 of move, which can be incremented to count what happens each frame in ch?
             }
             
             if (Input.GetKeyDown(input_stun) && ch.stun == 0)
             {
                 actionable = false;
-                ch.stun = Time.deltaTime;
+                StopMovement();
+                ch.stun = Time.fixedDeltaTime;
             }
             
             if (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0)
             {
                 actionable = false;
-                ch.block = Time.deltaTime;
-            }
-            else if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
-            {
-                ch.block_stop = Time.deltaTime;
-                ch.block = 0;
+                StopMovement();
+                ch.block = Time.fixedDeltaTime;
             }
         }
+
+        if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
+        {
+            ch.block_stop = Time.fixedDeltaTime;
+            ch.block = 0;
+        }
+    }
+
+    private void StopMovement()
+    {
+        ch.forward = 0;
+        ch.forward_stop = 0;
+        ch.backward = 0;
+        ch.backward_stop = 0;
     }
 
     private void ReadMenuInputs()

@@ -1026,6 +1026,10 @@ MonoBehaviour:
   stun_end: 5
   block: 0
   block_stop: 0
+  all_stop_ends: 0.5
+  attack_prefab: {fileID: 0}
+  stun_prefab: {fileID: 0}
+  block_prefab: {fileID: 0}
 --- !u!1 &1861949816
 GameObject:
   m_ObjectHideFlags: 0
@@ -1341,3 +1345,7 @@ MonoBehaviour:
   stun_end: 5
   block: 0
   block_stop: 0
+  all_stop_ends: 0.5
+  attack_prefab: {fileID: 3917296656748366264, guid: 34583b163711e10449a3d8b32c1d352b, type: 3}
+  stun_prefab: {fileID: 3917296656748366264, guid: b8ace28de677c4f4a91230d9f30f8708, type: 3}
+  block_prefab: {fileID: 3917296656748366264, guid: fe60bb97daf77d74987b5ee73f0aba85, type: 3}

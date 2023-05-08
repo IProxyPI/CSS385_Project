@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -21,9 +19,9 @@ public class Character : MonoBehaviour
     public float all_stop_ends = 0.5f;
 
     private float step = 0.1f;
-    private GameObject attack_prefab;
-    private GameObject stun_prefab;
-    private GameObject block_prefab;
+    [SerializeField] GameObject _attack_prefab;
+    [SerializeField] GameObject _stun_prefab;
+    [SerializeField] GameObject _block_prefab;
     private bool attack_instantiated = false;
     private bool stun_instantiated = false;
     private bool block_instantiated = false;
@@ -38,6 +36,7 @@ public class Character : MonoBehaviour
         else // (gameObject.name == p2_name)
         {
             pc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
+            step = -step;
         }
     }
 
@@ -74,7 +73,7 @@ public class Character : MonoBehaviour
                 // instantiate attack_prefab
                 attack_instantiated = true;
             }
-            DefiniteActionCounter(attack, attack_end, attack_prefab, attack_instantiated);
+            DefiniteActionCounter(ref attack, attack_end, _attack_prefab, attack_instantiated);
         }
 
         // Stun
@@ -85,24 +84,35 @@ public class Character : MonoBehaviour
                 // instantiate stun_prefab
                 stun_instantiated = true;
             }
-            DefiniteActionCounter(stun, stun_end, stun_prefab, stun_instantiated);
+            DefiniteActionCounter(ref stun, stun_end, _stun_prefab, stun_instantiated);
         }
 
         // Block
+        /*
         if (block > 0 || block_stop > 0)
         {
+            Debug.Log("Block: " + block + ", " + block_stop);
             if (!block_instantiated)
             {
                 // instantiate block_prefab
                 block_instantiated = true;
             }
-            IndefiniteActionStopper(block_stop);
+            block_stop = IndefiniteActionStopper(block_stop);
+        }
+        */
+        if (block > 0)
+        {
+            block = IndefiniteActionCounter(block);
+        }
+        if (block_stop > 0)
+        {
+            block_stop = IndefiniteActionStopper(block_stop);
         }
     }
 
     private float IndefiniteActionCounter(float action)
     {
-        return action += Time.deltaTime;
+        return action += Time.fixedDeltaTime;
     }
     
     private float IndefiniteActionStopper(float action_stop)
@@ -112,20 +122,21 @@ public class Character : MonoBehaviour
         //     // destroy block_prefab
         //     block_instantiated = false;
         // }
+        Debug.Log(action_stop);
         if (action_stop >= all_stop_ends)
         {
-            return action_stop = 0;
             pc.actionable = true;
+            return 0;
         }
-        return action_stop += Time.deltaTime;
+        return action_stop += Time.fixedDeltaTime;
     }
 
-    private void DefiniteActionCounter (float action, float action_end, GameObject action_prefab, bool action_instantiated)
+    private void DefiniteActionCounter (ref float action, float action_end, GameObject action_prefab, bool action_instantiated)
     {
         if (action > 0)
         {
-            Debug.Log("P" + pc.player + " has been definitely acting for " + action + " seconds");
-            action += Time.deltaTime;
+            action += Time.fixedDeltaTime;
+            Debug.Log("P" + pc.player + " has been definitely acting for " + action + " seconds, end = " + action_end);
             if (action >= action_end)
             {
                 if (action_prefab != null)
@@ -134,6 +145,7 @@ public class Character : MonoBehaviour
                     action_instantiated = false;
                 }
                 action = 0;
+                Debug.Log("P" + pc.player + " has finished acting");
                 pc.actionable = true;
             }
         }
