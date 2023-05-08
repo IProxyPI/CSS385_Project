@@ -122,7 +122,7 @@ public class Player_Controller : MonoBehaviour
                 if (Input.GetKeyDown(input_attack) && ch.attack == 0)
                 {
                     actionable = false;
-                    ch.forward = Time.fixedDeltaTime;
+                    ch.attack = Time.fixedDeltaTime;
                 }
 
                 // stun

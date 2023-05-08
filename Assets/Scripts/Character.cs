@@ -86,7 +86,7 @@ public class Character : MonoBehaviour
                     // instantiate attack_prefab
                     attack_instantiated = true;
                 }
-                Set_Animation_Counter(attack, attack_end, attack_prefab, attack_instantiated);
+                Set_Animation_Counter(ref attack, attack_end, _attack_prefab, attack_instantiated);
             }
 
             // stun
@@ -97,7 +97,7 @@ public class Character : MonoBehaviour
                     // instantiate stun_prefab
                     stun_instantiated = true;
                 }
-                Set_Animation_Counter(stun, stun_end, stun_prefab, stun_instantiated);          
+                Set_Animation_Counter(ref stun, stun_end, _stun_prefab, stun_instantiated);          
             }
 
             // block
@@ -109,7 +109,7 @@ public class Character : MonoBehaviour
                     block_instantiated = true;
                 }
                 Endless_Animation_Counter(ref block);
-                }
+            }
 
             // block_stop
             if (block_stop > 0) {
@@ -130,7 +130,6 @@ public class Character : MonoBehaviour
         //     // destroy block_prefab
         //     block_instantiated = false;
         // }
-        Debug.Log(action_stop);
         if (action_stop >= all_stop_ends)
         {
             action_stop = 0;
@@ -143,12 +142,12 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void DefiniteActionCounter(ref float action, float action_end, GameObject action_prefab, bool action_instantiated)
+    private void Set_Animation_Counter(ref float action, float action_end, GameObject action_prefab, bool action_instantiated)
     {
         if (action > 0)
         {
             action += Time.fixedDeltaTime;
-            Debug.Log("P" + pc.player + " has been definitely acting for " + action + " seconds, end = " + action_end);
+            Debug.Log("P" + pc.player + " has been attacking/stunning for " + action + " seconds, end = " + action_end);
             if (action >= action_end)
             {
                 if (action_prefab != null)
