@@ -3,8 +3,8 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     private Player_Controller pc;
-    private string p1_name = "DummyPlayer1";
-    private string p2_name = "DummyPlayer2";
+    [SerializeField] private string p1_name = "DummyPlayer1";
+    [SerializeField] private string p2_name = "DummyPlayer2";
 
     // Movement
     public float forward = 0;
@@ -13,7 +13,7 @@ public class Character : MonoBehaviour
     public float backward_stop = 0;
     private float step = 0.1f;
 
-    // Actions
+    // RPS Tools
     public float attack = 0;
     public float attack_end = 0.5f;
     public float stun = 0;
@@ -58,68 +58,60 @@ public class Character : MonoBehaviour
             // forward
             if (forward > 0)
             {
+                Action_Counter(ref forward, -1);
                 pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
-                Endless_Animation_Counter(ref forward);
             }
             
             // backward
             if (backward > 0)
             {
+                Action_Counter(ref backward, -1);
                 pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
-                Endless_Animation_Counter(ref backward);
             }
 
             // forward_stop
             if (forward_stop > 0)
             {
-                Endless_Animation_Stopper(ref forward, ref forward_stop);
+                forward = 0;
+                Action_Counter(ref forward_stop, all_stop_ends);
             }
 
             // backward_stop
             if (backward_stop > 0)
             {
-                Endless_Animation_Stopper(ref backward, ref backward_stop);
+                backward = 0;
+                Action_Counter(ref backward_stop, all_stop_ends);
             }
         }
 
-        // Actions
+        // RPS Tools
         {
             // attack
             if (attack > 0)
             {
-                if (!attack_instantiated)
-                {
-                    // instantiate attack_prefab
-                    attack_instantiated = true;
-                }
-                Set_Animation_Counter(ref attack, attack_end, _attack_prefab, attack_instantiated);
+                Action_Counter(ref attack, attack_end);
+                Tool_Handler(ref attack, attack, attack_end, _attack_prefab, ref attack_instantiated);          
             }
 
             // stun
             if (stun > 0)
             {
-                if (!stun_instantiated)
-                {
-                    // instantiate stun_prefab
-                    stun_instantiated = true;
-                }
-                Set_Animation_Counter(ref stun, stun_end, _stun_prefab, stun_instantiated);          
+                Action_Counter(ref stun, stun_end);
+                Tool_Handler(ref stun, stun, stun_end, _stun_prefab, ref stun_instantiated);          
             }
 
             // block
             if (block > 0)
             {
-                if (!block_instantiated)
-                {
-                    // instantiate block_prefab
-                    block_instantiated = true;
-                }
-                Endless_Animation_Counter(ref block);
+                Action_Counter(ref block, -1);
+                Tool_Handler(ref block, block_stop, all_stop_ends, _block_prefab, ref block_instantiated);
             }
 
             // block_stop
             if (block_stop > 0) {
-                Endless_Animation_Stopper(ref block, ref block_stop);
+                block = 0;
+                Action_Counter(ref block_stop, all_stop_ends);
+                Tool_Handler(block, block_stop, _block_prefab, ref block_instantiated);
             }
         }
 
@@ -127,58 +119,45 @@ public class Character : MonoBehaviour
         {
             if (stunned > 0)
             {
-                Set_Animation_Counter(ref stunned, ref stunned_end);
+                Action_Counter(ref stunned, stunned_end);
             }
 
             if (fall > 0)
             {
-                Set_Animation_Counter(ref fall, ref fall_end);
+                Action_Counter(ref fall, fall_end);
             }
         }
             
     }
 
-    private void Endless_Animation_Counter(ref float action)
+    private void Action_Counter(ref float action, float action_end)
     {
         action += Time.fixedDeltaTime;
-    }
-
-    private void Endless_Animation_Stopper(ref float action, ref float action_stop)
-    {
-        // if (block_prefab != null)
-        // {
-        //     // destroy block_prefab
-        //     block_instantiated = false;
-        // }
-        if (action_stop >= all_stop_ends)
-        {
-            action_stop = 0;
-            pc.actionable = true;
-        }
-        else
+        if (action_end != -1 && action >= action_end)
         {
             action = 0;
-            action_stop += Time.fixedDeltaTime;
+            pc.actionable = true;
         }
     }
 
-    private void Set_Animation_Counter(ref float action, float action_end, GameObject action_prefab, bool action_instantiated)
+    private void Tool_Handler(ref float action, float action_stop, float action_end, GameObject action_prefab, ref bool tool_instantiated)
     {
-        if (action > 0)
+        if (!tool_instantiated)
         {
-            action += Time.fixedDeltaTime;
-            // Debug.Log("P" + pc.player + " has been attacking/stunning/hurt for " + action + " seconds, end = " + action_end);
-            if (action >= action_end)
+            // instantiate _prefab
+            tool_instantiated = true;
+        }
+        
+        if (action_stop >= action_end)
+        {
+            if (action_prefab != null)
             {
-                if (action_prefab != null)
-                {
-                    // destroy block_prefab
-                    action_instantiated = false;
-                }
-                action = 0;
-                Debug.Log("P" + pc.player + " has finished acting");
-                pc.actionable = true;
+                // destroy prefab
+                tool_instantiated = false;
             }
+            action = 0;
+            Debug.Log("P" + pc.player + " has finished acting");
+            pc.actionable = true;
         }
     }
 }
