@@ -28,7 +28,7 @@ public class Character : MonoBehaviour
     private bool block_instantiated = false;
 
     // Both
-    private float all_stop_ends = 0.5f;
+    private float all_stop_ends = 0.3f;
 
     // Status
     public float stunned = 0;
@@ -39,6 +39,7 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         if (gameObject.name == p1_name)
         {
             pc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
@@ -54,6 +55,16 @@ public class Character : MonoBehaviour
             _block_object = GameObject.Find("Block2");
             step = -step;
         }
+
+        // Turn off renderer and collision for moves
+        // Block is purely visual as it's a state
+        Toggle_Move(_attack_obj, false, false);
+        Toggle_Move(_stun_obj, false, false);
+        Toggle_Move(_block_obj, false, true);
+
+        // Tells to ignore colliders with own moves
+        Physics2D.IgnoreCollision(_attack_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        Physics2D.IgnoreCollision(_stun_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
     }
 
     // Update is called once per frame
@@ -164,6 +175,15 @@ public class Character : MonoBehaviour
             action = 0;
             Debug.Log("P" + pc.player + " has finished acting");
             pc.actionable = true;
+        }
+    }
+
+    private void Toggle_Move(GameObject action, bool state, bool isBlock)
+    {
+        action.GetComponent<Renderer>().enabled = state;
+        if (!isBlock)
+        {
+            action.GetComponent<Collider2D>().enabled = state;
         }
     }
 }

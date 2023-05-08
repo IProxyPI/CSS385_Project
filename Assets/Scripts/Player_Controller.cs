@@ -109,17 +109,23 @@ public class Player_Controller : MonoBehaviour
                 ch.forward_stop = Time.fixedDeltaTime;
                 ch.forward = 0;
             }
-
-            // move backwards
+            // move backward
             if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
             {
                 ch.backward = Time.fixedDeltaTime;
             }
-            // stop backwards
+            // stop backward
             else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
             {
                 ch.backward_stop = Time.fixedDeltaTime;
                 ch.backward = 0;
+            }
+
+            // SOCD Neutral
+            if (socd_neutral && ch.forward > 0 && ch.backward > 0)
+            {
+                Debug.Log("Neutral");
+                StopMovement();
             }
 
             // Actions
