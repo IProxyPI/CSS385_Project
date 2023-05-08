@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ActionTagger : MonoBehaviour
+public class ToolsTagger : MonoBehaviour
 {
     [SerializeField] private string p1_action = "";
     //[SerializeField] private string p2_action = "";
