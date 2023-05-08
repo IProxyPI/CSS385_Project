@@ -20,7 +20,6 @@ public class Character : MonoBehaviour
     public float stun_end = 3;
     public float block = 0;
     public float block_stop = 0;
-    public float all_stop_ends = 0.5f;
     [SerializeField] GameObject _attack_prefab;
     [SerializeField] GameObject _stun_prefab;
     [SerializeField] GameObject _block_prefab;
