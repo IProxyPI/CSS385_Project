@@ -6,18 +6,21 @@ public class Character : MonoBehaviour
     private string p1_name = "DummyPlayer1";
     private string p2_name = "DummyPlayer2";
 
+    public string case_movement;
     public float forward = 0;
     public float forward_stop = 0;
     public float backward = 0;
     public float backward_stop = 0;
+
+    public string case_action;
     public float attack = 0;
-    public float attack_end = 3;
+    public float attack_end = 1;
     public float stun = 0;
-    public float stun_end = 3;
+    public float stun_end = 1;
     public float block = 0;
     public float block_stop = 0;
-    public float all_stop_ends = 0.5f;
 
+    private float all_stop_ends = 0.5f;
     private float step = 0.1f;
     [SerializeField] GameObject _attack_prefab;
     [SerializeField] GameObject _stun_prefab;
@@ -43,79 +46,68 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Move forward
-        if (forward > 0)
+        switch (case_movement)
         {
-            pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
-            forward = IndefiniteActionCounter(forward);
-        }
-        if (forward_stop > 0)
-        {
-            forward_stop = IndefiniteActionStopper(forward_stop);
+            case "forward":
+                pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
+                forward = Endless_Animation_Counter(forward);
+                break;
+
+            case "forward_stop":
+                forward_stop = Endless_Animation_Stopper(forward_stop);
+                break;
+            
+            case "backward":
+                pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
+                backward = Endless_Animation_Counter(backward);
+                break;
+            
+            case "backward_stop":
+               backward_stop = Endless_Animation_Stopper(backward_stop);
+               break;
         }
 
-        // Move backward
-        if (backward > 0)
+        switch (case_action)
         {
-            pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
-            backward = IndefiniteActionCounter(backward);
-        }
-        if (backward_stop > 0)
-        {
-            backward_stop = IndefiniteActionStopper(backward_stop);
-        }
+            case "attack":
+                if (!attack_instantiated)
+                {
+                    // instantiate attack_prefab
+                    attack_instantiated = true;
+                }
+                Set_Animation_Counter(attack, attack_end, _attack_prefab, attack_instantiated);
+                break;
 
-        // Attack
-        if (attack > 0)
-        {
-            if (!attack_instantiated)
-            {
-                // instantiate attack_prefab
-                attack_instantiated = true;
-            }
-            DefiniteActionCounter(ref attack, attack_end, _attack_prefab, attack_instantiated);
-        }
+            case "stun":
+                if (!stun_instantiated)
+                {
+                    // instantiate stun_prefab
+                    stun_instantiated = true;
+                }
+                Set_Animation_Counter(stun, stun_end, _stun_prefab, stun_instantiated);          
+                break;
 
-        // Stun
-        if (stun > 0)
-        {
-            if (!stun_instantiated)
-            {
-                // instantiate stun_prefab
-                stun_instantiated = true;
-            }
-            DefiniteActionCounter(ref stun, stun_end, _stun_prefab, stun_instantiated);
-        }
+            case "block":
+                if (!block_instantiated)
+                {
+                    // instantiate block_prefab
+                    block_instantiated = true;
+                }
+                Endless_Animation_Counter(block);
+                break;
 
-        // Block
-        /*
-        if (block > 0 || block_stop > 0)
-        {
-            Debug.Log("Block: " + block + ", " + block_stop);
-            if (!block_instantiated)
-            {
-                // instantiate block_prefab
-                block_instantiated = true;
-            }
-            block_stop = IndefiniteActionStopper(block_stop);
-        }
-        */
-        if (block > 0)
-        {
-            block = IndefiniteActionCounter(block);
-        }
-        if (block_stop > 0)
-        {
-            block_stop = IndefiniteActionStopper(block_stop);
+            case "block_stop":
+                block_stop = Endless_Animation_Stopper(block_stop);
+                break;
         }
     }
 
-    private float IndefiniteActionCounter(float action)
+    private float Endless_Animation_Counter(float action)
     {
         return action += Time.fixedDeltaTime;
     }
     
-    private float IndefiniteActionStopper(float action_stop)
+    private float Endless_Animation_Stopper(float action_stop)
     {
         // if (block_prefab != null)
         // {
@@ -125,13 +117,15 @@ public class Character : MonoBehaviour
         Debug.Log(action_stop);
         if (action_stop >= all_stop_ends)
         {
+            case_movement = null;
             pc.actionable = true;
-            return 0;
+            return action_stop = 0;
+            pc.actionable = true;
         }
         return action_stop += Time.fixedDeltaTime;
     }
 
-    private void DefiniteActionCounter (ref float action, float action_end, GameObject action_prefab, bool action_instantiated)
+    private void Set_Animation_Counter (float action, float action_end, GameObject action_prefab, bool action_instantiated)
     {
         if (action > 0)
         {

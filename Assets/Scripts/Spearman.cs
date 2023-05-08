@@ -4,5 +4,5 @@ using UnityEngine;
 
 public class Spearman : Character
 {
-
+    // just global variables here
 }
