@@ -111,7 +111,7 @@ public class Character : MonoBehaviour
             if (block_stop > 0) {
                 block = 0;
                 Action_Counter(ref block_stop, all_stop_ends);
-                Tool_Handler(block, block_stop, _block_prefab, ref block_instantiated);
+                Tool_Handler(ref block, block_stop, all_stop_ends, _block_prefab, ref block_instantiated);
             }
         }
 
