@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -17,14 +15,15 @@ public class Character : MonoBehaviour
 
     // Actions
     public float attack = 0;
-    public float attack_end = 1;
+    public float attack_end = 3;
     public float stun = 0;
-    public float stun_end = 1;
+    public float stun_end = 3;
     public float block = 0;
     public float block_stop = 0;
-    private GameObject attack_prefab;
-    private GameObject stun_prefab;
-    private GameObject block_prefab;
+    public float all_stop_ends = 0.5f;
+    [SerializeField] GameObject _attack_prefab;
+    [SerializeField] GameObject _stun_prefab;
+    [SerializeField] GameObject _block_prefab;
     private bool attack_instantiated = false;
     private bool stun_instantiated = false;
     private bool block_instantiated = false;
@@ -42,6 +41,7 @@ public class Character : MonoBehaviour
         else // (gameObject.name == p2_name)
         {
             pc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
+            step = -step;
         }
     }
 
@@ -126,6 +126,12 @@ public class Character : MonoBehaviour
 
     private void Endless_Animation_Stopper(ref float action, ref float action_stop)
     {
+        // if (block_prefab != null)
+        // {
+        //     // destroy block_prefab
+        //     block_instantiated = false;
+        // }
+        Debug.Log(action_stop);
         if (action_stop >= all_stop_ends)
         {
             action_stop = 0;
@@ -138,12 +144,12 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void Set_Animation_Counter (float action, float action_end, GameObject action_prefab, bool action_instantiated)
+    private void DefiniteActionCounter(ref float action, float action_end, GameObject action_prefab, bool action_instantiated)
     {
         if (action > 0)
         {
-            Debug.Log("P" + pc.player + " has been definitely acting for " + action + " seconds");
             action += Time.fixedDeltaTime;
+            Debug.Log("P" + pc.player + " has been definitely acting for " + action + " seconds, end = " + action_end);
             if (action >= action_end)
             {
                 if (action_prefab != null)
@@ -152,6 +158,7 @@ public class Character : MonoBehaviour
                     action_instantiated = false;
                 }
                 action = 0;
+                Debug.Log("P" + pc.player + " has finished acting");
                 pc.actionable = true;
             }
         }

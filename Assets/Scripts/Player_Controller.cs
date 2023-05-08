@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_Controller : MonoBehaviour
@@ -78,10 +76,11 @@ public class Player_Controller : MonoBehaviour
 
     private void ReadFightInputs()
     {
-        // Menu
+        // Pause
         if (Input.GetKeyDown(input_pause))
         {
             Debug.Log("P" + player + " paused");
+            // Initialize pause menu prefab
             paused = true;
         }
 
@@ -94,26 +93,26 @@ public class Player_Controller : MonoBehaviour
                     // forward
                     if (Input.GetKey(input_forward))
                     {
-                        ch.forward += Time.fixedDeltaTime;
+                        ch.forward = Time.fixedDeltaTime;
                     }
 
                     // backward
                     if (Input.GetKey(input_backward))
                     {
-                        ch.backward += Time.fixedDeltaTime;
+                        ch.backward = Time.fixedDeltaTime;
                     }
                 }
 
                 // forward_stop
                 if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0 && ch.backward == 0)
                 {
-                    ch.forward_stop += Time.fixedDeltaTime;
+                    ch.forward_stop = Time.fixedDeltaTime;
                 }
                 
                 // backward_stop
                 if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0 && ch.forward == 0)
                 {
-                    ch.backward_stop += Time.fixedDeltaTime;
+                    ch.backward_stop = Time.fixedDeltaTime;
                 }
             }
 
@@ -123,31 +122,45 @@ public class Player_Controller : MonoBehaviour
                 if (Input.GetKeyDown(input_attack) && ch.attack == 0)
                 {
                     actionable = false;
-                    ch.forward += Time.fixedDeltaTime;
+                    ch.forward = Time.fixedDeltaTime;
                 }
 
                 // stun
                 if (Input.GetKeyDown(input_stun) && ch.stun == 0)
                 {
                     actionable = false;
-                    ch.stun += Time.fixedDeltaTime;
+                    ch.stun = Time.fixedDeltaTime;
                 }
 
                 // block
                 if (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0)
                 {
                     actionable = false;
-                    ch.block += Time.fixedDeltaTime;
+                    ch.block = Time.fixedDeltaTime;
                 }
 
                 // block_stop
                 if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
                 {
                     actionable = false;
-                    ch.block_stop += Time.fixedDeltaTime;
+                    ch.block_stop = Time.fixedDeltaTime;
                 }
             }
         }
+
+        if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
+        {
+            ch.block_stop = Time.fixedDeltaTime;
+            ch.block = 0;
+        }
+    }
+
+    private void StopMovement()
+    {
+        ch.forward = 0;
+        ch.forward_stop = 0;
+        ch.backward = 0;
+        ch.backward_stop = 0;
     }
 
     private void ReadMenuInputs()
@@ -217,7 +230,7 @@ public class Player_Controller : MonoBehaviour
 
                 // See comment in the top line of this if statement's scope
                 // ch = gameObject.GetComponent<Character>();
-                
+
                 // Resets lock
                 character_select_change = false;
             }
