@@ -30,6 +30,12 @@ public class Character : MonoBehaviour
     // Both
     private float all_stop_ends = 0.5f;
 
+    // Status
+    public float stunned = 0;
+    public float stunned_end = 2;
+    public float fall = 0;
+    public int fall_end = 2;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -116,6 +122,20 @@ public class Character : MonoBehaviour
                 Endless_Animation_Stopper(ref block, ref block_stop);
             }
         }
+
+        // Status
+        {
+            if (stunned > 0)
+            {
+                Set_Animation_Counter(ref stunned, ref stunned_end);
+            }
+
+            if (fall > 0)
+            {
+                Set_Animation_Counter(ref fall, ref fall_end);
+            }
+        }
+            
     }
 
     private void Endless_Animation_Counter(ref float action)
@@ -147,7 +167,7 @@ public class Character : MonoBehaviour
         if (action > 0)
         {
             action += Time.fixedDeltaTime;
-            Debug.Log("P" + pc.player + " has been attacking/stunning for " + action + " seconds, end = " + action_end);
+            // Debug.Log("P" + pc.player + " has been attacking/stunning/hurt for " + action + " seconds, end = " + action_end);
             if (action >= action_end)
             {
                 if (action_prefab != null)

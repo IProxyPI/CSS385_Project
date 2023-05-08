@@ -21,7 +21,6 @@ public class Player_Controller : MonoBehaviour
     public int lives = 3;
     public bool paused = false;
     public bool actionable = true;
-    public bool hurt = false;
     private string input_pause = "space";
     private string input_forward = "s";
     private string input_backward = "a";
@@ -67,11 +66,20 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
-    // No object has a trigger or tags set to true yet since I forget how those work
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter2D(Collider2D col)
     {
-        // ch.kneel and/or ch.die = 1; maybe?
-        hurt = true;
+        if (col.tag == "P2")
+        {
+            if (col.name == "attack_prefab")
+            {
+                ch.fall = Time.fixedDeltaTime;
+                lives--;
+            }
+            else if (col.name == "stun_prefab")
+            {
+                ch.stun_end = Time.fixedDeltaTime;
+            }
+        }
     }
 
     private void ReadFightInputs()

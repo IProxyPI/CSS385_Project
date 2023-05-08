@@ -5,7 +5,7 @@ using UnityEngine;
 public class TreeBehavior : MonoBehaviour
 {
     
-    private int state = 2; // 2 = full hp, 1 = 1 hp, 0 = dead
+    private Player_Controller pc;
 
     public Sprite healthy = null;
     public Sprite low_hp = null;
@@ -18,9 +18,14 @@ public class TreeBehavior : MonoBehaviour
         set_state(2);
     }
 
+    public void Start()
+    {
+        // pc = ...        
+    }
+
     public void Update()
     {
-        set_state(state);
+        // set_state(pc.lives - 1);
     }
     public void set_state(int _state)
     {
