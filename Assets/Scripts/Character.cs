@@ -20,28 +20,46 @@ public class Character : MonoBehaviour
     public float stun_end = 1f;
     public float block = 0;
     public float block_stop = 0;
-    [SerializeField] GameObject _attack_prefab;
-    [SerializeField] GameObject _stun_prefab;
-    [SerializeField] GameObject _block_prefab;
-    private bool attack_instantiated = false;
-    private bool stun_instantiated = false;
-    private bool block_instantiated = false;
+    [SerializeField] GameObject _attack_obj;
+    [SerializeField] GameObject _stun_obj;
+    [SerializeField] GameObject _block_obj;
+    [SerializeField] Transform _origin;
+    private bool attack_active = false;
+    private bool stun_active = false;
+    private bool block_active = false;
 
     // Both
-    private float all_stop_ends = 0.5f;
+    private float all_stop_ends = 0.3f;
 
     // Start is called before the first frame update
     void Start()
     {
+
         if (gameObject.name == p1_name)
         {
             pc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
+            _attack_obj = GameObject.Find("Attack1");
+            _stun_obj = GameObject.Find("Stun1");
+            _block_obj = GameObject.Find("Block1");
         }
         else // (gameObject.name == p2_name)
         {
             pc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
+            _attack_obj = GameObject.Find("Attack2");
+            _stun_obj = GameObject.Find("Stun2");
+            _block_obj = GameObject.Find("Block2");
             step = -step;
         }
+
+        // Turn off renderer and collision for moves
+        // Block is purely visual as it's a state
+        Toggle_Move(_attack_obj, false, false);
+        Toggle_Move(_stun_obj, false, false);
+        Toggle_Move(_block_obj, false, true);
+
+        // Tells to ignore colliders with own moves
+        Physics2D.IgnoreCollision(_attack_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        Physics2D.IgnoreCollision(_stun_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
     }
 
     // Update is called once per frame
@@ -81,38 +99,42 @@ public class Character : MonoBehaviour
             // attack
             if (attack > 0)
             {
-                if (!attack_instantiated)
+                if (!attack_active)
                 {
-                    // instantiate attack_prefab
-                    attack_instantiated = true;
+                    // unhide attack
+                    attack_active = true;
+                    Toggle_Move(_attack_obj, attack_active, false);
                 }
-                Set_Animation_Counter(ref attack, attack_end, _attack_prefab, attack_instantiated);
+                Set_Animation_Counter(ref attack, attack_end, _attack_obj, ref attack_active);
             }
 
             // stun
             if (stun > 0)
             {
-                if (!stun_instantiated)
+                if (!stun_active)
                 {
-                    // instantiate stun_prefab
-                    stun_instantiated = true;
+                    // unhide stun
+                    stun_active = true;
+                    Toggle_Move(_stun_obj, stun_active, false);
                 }
-                Set_Animation_Counter(ref stun, stun_end, _stun_prefab, stun_instantiated);          
+                Set_Animation_Counter(ref stun, stun_end, _stun_obj, ref stun_active);          
             }
 
             // block
             if (block > 0)
             {
-                if (!block_instantiated)
+                if (!block_active)
                 {
-                    // instantiate block_prefab
-                    block_instantiated = true;
+                    // unhide block
+                    block_active = true;
+                    Toggle_Move(_block_obj, block_active, true);
                 }
                 Endless_Animation_Counter(ref block);
             }
 
             // block_stop
-            if (block_stop > 0) {
+            if (block_stop > 0)
+            {
                 Endless_Animation_Stopper(ref block, ref block_stop);
             }
         }
@@ -125,11 +147,11 @@ public class Character : MonoBehaviour
 
     private void Endless_Animation_Stopper(ref float action, ref float action_stop)
     {
-        // if (block_prefab != null)
-        // {
-        //     // destroy block_prefab
-        //     block_instantiated = false;
-        // }
+        if (block_active)
+        {
+            block_active = false;
+            Toggle_Move(_block_obj, block_active, true);
+        }
         if (action_stop >= all_stop_ends)
         {
             action_stop = 0;
@@ -142,7 +164,7 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void Set_Animation_Counter(ref float action, float action_end, GameObject action_prefab, bool action_instantiated)
+    private void Set_Animation_Counter(ref float action, float action_end, GameObject action_obj, ref bool action_active)
     {
         if (action > 0)
         {
@@ -150,15 +172,25 @@ public class Character : MonoBehaviour
             Debug.Log("P" + pc.player + " has been attacking/stunning for " + action + " seconds, end = " + action_end);
             if (action >= action_end)
             {
-                if (action_prefab != null)
+                if (action_obj != null)
                 {
-                    // destroy block_prefab
-                    action_instantiated = false;
+                    // hide action (attack/stun)
+                    action_active = false;
+                    Toggle_Move(action_obj, action_active, false);
                 }
                 action = 0;
                 Debug.Log("P" + pc.player + " has finished acting");
                 pc.actionable = true;
             }
+        }
+    }
+
+    private void Toggle_Move(GameObject action, bool state, bool isBlock)
+    {
+        action.GetComponent<Renderer>().enabled = state;
+        if (!isBlock)
+        {
+            action.GetComponent<Collider2D>().enabled = state;
         }
     }
 }

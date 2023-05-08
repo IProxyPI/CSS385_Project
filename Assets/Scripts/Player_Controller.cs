@@ -22,12 +22,13 @@ public class Player_Controller : MonoBehaviour
     public bool paused = false;
     public bool actionable = true;
     public bool hurt = false;
-    private string input_pause = "space";
-    private string input_forward = "s";
-    private string input_backward = "a";
-    private string input_attack = "z";
-    private string input_stun = "x";
-    private string input_block = "c";
+    public bool socd_neutral = false;               // False = L/R -> L, True = L/R -> N (Facing R)
+    private KeyCode input_pause = KeyCode.Space;
+    private KeyCode input_forward = KeyCode.S;
+    private KeyCode input_backward = KeyCode.A;
+    private KeyCode input_attack = KeyCode.X;
+    private KeyCode input_stun = KeyCode.C;
+    private KeyCode input_block = KeyCode.V;
 
     // Start is called before the first frame update
     void Start()
@@ -40,12 +41,12 @@ public class Player_Controller : MonoBehaviour
         {
             player = 2;
             facing_dir = -1;
-            input_pause = "enter";
-            input_forward = "j";
-            input_backward = "k";
-            input_attack = "m";
-            input_stun = ",";
-            input_block = ".";
+            input_pause = KeyCode.Return;
+            input_forward = KeyCode.LeftArrow;
+            input_backward = KeyCode.RightArrow;
+            input_attack = KeyCode.M;
+            input_stun = KeyCode.Comma;
+            input_block = KeyCode.Period;
         }
     }
 
@@ -99,17 +100,23 @@ public class Player_Controller : MonoBehaviour
                 ch.forward_stop = Time.fixedDeltaTime;
                 ch.forward = 0;
             }
-
-            // move backwards
+            // move backward
             if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
             {
                 ch.backward = Time.fixedDeltaTime;
             }
-            // stop backwards
+            // stop backward
             else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
             {
                 ch.backward_stop = Time.fixedDeltaTime;
                 ch.backward = 0;
+            }
+
+            // SOCD Neutral
+            if (socd_neutral && ch.forward > 0 && ch.backward > 0)
+            {
+                Debug.Log("Neutral");
+                StopMovement();
             }
 
             // Actions
