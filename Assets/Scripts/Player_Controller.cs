@@ -87,46 +87,64 @@ public class Player_Controller : MonoBehaviour
         if (actionable)
         {
             // Movement
-            if (Input.GetKey(input_forward) && ch.forward == 0 && ch.forward_stop == 0)
             {
-                ch.forward = Time.fixedDeltaTime;
-            }
-            else if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0)
-            {
-                ch.forward_stop = Time.fixedDeltaTime;
-                ch.forward = 0;
-            }
+                if (ch.forward == 0 && ch.backward == 0)
+                {
+                    // forward
+                    if (Input.GetKey(input_forward))
+                    {
+                        ch.forward = Time.fixedDeltaTime;
+                    }
 
-            if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
-            {
-                ch.backward = Time.fixedDeltaTime;
-            }
-            else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
-            {
-                ch.backward_stop = Time.fixedDeltaTime;
-                ch.backward = 0;
+                    // backward
+                    if (Input.GetKey(input_backward))
+                    {
+                        ch.backward = Time.fixedDeltaTime;
+                    }
+                }
+
+                // forward_stop
+                if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0 && ch.backward == 0)
+                {
+                    ch.forward_stop = Time.fixedDeltaTime;
+                }
+                
+                // backward_stop
+                if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0 && ch.forward == 0)
+                {
+                    ch.backward_stop = Time.fixedDeltaTime;
+                }
             }
 
             // Actions
-            if (Input.GetKeyDown(input_attack) && ch.attack == 0)
             {
-                actionable = false;
-                StopMovement();
-                ch.attack = Time.fixedDeltaTime;  // changed from 0.  represents frame 1 of move, which can be incremented to count what happens each frame in ch?
-            }
+                // attack
+                if (Input.GetKeyDown(input_attack) && ch.attack == 0)
+                {
+                    actionable = false;
+                    ch.forward = Time.fixedDeltaTime;
+                }
 
-            if (Input.GetKeyDown(input_stun) && ch.stun == 0)
-            {
-                actionable = false;
-                StopMovement();
-                ch.stun = Time.fixedDeltaTime;
-            }
+                // stun
+                if (Input.GetKeyDown(input_stun) && ch.stun == 0)
+                {
+                    actionable = false;
+                    ch.stun = Time.fixedDeltaTime;
+                }
 
-            if (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0)
-            {
-                actionable = false;
-                StopMovement();
-                ch.block = Time.fixedDeltaTime;
+                // block
+                if (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0)
+                {
+                    actionable = false;
+                    ch.block = Time.fixedDeltaTime;
+                }
+
+                // block_stop
+                if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
+                {
+                    actionable = false;
+                    ch.block_stop = Time.fixedDeltaTime;
+                }
             }
         }
 
