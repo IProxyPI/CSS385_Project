@@ -78,59 +78,78 @@ public class Player_Controller : MonoBehaviour
 
     private void ReadFightInputs()
     {
-        // Pause
+        // Menu
         if (Input.GetKeyDown(input_pause))
         {
             Debug.Log("P" + player + " paused");
-            // Initialize pause menu prefab
             paused = true;
         }
-        
-        // Movement
-        if (Input.GetKey(input_forward) && ch.forward == 0 && ch.forward_stop == 0)
-        {
-            ch.forward = Time.deltaTime;
-        }
-        else if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0)
-        {
-            ch.forward_stop = Time.deltaTime;
-            ch.forward = 0;
-        }
 
-        if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
-        {
-            ch.backward = Time.deltaTime;
-        }
-        else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
-        {
-            ch.backward_stop = Time.deltaTime;
-            ch.backward = 0;
-        }
-
-        // Actions
         if (actionable)
         {
-            if (Input.GetKeyDown(input_attack) && ch.attack == 0)
+            // Movement
+            switch (true)
             {
-                actionable = false;
-                ch.attack = Time.deltaTime;  // changed from 0.  represents frame 1 of move, which can be incremented to count what happens each frame in ch?
+                // Locks on these aren't perfect; sometimes one counts indefinitely.  This first
+                //  case and the ordering (_stop's last) together are a temporary solution for
+                //  resolving this, but on a slower machine movement one will likely get "stuck".
+                // To test ^this^, watch the Spearman/Ninja movement values in inspector after
+                //  either commenting out the first case, or shifting one/both of the _stop cases
+                //  higher.
+                // Just needa review lock logic to eliminate this.  So long as we use our comp's
+                //  for the demo, it should be fine.  But it would def not be ok in a public
+                //  release lol.
+                case bool check when (Input.GetKey(input_forward) && Input.GetKey(input_backward)):
+                    ch.case_movement = null;
+                    ch.forward = 0;
+                    ch.forward_stop = 0;
+                    ch.backward = 0;
+                    ch.backward_stop = 0;
+                    break;
+
+                case bool check when (Input.GetKey(input_forward) && ch.forward == 0 && ch.forward_stop == 0):
+                    ch.case_movement = "forward";
+                    break;
+
+                case bool check when (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0):
+                    ch.case_movement = "backward";
+                    break;
+
+                case bool check when (Input.GetKeyUp(input_forward) && ch.forward_stop == 0):
+                    actionable = false;
+                    ch.case_movement = "forward_stop";
+                    ch.forward = 0;
+                    break;
+
+                case bool check when (Input.GetKeyUp(input_backward) && ch.backward_stop == 0):
+                    actionable = false;
+                    ch.case_movement = "backward_stop";
+                    ch.backward = 0;
+                    break;
             }
-            
-            if (Input.GetKeyDown(input_stun) && ch.stun == 0)
+
+            // Actions
+            switch (true)
             {
-                actionable = false;
-                ch.stun = Time.deltaTime;
-            }
-            
-            if (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0)
-            {
-                actionable = false;
-                ch.block = Time.deltaTime;
-            }
-            else if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
-            {
-                ch.block_stop = Time.deltaTime;
-                ch.block = 0;
+                case bool check when (Input.GetKeyDown(input_attack) && ch.attack == 0):
+                    actionable = false;
+                    ch.case_action = "attack";
+                    break;
+
+                case bool check when (Input.GetKeyDown(input_stun) && ch.stun == 0):
+                    actionable = false;
+                    ch.case_action = "stun";
+                    break;
+
+                case bool check when (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0):
+                    actionable = false;
+                    ch.case_action = "block";
+                    break;
+
+                case bool check when (Input.GetKeyUp(input_block) && ch.block_stop == 0):
+                    actionable = false;
+                    ch.case_action = "block_stop";
+                    break;
             }
         }
     }
