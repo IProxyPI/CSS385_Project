@@ -19,7 +19,7 @@ public class Background_Manager : MonoBehaviour
     
     [SerializeField] private List<TreeBehavior> p1_trees;
     [SerializeField] private List<TreeBehavior> p2_trees;
-
+    [SerializeField] private Round_Vis_Manager RVM;
     private int prev_p1_hp = 0;
     private int prev_p2_hp = 0;
     public void Awake()
@@ -75,5 +75,6 @@ public class Background_Manager : MonoBehaviour
     void Trigger_HP_Loss_Effect( TreeBehavior _tree, int _new_hp )
     {
         _tree.Trigger_Particles(_new_hp);
+        RVM.Apply_Freezeframe(0.2f);
     }
 }

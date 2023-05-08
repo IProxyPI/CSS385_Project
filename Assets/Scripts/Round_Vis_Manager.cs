@@ -23,6 +23,9 @@ public class Round_Vis_Manager : MonoBehaviour
     private int victory_condition = 3; // Round wins required to win the game
 
     private float freezer = 0;
+
+    private int p1hp = 2;
+    private int p2hp = 2;
     
     [SerializeField] private Background_Manager bgm;
         
@@ -42,8 +45,18 @@ public class Round_Vis_Manager : MonoBehaviour
     // Just pass in the new values of player hp, and the visuals will be updated to match
     public void Update_Round_State( int _p1_hp, int _p2_hp )
     {
-        
-        bgm.Update_Tree_State( _p1_hp, _p2_hp, Game_Data.p1_wins, Game_Data.p2_wins );
+        p1hp = _p1_hp;
+        p2hp = _p2_hp;
+        bgm.Update_Tree_State( p1hp, p2hp, Game_Data.p1_wins, Game_Data.p2_wins );
+
+        if (p1hp <= 0)
+        {
+            Round_Complete(2);
+        }
+        else if (p2hp <= 0)
+        {
+            Round_Complete(1);
+        }
     }
 
     // Resets all round data and loads the combat scene
@@ -100,8 +113,8 @@ public class Round_Vis_Manager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.P))
         {
             Update_Round_State(0,0);
-            Apply_Freezeframe(0.2f);
-            GetComponent<AudioSource>().Play();
+            
+            
         }
 
         Game_Data.freeze_frame = false;
@@ -141,8 +154,9 @@ public class Round_Vis_Manager : MonoBehaviour
         Game_Data.cur_round = _cur_round;
     }
 
-    public void Apply_Freezeframe( float _time = 0.2f )
+    public void Apply_Freezeframe( float _time = 0.5f )
     {
         freezer = _time;
+        GetComponent<AudioSource>().Play();
     }
 }
