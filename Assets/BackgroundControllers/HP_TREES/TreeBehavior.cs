@@ -5,8 +5,11 @@ using UnityEngine;
 public class TreeBehavior : MonoBehaviour
 {
     
-    private Player_Controller pc;
-
+    private Player_Manager pm;
+    [SerializeField] private string player_manager_name = "Player";
+    
+    private int state = 2; // 2 = full hp, 1 = 1 hp, 0 = dead
+    
     public Sprite healthy = null;
     public Sprite low_hp = null;
     public Sprite dead = null;
@@ -20,13 +23,15 @@ public class TreeBehavior : MonoBehaviour
 
     public void Start()
     {
-        // pc = ...        
+        pm = GameObject.Find(player_manager_name).GetComponent<Player_Manager>();
     }
 
     public void Update()
     {
-        // set_state(pc.lives - 1);
+        set_state(pm.p1.lives - 1);
+        // logic for p2
     }
+
     public void set_state(int _state)
     {
         state = _state;

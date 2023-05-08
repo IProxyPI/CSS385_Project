@@ -72,7 +72,7 @@ public class Player_Controller : MonoBehaviour
         {
             if (col.name == "attack_prefab")
             {
-                ch.fall = Time.fixedDeltaTime;
+                ch.hurt = Time.fixedDeltaTime;
                 lives--;
             }
             else if (col.name == "stun_prefab")

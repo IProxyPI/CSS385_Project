@@ -20,9 +20,9 @@ public class Character : MonoBehaviour
     public float stun_end = 1f;
     public float block = 0;
     public float block_stop = 0;
-    [SerializeField] GameObject _attack_prefab;
-    [SerializeField] GameObject _stun_prefab;
-    [SerializeField] GameObject _block_prefab;
+    [SerializeField] GameObject _attack_object;
+    [SerializeField] GameObject _stun_object;
+    [SerializeField] GameObject _block_object;
     private bool attack_instantiated = false;
     private bool stun_instantiated = false;
     private bool block_instantiated = false;
@@ -33,8 +33,8 @@ public class Character : MonoBehaviour
     // Status
     public float stunned = 0;
     public float stunned_end = 2;
-    public float fall = 0;
-    public int fall_end = 2;
+    public float hurt = 0;
+    public int hurt_end = 2;
 
     // Start is called before the first frame update
     void Start()
@@ -42,10 +42,16 @@ public class Character : MonoBehaviour
         if (gameObject.name == p1_name)
         {
             pc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
+            _attack_object = GameObject.Find("Attack1");
+            _stun_object = GameObject.Find("Stun1");
+            _block_object = GameObject.Find("Block1");
         }
         else // (gameObject.name == p2_name)
         {
             pc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
+            _attack_object = GameObject.Find("Attack2");
+            _stun_object = GameObject.Find("Stun2");
+            _block_object = GameObject.Find("Block2");
             step = -step;
         }
     }
@@ -90,28 +96,28 @@ public class Character : MonoBehaviour
             if (attack > 0)
             {
                 Action_Counter(ref attack, attack_end);
-                Tool_Handler(ref attack, attack, attack_end, _attack_prefab, ref attack_instantiated);          
+                Tool_Handler(ref attack, attack, attack_end, _attack_object, ref attack_instantiated);          
             }
 
             // stun
             if (stun > 0)
             {
                 Action_Counter(ref stun, stun_end);
-                Tool_Handler(ref stun, stun, stun_end, _stun_prefab, ref stun_instantiated);          
+                Tool_Handler(ref stun, stun, stun_end, _stun_object, ref stun_instantiated);          
             }
 
             // block
             if (block > 0)
             {
                 Action_Counter(ref block, -1);
-                Tool_Handler(ref block, block_stop, all_stop_ends, _block_prefab, ref block_instantiated);
+                Tool_Handler(ref block, block_stop, all_stop_ends, _block_object, ref block_instantiated);
             }
 
             // block_stop
             if (block_stop > 0) {
                 block = 0;
                 Action_Counter(ref block_stop, all_stop_ends);
-                Tool_Handler(ref block, block_stop, all_stop_ends, _block_prefab, ref block_instantiated);
+                Tool_Handler(ref block, block_stop, all_stop_ends, _block_object, ref block_instantiated);
             }
         }
 
@@ -122,9 +128,9 @@ public class Character : MonoBehaviour
                 Action_Counter(ref stunned, stunned_end);
             }
 
-            if (fall > 0)
+            if (hurt > 0)
             {
-                Action_Counter(ref fall, fall_end);
+                Action_Counter(ref hurt, hurt_end);
             }
         }
             
@@ -140,19 +146,19 @@ public class Character : MonoBehaviour
         }
     }
 
-    private void Tool_Handler(ref float action, float action_stop, float action_end, GameObject action_prefab, ref bool tool_instantiated)
+    private void Tool_Handler(ref float action, float action_stop, float action_end, GameObject tool_object, ref bool tool_instantiated)
     {
         if (!tool_instantiated)
         {
-            // instantiate _prefab
+            // show tool_object and enable collisions
             tool_instantiated = true;
         }
         
         if (action_stop >= action_end)
         {
-            if (action_prefab != null)
+            if (tool_object != null)
             {
-                // destroy prefab
+                // hide tool_object and disable collisions
                 tool_instantiated = false;
             }
             action = 0;

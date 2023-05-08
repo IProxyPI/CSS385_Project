@@ -9,8 +9,8 @@ public class Player_Manager : MonoBehaviour
     [SerializeField] private string scene_1 = "1_Fight";
     [SerializeField] private string scene_2 = "2_Select_Next";
     public int scene_num = 0;
-    private Player_Controller p1;
-    private Player_Controller p2;
+    public Player_Controller p1;
+    public Player_Controller p2;
     [SerializeField] private string p1_name = "DummyPlayer1";
     [SerializeField] private string p2_name = "DummyPlayer2";
     private int players_ready = 0;
@@ -41,15 +41,15 @@ public class Player_Manager : MonoBehaviour
 
     void Update()
     {
-        // Possible in scene_fight
-        if (p1.hurt)
-        {
-            HurtOutcome(p1);
-        }
-        if (p2.hurt)
-        {
-            HurtOutcome(p2);
-        }
+        // // Possible in scene_fight
+        // if (p1.ch.hurt > 0)
+        // {
+        //     HurtOutcome(p1);
+        // }
+        // if (p2.ch.hurt > 0)
+        // {
+        //     HurtOutcome(p2);
+        // }
 
         // Possible in scene_select_fighter, scene_fight pause, or scene_select_next
         if (p1.menu_select_change)
@@ -70,21 +70,21 @@ public class Player_Manager : MonoBehaviour
         }
     }
 
-    private void HurtOutcome(Player_Controller p)
-    {
-        p.lives--;
-        // Tree fall animation
+    // private void HurtOutcome(Player_Controller p)
+    // {
+    //     p.lives--;
+    //     // Tree fall animation
 
-        if (p.lives > 0)
-        {
-            // Load next round
-        }
-        else 
-        {
-            scene_num = 2;
-            SceneManager.LoadScene(scene_2, LoadSceneMode.Single);
-        }
-    }
+    //     if (p.lives > 0)
+    //     {
+    //         // Load next round
+    //     }
+    //     else 
+    //     {
+    //         scene_num = 2;
+    //         SceneManager.LoadScene(scene_2, LoadSceneMode.Single);
+    //     }
+    // }
 
     private void MenuSelectOutcome(Player_Controller p)
     {
