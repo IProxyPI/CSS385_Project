@@ -18,6 +18,7 @@ public class Player_Controller : MonoBehaviour
     private int quit_timer_limit = 3;
 
     // Used in scene_fight
+    [SerializeField] string opponent_tag = "P2";
     public int lives = 3;
     public bool paused = false;
     public bool actionable = true;
@@ -39,6 +40,7 @@ public class Player_Controller : MonoBehaviour
         {
             player = 2;
             facing_dir = -1;
+            opponent_tag = "P1";
             input_pause = "enter";
             input_forward = "j";
             input_backward = "k";
@@ -68,14 +70,14 @@ public class Player_Controller : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag == "P2")
+        if (col.tag == opponent_tag)
         {
-            if (col.name == "attack_prefab")
+            if (col.name.Contains("Attack"))
             {
                 ch.hurt = Time.fixedDeltaTime;
                 lives--;
             }
-            else if (col.name == "stun_prefab")
+            else // (col.name.Contains("Stun"))
             {
                 ch.stun_end = Time.fixedDeltaTime;
             }

@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class ToolsTagger : MonoBehaviour
 {
+    private BoxCollider2D bc;
+
     [SerializeField] private string p1_action = "";
     //[SerializeField] private string p2_action = "";
     
@@ -17,5 +19,8 @@ public class ToolsTagger : MonoBehaviour
         {
             gameObject.tag = "P2";
         }
+
+        bc = GetComponent<BoxCollider2D>();
+        bc.isTrigger = true;
     }
 }
