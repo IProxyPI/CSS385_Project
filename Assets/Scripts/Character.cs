@@ -15,9 +15,9 @@ public class Character : MonoBehaviour
 
     // Actions
     public float attack = 0;
-    public float attack_end = 3;
+    public float attack_end = 0.5f;
     public float stun = 0;
-    public float stun_end = 3;
+    public float stun_end = 1f;
     public float block = 0;
     public float block_stop = 0;
     [SerializeField] GameObject _attack_prefab;
