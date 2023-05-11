@@ -4,10 +4,9 @@ public class Player_Controller : MonoBehaviour
 {
     // Used in Start(), scene_select_fighter, scene_fight's pause, and/or scene_select_next
     private Player_Manager pm;
-    public Rigidbody2D rb;
-    public int player = 1;                          // Used in Debug.Log()'s
-    public int facing_dir = 1;                      // 1 = left side facing right; -1 = right side facing left
     public Character ch;
+    public Rigidbody2D rb;
+    public int facing_dir = 1;                      // 1 = left side facing right; -1 = right side facing left
     private int character_select = 0;               // 0 = Spearman, 1 = Ninja
     private bool character_select_change = false;
     public int menu_select = 0;                     // 0 = scene_fight, 1 = scene_select_fighter, 2 = quit application
@@ -18,10 +17,11 @@ public class Player_Controller : MonoBehaviour
     private int quit_timer_limit = 3;
 
     // Used in scene_fight
-    public int lives = 3;
+    public string player_tag = "P1";
+    public string opponent_tag = "P2";
+    public int lives = 2;
     public bool paused = false;
     public bool actionable = true;
-    public bool hurt = false;
     public bool socd_neutral = false;               // False = L/R -> L, True = L/R -> N (Facing R)
     private KeyCode input_pause = KeyCode.Space;
     private KeyCode input_forward = KeyCode.S;
@@ -39,8 +39,9 @@ public class Player_Controller : MonoBehaviour
 
         if (gameObject.name == "DummyPlayer2")
         {
-            player = 2;
             facing_dir = -1;
+            player_tag = "P2";
+            opponent_tag = "P1";
             input_pause = KeyCode.Return;
             input_forward = KeyCode.LeftArrow;
             input_backward = KeyCode.RightArrow;
@@ -48,6 +49,7 @@ public class Player_Controller : MonoBehaviour
             input_stun = KeyCode.Comma;
             input_block = KeyCode.Period;
         }
+        // gameObject.tag = player_tag;
     }
 
     // Update is called once per frame
@@ -68,11 +70,31 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
-    // No object has a trigger or tags set to true yet since I forget how those work
-    private void OnTriggerEnter(Collider other)
+    // Called by ReadFightInputs()
+    private void StopMovement()
     {
-        // ch.kneel and/or ch.die = 1; maybe?
-        hurt = true;
+        ch.forward = 0;
+        ch.forward_stop = 0;
+        ch.backward = 0;
+        ch.backward_stop = 0;
+    }
+    
+    // Attacked or Stunned
+    private void OnTriggerEnter2D(Collider2D col)
+    {
+        Debug.Log(col.name + " collided with " + player_tag);
+        if (col.tag == opponent_tag)
+        {
+            if (col.name.Contains("Attack"))
+            {
+                ch.hurt = Time.fixedDeltaTime;
+                lives--;
+            }
+            else // (col.name.Contains("Stun"))
+            {
+                ch.stun_end = Time.fixedDeltaTime;
+            }
+        }
     }
 
     private void ReadFightInputs()
@@ -80,7 +102,7 @@ public class Player_Controller : MonoBehaviour
         // Pause
         if (Input.GetKeyDown(input_pause))
         {
-            Debug.Log("P" + player + " paused");
+            Debug.Log(player_tag + " paused");
             // Initialize pause menu prefab
             paused = true;
         }
@@ -153,14 +175,6 @@ public class Player_Controller : MonoBehaviour
         }
     }
 
-    private void StopMovement()
-    {
-        ch.forward = 0;
-        ch.forward_stop = 0;
-        ch.backward = 0;
-        ch.backward_stop = 0;
-    }
-
     private void ReadMenuInputs()
     {
         // Player has not yet chosen a menu option
@@ -215,13 +229,13 @@ public class Player_Controller : MonoBehaviour
                 // This should probably be moved to Player_Manager.cs
                 if (character_select == 0)
                 {
-                    Debug.Log("P" + (player) + " selects Spearman");
+                    Debug.Log(player_tag + " selects Spearman");
                     Destroy(gameObject.GetComponent<Ninja>());
                     ch = gameObject.AddComponent<Spearman>() as Spearman;
                 }
                 else // (character_select == 1)
                 {
-                    Debug.Log("P" + (player) + " selects Ninja");
+                    Debug.Log(player_tag + " selects Ninja");
                     Destroy(gameObject.GetComponent<Spearman>());
                     ch = gameObject.AddComponent<Ninja>() as Ninja;
                 }
@@ -261,7 +275,7 @@ public class Player_Controller : MonoBehaviour
     private void HeldQuitInput()
     {
         quit_timer += Time.deltaTime;
-        Debug.Log("P" + player + " quitting out in " + (quit_timer_limit - quit_timer));
+        Debug.Log(player_tag + " quitting out in " + (quit_timer_limit - quit_timer));
 
         if (quit_timer >= quit_timer_limit)
         {

@@ -5,14 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class Player_Manager : MonoBehaviour
 {
+    // Scenes
     [SerializeField] private string scene_0 = "0_Select_Fighter";
     [SerializeField] private string scene_1 = "1_Fight";
     [SerializeField] private string scene_2 = "2_Select_Next";
     public int scene_num = 0;
-    private Player_Controller p1;
-    private Player_Controller p2;
+
+    // Background / Round Visuals
+    [SerializeField] private string bgm_name = "Background_Manager";
+    private Round_Vis_Manager rvm;
+    
+    // Players
     [SerializeField] private string p1_name = "DummyPlayer1";
     [SerializeField] private string p2_name = "DummyPlayer2";
+    private Player_Controller p1;
+    private Player_Controller p2;
     private int players_ready = 0;
 
     void Start()
@@ -34,7 +41,10 @@ public class Player_Manager : MonoBehaviour
             Debug.Log("SELECT YOUR FIGHTER!");
         }
         
-        // Store pointers to both players
+        // Store reference to background manager's round visual manager
+        rvm = GameObject.Find(bgm_name).GetComponent<Round_Vis_Manager>();
+
+        // Store references to both player scripts
         p1 = GameObject.Find(p1_name).GetComponent<Player_Controller>();
         p2 = GameObject.Find(p2_name).GetComponent<Player_Controller>();
     }
@@ -42,13 +52,9 @@ public class Player_Manager : MonoBehaviour
     void Update()
     {
         // Possible in scene_fight
-        if (p1.hurt)
+        if (p1.ch.hurt > 0 || p2.ch.hurt > 0)
         {
-            HurtOutcome(p1);
-        }
-        if (p2.hurt)
-        {
-            HurtOutcome(p2);
+            rvm.Update_Round_State(p1.lives, p2.lives);
         }
 
         // Possible in scene_select_fighter, scene_fight pause, or scene_select_next
@@ -70,21 +76,21 @@ public class Player_Manager : MonoBehaviour
         }
     }
 
-    private void HurtOutcome(Player_Controller p)
-    {
-        p.lives--;
-        // Tree fall animation
+    // private void HurtOutcome(Player_Controller p)
+    // {
+    //     p.lives--;
+    //     // Tree fall animation
 
-        if (p.lives > 0)
-        {
-            // Load next round
-        }
-        else 
-        {
-            scene_num = 2;
-            SceneManager.LoadScene(scene_2, LoadSceneMode.Single);
-        }
-    }
+    //     if (p.lives > 0)
+    //     {
+    //         // Load next round
+    //     }
+    //     else 
+    //     {
+    //         scene_num = 2;
+    //         SceneManager.LoadScene(scene_2, LoadSceneMode.Single);
+    //     }
+    // }
 
     private void MenuSelectOutcome(Player_Controller p)
     {
@@ -101,7 +107,7 @@ public class Player_Manager : MonoBehaviour
         if (p.menu_choice == -1)
         {
             // p undoes their vote to load scene_fight
-            Debug.Log("P" + p.player + " undid ready");
+            Debug.Log(p.player_tag + " undid ready");
             players_ready--;
             p.menu_choice = 0;
         }
@@ -112,7 +118,7 @@ public class Player_Manager : MonoBehaviour
             // p votes to load scene_fight
             if (scene_num == 0 || scene_num == 2)
             {
-                Debug.Log("P" + p.player + " ready!");
+                Debug.Log(p.player_tag + " ready!");
                 players_ready++;
                 if (players_ready == 2)
                 {
@@ -130,7 +136,7 @@ public class Player_Manager : MonoBehaviour
             else // (scene_num == 1)
             {
                 // Resume scene_fight
-                Debug.Log("P" + p.player + " unpaused");
+                Debug.Log(p.player_tag + " unpaused");
                 // Destroy pause menu prefab
                 p.paused = false;
                 p.menu_select = 0;

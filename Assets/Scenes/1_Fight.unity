@@ -133,9 +133,10 @@ GameObject:
   m_Component:
   - component: {fileID: 59508166}
   - component: {fileID: 59508167}
+  - component: {fileID: 59508168}
   m_Layer: 0
   m_Name: Block2
-  m_TagString: Untagged
+  m_TagString: P2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -207,6 +208,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &59508168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59508165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836cf1d55a485d7429eda004b193f39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p1_action: 1
 --- !u!1 &318239566
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,9 +233,10 @@ GameObject:
   - component: {fileID: 318239570}
   - component: {fileID: 318239569}
   - component: {fileID: 318239568}
+  - component: {fileID: 318239571}
   m_Layer: 0
   m_Name: Attack2
-  m_TagString: Attack
+  m_TagString: P2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -342,6 +357,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &318239571
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318239566}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836cf1d55a485d7429eda004b193f39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p1_action: 1
 --- !u!1 &683055790
 GameObject:
   m_ObjectHideFlags: 0
@@ -589,7 +617,7 @@ GameObject:
   - component: {fileID: 890933691}
   m_Layer: 0
   m_Name: Origin
-  m_TagString: Untagged
+  m_TagString: P1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -624,9 +652,10 @@ GameObject:
   - component: {fileID: 966249758}
   - component: {fileID: 966249757}
   - component: {fileID: 966249756}
+  - component: {fileID: 966249759}
   m_Layer: 0
   m_Name: Stun2
-  m_TagString: Stun
+  m_TagString: P2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -735,6 +764,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &966249759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 966249754}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836cf1d55a485d7429eda004b193f39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p1_action: 1
 --- !u!1 &985888270
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,6 +1033,7 @@ MonoBehaviour:
   scene_1: 1_Fight
   scene_2: 2_Select_Next
   scene_num: 0
+  bgm_name: Background_Manager
   p1_name: DummyPlayer1
   p2_name: DummyPlayer2
 --- !u!1 &1247442389
@@ -1571,7 +1614,7 @@ GameObject:
   - component: {fileID: 1576170258}
   m_Layer: 0
   m_Name: Origin
-  m_TagString: Untagged
+  m_TagString: P2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1610,7 +1653,7 @@ GameObject:
   - component: {fileID: 1704182254}
   m_Layer: 0
   m_Name: DummyPlayer2
-  m_TagString: Untagged
+  m_TagString: P2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1742,18 +1785,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236826c1a94c21141bc4129e28c72f25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  player: 1
-  facing_dir: 1
   ch: {fileID: 1704182260}
+  rb: {fileID: 0}
+  facing_dir: 1
   menu_select: 0
   menu_select_change: 0
   menu_choice: 0
   menu_choice_change: 0
-  lives: 3
+  player_tag: P1
+  opponent_tag: P2
+  lives: 2
   paused: 0
   actionable: 1
-  hurt: 0
   socd_neutral: 1
 --- !u!114 &1704182260
 MonoBehaviour:
@@ -1781,6 +1824,10 @@ MonoBehaviour:
   _stun_obj: {fileID: 966249754}
   _block_obj: {fileID: 59508165}
   _origin: {fileID: 1576170258}
+  stunned: 0
+  stunned_end: 1
+  hurt: 0
+  hurt_end: 2
 --- !u!1 &1861949816
 GameObject:
   m_ObjectHideFlags: 0
@@ -1930,7 +1977,7 @@ GameObject:
   - component: {fileID: 1916983668}
   m_Layer: 0
   m_Name: DummyPlayer1
-  m_TagString: Untagged
+  m_TagString: P1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2062,18 +2109,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 236826c1a94c21141bc4129e28c72f25, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rb: {fileID: 0}
-  player: 1
-  facing_dir: 1
   ch: {fileID: 1916983674}
+  rb: {fileID: 0}
+  facing_dir: 1
   menu_select: 0
   menu_select_change: 0
   menu_choice: 0
   menu_choice_change: 0
-  lives: 3
+  player_tag: P1
+  opponent_tag: P2
+  lives: 2
   paused: 0
   actionable: 1
-  hurt: 0
   socd_neutral: 1
 --- !u!114 &1916983674
 MonoBehaviour:
@@ -2101,6 +2148,10 @@ MonoBehaviour:
   _stun_obj: {fileID: 5827938642302955258}
   _block_obj: {fileID: 7076236591022042448}
   _origin: {fileID: 890933691}
+  stunned: 0
+  stunned_end: 1
+  hurt: 0
+  hurt_end: 2
 --- !u!212 &981396064487911097
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2165,9 +2216,10 @@ GameObject:
   - component: {fileID: 6439395022633535698}
   - component: {fileID: 3417870133468351436}
   - component: {fileID: 6373525657097143552}
+  - component: {fileID: 6439395022633535699}
   m_Layer: 0
   m_Name: Attack1
-  m_TagString: Attack
+  m_TagString: P1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2235,9 +2287,10 @@ GameObject:
   - component: {fileID: 981396064487911097}
   - component: {fileID: 7201674303684951500}
   - component: {fileID: 7201674303684951499}
+  - component: {fileID: 7201674303684951501}
   m_Layer: 0
   m_Name: Stun1
-  m_TagString: Stun
+  m_TagString: P1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2322,6 +2375,19 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &6439395022633535699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1607670444970005751}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836cf1d55a485d7429eda004b193f39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p1_action: 1
 --- !u!212 &6465606412555889104
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2384,13 +2450,27 @@ GameObject:
   m_Component:
   - component: {fileID: 3174618983123319081}
   - component: {fileID: 6465606412555889104}
+  - component: {fileID: 7076236591022042449}
   m_Layer: 0
   m_Name: Block1
-  m_TagString: Untagged
+  m_TagString: P1
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &7076236591022042449
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7076236591022042448}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836cf1d55a485d7429eda004b193f39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p1_action: 1
 --- !u!4 &7201674303684951498
 Transform:
   m_ObjectHideFlags: 0
@@ -2443,3 +2523,16 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 0
+--- !u!114 &7201674303684951501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5827938642302955258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 836cf1d55a485d7429eda004b193f39d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  p1_action: 1

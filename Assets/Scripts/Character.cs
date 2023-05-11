@@ -13,17 +13,17 @@ public class Character : MonoBehaviour
     public float backward_stop = 0;
     private float step = 0.1f;
 
-    // Actions
+    // RPS Tools
     public float attack = 0;
     public float attack_end = 0.5f;
     public float stun = 0;
-    public float stun_end = 1f;
+    public float stun_end = 0.5f;
     public float block = 0;
     public float block_stop = 0;
-    [SerializeField] GameObject _attack_obj;
-    [SerializeField] GameObject _stun_obj;
-    [SerializeField] GameObject _block_obj;
-    [SerializeField] Transform _origin;
+    [SerializeField] private GameObject _attack_obj;
+    [SerializeField] private GameObject _stun_obj;
+    [SerializeField] private GameObject _block_obj;
+    [SerializeField] private Transform _origin;
     private bool attack_active = false;
     private bool stun_active = false;
     private bool block_active = false;
@@ -31,10 +31,15 @@ public class Character : MonoBehaviour
     // Both
     private float all_stop_ends = 0.3f;
 
+    // Statuses
+    public float stunned = 0;
+    public float stunned_end = 1;
+    public float hurt = 0;
+    public float hurt_end = 2;
+
     // Start is called before the first frame update
     void Start()
     {
-
         if (gameObject.name == p1_name)
         {
             pc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
@@ -94,7 +99,7 @@ public class Character : MonoBehaviour
             }
         }
 
-        // Actions
+        // RPS Tools
         {
             // attack
             if (attack > 0)
@@ -138,6 +143,21 @@ public class Character : MonoBehaviour
                 Endless_Animation_Stopper(ref block, ref block_stop);
             }
         }
+
+        // Statuses
+        {
+            bool change_logic_later = false;
+
+            if (stunned > 0)
+            {
+                Set_Animation_Counter(ref stunned, stunned_end, null, ref change_logic_later);
+            }
+
+            if (hurt > 0)
+            {
+                Set_Animation_Counter(ref hurt, hurt_end, null, ref change_logic_later);
+            }
+        }
     }
 
     private void Endless_Animation_Counter(ref float action)
@@ -169,7 +189,7 @@ public class Character : MonoBehaviour
         if (action > 0)
         {
             action += Time.fixedDeltaTime;
-            Debug.Log("P" + pc.player + " has been attacking/stunning for " + action + " seconds, end = " + action_end);
+            // Debug.Log(pc.player_tag + " has been acting for " + action + " seconds, end = " + action_end);
             if (action >= action_end)
             {
                 if (action_obj != null)
@@ -179,7 +199,7 @@ public class Character : MonoBehaviour
                     Toggle_Move(action_obj, action_active, false);
                 }
                 action = 0;
-                Debug.Log("P" + pc.player + " has finished acting");
+                // Debug.Log(pc.player_tag + " has finished acting");
                 pc.actionable = true;
             }
         }
