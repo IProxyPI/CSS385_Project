@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class ButtonController : MonoBehaviour
 {
@@ -10,11 +11,16 @@ public class ButtonController : MonoBehaviour
     private bool startable;
     public Player_Manager playerManager;
     public TMP_Text playerText;
+    public Button readyButton;
     private string player1, player2;
 
     void Start()
     {
         player = 1;
+        if (playerText != null)
+        {
+            playerText.text = "Player 1 Selecting";
+        }
     }
 
     void Update()
@@ -96,15 +102,31 @@ public class ButtonController : MonoBehaviour
         Debug.Log("Btn Quit!");
     }
 
-    // Go back to character selection
-    public void OnPlayAgainClick()
+    // Go to character selection screen
+    public void OnCharacterSelectClick()
     {
         SceneManager.LoadScene("0_Select_Fighter");
         player1 = "";
         player2 = "";
-        playerText.text = "Player 1 Selecting";
         player = 1;
         startable = false;
-        Debug.Log("Btn Again!");
+        Debug.Log("Btn Select!");
+
+    }
+
+    // Go to main menu
+    public void OnHomeClick()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Debug.Log("Btn Main Menu!");
+
+    }
+
+    // Go to controls
+    public void OnControlsClick()
+    {
+        SceneManager.LoadScene("Controls");
+        Debug.Log("Btn Controls!");
+
     }
 }
