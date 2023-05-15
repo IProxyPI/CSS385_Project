@@ -245,6 +245,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerManager: {fileID: 0}
   playerText: {fileID: 0}
+  readyButton: {fileID: 0}
 --- !u!1 &368498419
 GameObject:
   m_ObjectHideFlags: 0
