@@ -109,12 +109,10 @@ public class Round_Vis_Manager : MonoBehaviour
             {
                 if (Game_Data.p1_wins < victory_condition && Game_Data.p2_wins < victory_condition)
                 {
-                    print("Loading fight");
                     SceneManager.LoadScene("1_Fight");
                 }
                 else
                 {
-                    print("loading victory");
                     SceneManager.LoadScene("2_Victory");
                 }
             }
