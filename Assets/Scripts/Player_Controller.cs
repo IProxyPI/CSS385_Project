@@ -6,6 +6,7 @@ public class Player_Controller : MonoBehaviour
     private Player_Manager pm;
     public Character ch;
     public Rigidbody2D rb;
+    public BoxCollider2D bc;
     public int facing_dir = 1;                      // 1 = left side facing right; -1 = right side facing left
     private int character_select = 0;               // 0 = Spearman, 1 = Ninja
     private bool character_select_change = false;
@@ -36,6 +37,10 @@ public class Player_Controller : MonoBehaviour
         pm = GameObject.Find("Players").GetComponent<Player_Manager>();
         ch = gameObject.AddComponent<Spearman>() as Spearman;
         rb = GetComponent<Rigidbody2D>();
+        bc = GetComponent<BoxCollider2D>();
+
+        rb.gravityScale = 0;
+        bc.isTrigger = true;
 
         if (gameObject.name == "DummyPlayer2")
         {

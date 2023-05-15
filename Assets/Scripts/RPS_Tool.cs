@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class RPS_Tool : MonoBehaviour
 {
-    private Collider2D bc;
+    private BoxCollider2D bc;
 
     [SerializeField] private string p1_action = "1";
     // [SerializeField] private string p1_action = "2";
@@ -27,8 +27,8 @@ public class RPS_Tool : MonoBehaviour
         // Assigns Collider2D component if an Attack or Stun object
         if (!gameObject.name.Contains("Block"))
         {
-            bc = GetComponent<Collider2D>();
-            bc.isTrigger = true;
+            bc = GetComponent<BoxCollider2D>();
+            // bc.isTrigger = true;
         }
     }
 }

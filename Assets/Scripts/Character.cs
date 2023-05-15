@@ -210,7 +210,7 @@ public class Character : MonoBehaviour
         action.GetComponent<Renderer>().enabled = state;
         if (!isBlock)
         {
-            action.GetComponent<Collider2D>().enabled = state;
+            action.GetComponent<BoxCollider2D>().enabled = state;
         }
     }
 }
