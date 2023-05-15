@@ -23,7 +23,7 @@ public class Round_Vis_Manager : MonoBehaviour
     private int victory_condition = 3; // Round wins required to win the game
 
     private float freezer = 0;
-    private float end_of_round_countdown = 2f;
+    private float end_of_round_countdown = 1f;
     private bool round_over = false;
 
     private int p1hp = 2;
@@ -57,7 +57,7 @@ public class Round_Vis_Manager : MonoBehaviour
         }
         else if (p2hp <= 0)
         {
-            Round_Complete(1);
+            Round_Complete(11);
         }
     }
 
@@ -74,17 +74,19 @@ public class Round_Vis_Manager : MonoBehaviour
 
     public void Round_Complete( int _winner = 1 )
     {
-        if (_winner == 1)
-        {
-            Game_Data.p2_wins++;
-        } 
-            else
-        {
-            Game_Data.p1_wins++;
-        }
+        if (!round_over) {
+            if (_winner == 1)
+            {
+                Game_Data.p2_wins++;
+            } 
+                else
+            {
+                Game_Data.p1_wins++;
+            }
 
-        round_over = true;
-        Apply_Freezeframe(end_of_round_countdown);
+            round_over = true;
+            Apply_Freezeframe(end_of_round_countdown);
+        }
     }
         
 
@@ -129,10 +131,12 @@ public class Round_Vis_Manager : MonoBehaviour
             {
                 if (Game_Data.p1_wins < victory_condition && Game_Data.p2_wins < victory_condition)
                 {
+                    print("Loading fight");
                     SceneManager.LoadScene("1_Fight");
                 }
                 else
                 {
+                    print("loading victory");
                     SceneManager.LoadScene("2_Victory");
                 }
             }
