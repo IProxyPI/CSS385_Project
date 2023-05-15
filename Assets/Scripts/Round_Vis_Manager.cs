@@ -23,7 +23,7 @@ public class Round_Vis_Manager : MonoBehaviour
     private int victory_condition = 3; // Round wins required to win the game
 
     private float freezer = 0;
-    private float end_of_round_countdown = 1f;
+    private float end_of_round_countdown = 2f;
     private bool round_over = false;
 
     private int p1hp = 2;
@@ -49,15 +49,16 @@ public class Round_Vis_Manager : MonoBehaviour
     {
         p1hp = _p1_hp;
         p2hp = _p2_hp;
-        bgm.Update_Tree_State( p1hp, p2hp, Game_Data.p1_wins, Game_Data.p2_wins );
-
+        if (!round_over && Game_Data.p1_wins < victory_condition && Game_Data.p2_wins < victory_condition) {
+            bgm.Update_Tree_State( p1hp, p2hp, Game_Data.p1_wins, Game_Data.p2_wins );
+        }
         if (p1hp <= 0)
         {
-            Round_Complete(2);
+            Round_Complete(1);
         }
         else if (p2hp <= 0)
         {
-            Round_Complete(11);
+            Round_Complete(2);
         }
     }
 
@@ -72,7 +73,7 @@ public class Round_Vis_Manager : MonoBehaviour
     
     // Im just gonna start building some game flow logic here
 
-    public void Round_Complete( int _winner = 1 )
+    public void Round_Complete( int _winner )
     {
         if (!round_over) {
             if (_winner == 1)
@@ -85,35 +86,12 @@ public class Round_Vis_Manager : MonoBehaviour
             }
 
             round_over = true;
-            Apply_Freezeframe(end_of_round_countdown);
+            Apply_Freezeframe();
         }
     }
-        
-
-        // QUICK HACK FOR TESTING
-    // delete all this shit later lmao
     
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.U))
-        {
-            Round_Complete(1);
-        }
-
-        if (Input.GetKeyDown(KeyCode.I))
-        {
-            Round_Complete(2);
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            Start_Game();
-        }
-        if (Input.GetKeyDown(KeyCode.P))
-        {
-            Update_Round_State(0,0);
-            
-            
-        }
 
         Game_Data.freeze_frame = false;
         Time.timeScale = Game_Data.current_timescale;
@@ -170,7 +148,7 @@ public class Round_Vis_Manager : MonoBehaviour
         Game_Data.cur_round = _cur_round;
     }
 
-    public void Apply_Freezeframe( float _time = 0.5f )
+    public void Apply_Freezeframe( float _time = 0.25f )
     {
         freezer = _time;
         GetComponent<AudioSource>().Play();
