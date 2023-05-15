@@ -18,6 +18,7 @@ public static class Game_Data
     public static AudioSource track_1;
     public static AudioSource track_2;
     public static AudioSource track_3;
+    public static bool audio_set_up = false;
 }
 
 public class Round_Vis_Manager : MonoBehaviour
@@ -48,17 +49,15 @@ public class Round_Vis_Manager : MonoBehaviour
 
     public void Start()
     {
-        
-        //if (!Game_Data.audio_set_up)
-        //{
-            Game_Data.track_1 = track_1;
-            Game_Data.track_2 = track_2;
-            Game_Data.track_3 = track_3;
-            Game_Data.track_1.Play();
-            Game_Data.track_2.Play();
-            Game_Data.track_3.Play();
-        //}
-        
+
+        Game_Data.track_1 = track_1;
+        Game_Data.track_2 = track_2;
+        Game_Data.track_3 = track_3;
+        Game_Data.track_1.Play();
+        Game_Data.track_2.Play();
+        Game_Data.track_3.Play();
+        Game_Data.audio_set_up = true;
+
         New_Round();
 
         if (Game_Data.p1_wins == victory_condition - 1 || Game_Data.p2_wins == victory_condition - 1)
