@@ -14,7 +14,10 @@ public static class Game_Data
     
     public static float current_timescale = 1f;
     public static bool freeze_frame = false; // Doesnt do anything yet, but ideally we should slap this little guy into every
-    
+
+    public static AudioSource track_1;
+    public static AudioSource track_2;
+    public static AudioSource track_3;
 }
 
 public class Round_Vis_Manager : MonoBehaviour
@@ -29,6 +32,10 @@ public class Round_Vis_Manager : MonoBehaviour
     private int p1hp = 2;
     private int p2hp = 2;
     
+    public AudioSource track_1;
+    public AudioSource track_2;
+    public AudioSource track_3;
+    
     [SerializeField] private Background_Manager bgm;
         
     // Resets all round stats, updates background visuals to represent previous rounds, etc.
@@ -41,7 +48,26 @@ public class Round_Vis_Manager : MonoBehaviour
 
     public void Start()
     {
+        
+        //if (!Game_Data.audio_set_up)
+        //{
+            Game_Data.track_1 = track_1;
+            Game_Data.track_2 = track_2;
+            Game_Data.track_3 = track_3;
+            Game_Data.track_1.Play();
+            Game_Data.track_2.Play();
+            Game_Data.track_3.Play();
+        //}
+        
         New_Round();
+
+        if (Game_Data.p1_wins == victory_condition - 1 || Game_Data.p2_wins == victory_condition - 1)
+        {
+            Manage_Music(3);
+        } else
+        {
+            Manage_Music(1);
+        }
     }
     
     // Just pass in the new values of player hp, and the visuals will be updated to match
@@ -60,6 +86,15 @@ public class Round_Vis_Manager : MonoBehaviour
         {
             Round_Complete(2);
         }
+
+        if (p1hp == 2 && _p2_hp == 2)
+        {
+            Manage_Music(1);
+        }
+        else
+        {
+            Manage_Music(2);
+        }
     }
 
     // Resets all round data and loads the combat scene
@@ -69,6 +104,21 @@ public class Round_Vis_Manager : MonoBehaviour
         Game_Data.p2_wins = 0;
         Game_Data.cur_round = 0;
         SceneManager.LoadScene("1_Fight");
+    }
+
+    public void Manage_Music( int phase )
+    {
+        Game_Data.track_1.volume = 0;
+        Game_Data.track_2.volume = 0;
+        Game_Data.track_3.volume = 0;
+        switch (phase)
+        {
+            case(1): Game_Data.track_1.volume = 1; break;
+            case(2): Game_Data.track_2.volume = 1; break;
+            case(3): Game_Data.track_3.volume = 1; break;
+            default: break;
+        }
+        
     }
     
     // Im just gonna start building some game flow logic here
@@ -146,7 +196,7 @@ public class Round_Vis_Manager : MonoBehaviour
         Game_Data.cur_round = _cur_round;
     }
 
-    public void Apply_Freezeframe( float _time = 0.25f )
+    public void Apply_Freezeframe( float _time = 0.5f )
     {
         freezer = _time;
         GetComponent<AudioSource>().Play();
