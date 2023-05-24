@@ -978,6 +978,7 @@ GameObject:
   - component: {fileID: 1593658894}
   - component: {fileID: 1593658896}
   - component: {fileID: 1593658895}
+  - component: {fileID: 1593658897}
   m_Layer: 0
   m_Name: CharSelectText
   m_TagString: Untagged
@@ -1139,3 +1140,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1593658897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1593658893}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: badc6ca026a312b4096d5617a23c1a97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  t: {fileID: 1593658895}
