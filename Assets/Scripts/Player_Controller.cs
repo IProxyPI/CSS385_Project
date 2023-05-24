@@ -90,14 +90,15 @@ public class Player_Controller : MonoBehaviour
         Debug.Log(col.name + " collided with " + player_tag);
         if (col.tag == opponent_tag)
         {
-            if (col.name.Contains("Attack"))
+            if (col.name.Contains("Attack") && ch.block == 0)
             {
                 ch.hurt = Time.fixedDeltaTime;
                 lives--;
             }
-            else // (col.name.Contains("Stun"))
+            else if (col.name.Contains("Stun") && ch.attack == 0)
             {
-                ch.stun_end = Time.fixedDeltaTime;
+                actionable = false;
+                ch.stunned = Time.fixedDeltaTime;
             }
         }
     }

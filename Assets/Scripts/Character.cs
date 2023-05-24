@@ -33,7 +33,7 @@ public class Character : MonoBehaviour
 
     // Statuses
     public float stunned = 0;
-    public float stunned_end = 1;
+    public float stunned_end = 2;
     public float hurt = 0;
     public float hurt_end = 2;
 
