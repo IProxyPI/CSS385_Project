@@ -1951,10 +1951,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1704182252}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 236826c1a94c21141bc4129e28c72f25, type: 3}
+  m_Script: {fileID: 11500000, guid: 78da68cf86588124a8b701149256508a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ch: {fileID: 1704182260}
+  anim: {fileID: 0}
   rb: {fileID: 1704182254}
   bc: {fileID: 1704182255}
   facing_dir: 1
@@ -1981,23 +1982,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forward: 0
-  forward_stop: 0
   backward: 0
-  backward_stop: 0
   attack: 0
-  attack_end: 5
   stun: 0
-  stun_end: 5
   block: 0
-  block_stop: 0
   _attack_obj: {fileID: 318239566}
   _stun_obj: {fileID: 966249754}
   _block_obj: {fileID: 59508165}
   _origin: {fileID: 1576170258}
   stunned: 0
-  stunned_end: 1
   hurt: 0
-  hurt_end: 2
 --- !u!1 &1861949816
 GameObject:
   m_ObjectHideFlags: 0
@@ -2278,10 +2272,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1916983666}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 236826c1a94c21141bc4129e28c72f25, type: 3}
+  m_Script: {fileID: 11500000, guid: 78da68cf86588124a8b701149256508a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   ch: {fileID: 1916983674}
+  anim: {fileID: 1637106332}
   rb: {fileID: 1916983668}
   bc: {fileID: 1916983669}
   facing_dir: 1
@@ -2308,23 +2303,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   forward: 0
-  forward_stop: 0
   backward: 0
-  backward_stop: 0
   attack: 0
-  attack_end: 5
   stun: 0
-  stun_end: 5
   block: 0
-  block_stop: 0
   _attack_obj: {fileID: 1607670444970005751}
   _stun_obj: {fileID: 5827938642302955258}
   _block_obj: {fileID: 7076236591022042448}
   _origin: {fileID: 890933691}
   stunned: 0
-  stunned_end: 1
   hurt: 0
-  hurt_end: 2
 --- !u!212 &981396064487911097
 SpriteRenderer:
   m_ObjectHideFlags: 0

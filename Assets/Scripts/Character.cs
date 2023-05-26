@@ -7,35 +7,25 @@ public class Character : MonoBehaviour
     private string p2_name = "DummyPlayer2";
 
     // Movement
-    public float forward = 0;
-    public float forward_stop = 0;
-    public float backward = 0;
-    public float backward_stop = 0;
+    public bool forward = false;
+    public bool backward = false;
     private float step = 0.1f;
 
     // RPS Tools
-    public float attack = 0;
-    public float attack_end = 0.5f;
-    public float stun = 0;
-    public float stun_end = 0.5f;
-    public float block = 0;
-    public float block_stop = 0;
+    public bool attack = false;
+    public bool stun = false;
+    public bool block = false;
     [SerializeField] private GameObject _attack_obj;
     [SerializeField] private GameObject _stun_obj;
     [SerializeField] private GameObject _block_obj;
-    [SerializeField] private Transform _origin;
-    private bool attack_active = false;
-    private bool stun_active = false;
-    private bool block_active = false;
-
-    // Both
-    private float all_stop_ends = 0.3f;
+    // [SerializeField] private Transform _origin;
+    // private bool attack_active = false;
+    // private bool stun_active = false;
+    // private bool block_active = false;
 
     // Statuses
-    public float stunned = 0;
-    public float stunned_end = 2;
-    public float hurt = 0;
-    public float hurt_end = 2;
+    public bool stunned = false;
+    public bool hurt = false;
 
     // Start is called before the first frame update
     void Start()
@@ -58,9 +48,9 @@ public class Character : MonoBehaviour
 
         // Turn off renderer and collision for moves
         // Block is purely visual as it's a state
-        Toggle_Move(_attack_obj, false, false);
-        Toggle_Move(_stun_obj, false, false);
-        Toggle_Move(_block_obj, false, true);
+        Toggle_Tool(_attack_obj, false, false);
+        Toggle_Tool(_stun_obj, false, false);
+        Toggle_Tool(_block_obj, false, true);
 
         // Tells to ignore colliders with own moves
         Physics2D.IgnoreCollision(_attack_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
@@ -73,144 +63,104 @@ public class Character : MonoBehaviour
         // Movement
         {
             // forward
-            if (forward > 0)
+            if (forward)
             {
                 pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
-                Endless_Animation_Counter(ref forward);
             }
             
             // backward
-            if (backward > 0)
+            if (backward)
             {
                 pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
-                Endless_Animation_Counter(ref backward);
-            }
-
-            // forward_stop
-            if (forward_stop > 0)
-            {
-                Endless_Animation_Stopper(ref forward, ref forward_stop);
-            }
-
-            // backward_stop
-            if (backward_stop > 0)
-            {
-                Endless_Animation_Stopper(ref backward, ref backward_stop);
             }
         }
 
         // RPS Tools
         {
             // attack
-            if (attack > 0)
+            if (attack)
             {
-                if (!attack_active)
+                // if hidden
+                if (!_attack_obj.GetComponent<Renderer>().enabled)
                 {
-                    // unhide attack
-                    attack_active = true;
-                    Toggle_Move(_attack_obj, attack_active, false);
+                    // unhide
+                    _attack_obj.GetComponent<Renderer>().enabled = true;
                 }
-                Set_Animation_Counter(ref attack, attack_end, _attack_obj, ref attack_active);
+                
+                if (pc.anim.GetCurrentAnimatorStateInfo.IsTag("Idle"))
+                {
+                    attack = false;
+                    _attack_obj.GetComponent<Renderer>().enabled = false;
+                }
             }
 
             // stun
-            if (stun > 0)
+            if (stun)
             {
-                if (!stun_active)
+                // if hidden
+                if (!_stun_obj.GetComponent<Renderer>().enabled)
                 {
-                    // unhide stun
-                    stun_active = true;
-                    Toggle_Move(_stun_obj, stun_active, false);
+                    // unhide
+                    _stun_obj.GetComponent<Renderer>().enabled = true;
                 }
-                Set_Animation_Counter(ref stun, stun_end, _stun_obj, ref stun_active);          
+                
+                if (pc.anim.GetCurrentAnimatorStateInfo.IsTag("Idle"))
+                {
+                    stun = false;
+                    _stun_obj.GetComponent<Renderer>().enabled = false;
+                }
             }
 
             // block
-            if (block > 0)
+            if (block)
             {
-                if (!block_active)
+                // if hidden
+                if (!_block_obj.GetComponent<Renderer>().enabled)
                 {
-                    // unhide block
-                    block_active = true;
-                    Toggle_Move(_block_obj, block_active, true);
+                    // unhide
+                    _block_obj.GetComponent<Renderer>().enabled = true;
                 }
-                Endless_Animation_Counter(ref block);
             }
-
-            // block_stop
-            if (block_stop > 0)
+            if (!block)
             {
-                Endless_Animation_Stopper(ref block, ref block_stop);
-            }
-        }
-
-        // Statuses
-        {
-            bool change_logic_later = false;
-
-            if (stunned > 0)
-            {
-                Set_Animation_Counter(ref stunned, stunned_end, null, ref change_logic_later);
-            }
-
-            if (hurt > 0)
-            {
-                Set_Animation_Counter(ref hurt, hurt_end, null, ref change_logic_later);
-            }
-        }
-    }
-
-    private void Endless_Animation_Counter(ref float action)
-    {
-        action += Time.fixedDeltaTime;
-    }
-
-    private void Endless_Animation_Stopper(ref float action, ref float action_stop)
-    {
-        if (block_active)
-        {
-            block_active = false;
-            Toggle_Move(_block_obj, block_active, true);
-        }
-        if (action_stop >= all_stop_ends)
-        {
-            action_stop = 0;
-            pc.actionable = true;
-        }
-        else
-        {
-            action = 0;
-            action_stop += Time.fixedDeltaTime;
-        }
-    }
-
-    private void Set_Animation_Counter(ref float action, float action_end, GameObject action_obj, ref bool action_active)
-    {
-        if (action > 0)
-        {
-            action += Time.fixedDeltaTime;
-            // Debug.Log(pc.player_tag + " has been acting for " + action + " seconds, end = " + action_end);
-            if (action >= action_end)
-            {
-                if (action_obj != null)
+                // if not hidden
+                if (_block_obj.GetComponent<Renderer>().enabled)
                 {
-                    // hide action (attack/stun)
-                    action_active = false;
-                    Toggle_Move(action_obj, action_active, false);
+                    // hide
+                    _block_obj.GetComponent<Renderer>().enabled = false;
                 }
-                action = 0;
-                // Debug.Log(pc.player_tag + " has finished acting");
+            }
+        }
+    }
+
+    private void Tool_Handler(bool action, GameObject tool_obj, ref bool tool_instantiated)
+    {
+        // if stopping tool use
+        {
+            if (block_active)
+            {
+                block_active = false;
+                Toggle_Tool(_block_obj, block_active, true);
+            }
+            // if animation ends
+            {
+                if (tool_obj != null)
+                {
+                    tool_instantiated = false;
+                    Toggle_Tool(tool_obj, tool_instantiated, false);
+                }
+                action = false;
                 pc.actionable = true;
             }
         }
     }
 
-    private void Toggle_Move(GameObject action, bool state, bool isBlock)
-    {
-        action.GetComponent<Renderer>().enabled = state;
-        if (!isBlock)
-        {
-            action.GetComponent<BoxCollider2D>().enabled = state;
-        }
-    }
+    // private void Toggle_Tool(GameObject action, bool state, bool isBlock)
+    // {
+    //     action.GetComponent<Renderer>().enabled = state;
+    //     if (!isBlock)
+    //     {
+    //         action.GetComponent<BoxCollider2D>().enabled = state;
+    //     }
+    // }
 }

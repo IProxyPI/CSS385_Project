@@ -5,6 +5,7 @@ public class Player_Controller : MonoBehaviour
     // Used in Start(), scene_select_fighter, scene_fight's pause, and/or scene_select_next
     private Player_Manager pm;
     public Character ch;
+    public Animator anim;
     public Rigidbody2D rb;
     public BoxCollider2D bc;
     public int facing_dir = 1;                      // 1 = left side facing right; -1 = right side facing left
@@ -78,10 +79,9 @@ public class Player_Controller : MonoBehaviour
     // Called by ReadFightInputs()
     private void StopMovement()
     {
-        ch.forward = 0;
-        ch.forward_stop = 0;
-        ch.backward = 0;
-        ch.backward_stop = 0;
+        ch.forward = false;
+        ch.backward = false;
+        anim.SetFloat("Speed", 0);
     }
     
     // Attacked or Stunned
@@ -90,15 +90,17 @@ public class Player_Controller : MonoBehaviour
         Debug.Log(col.name + " collided with " + player_tag);
         if (col.tag == opponent_tag)
         {
-            if (col.name.Contains("Attack") && ch.block == 0)
+            if (col.name.Contains("Attack") && !ch.block)
             {
-                ch.hurt = Time.fixedDeltaTime;
+                ch.hurt = true;
+                anim.SetBool("Hurt", true);
                 lives--;
             }
-            else if (col.name.Contains("Stun") && ch.attack == 0)
+            else if (col.name.Contains("Stun") && !ch.attack)
             {
                 actionable = false;
-                ch.stunned = Time.fixedDeltaTime;
+                ch.stunned = true;
+                // anim.SetBool("Stunned", true);
             }
         }
     }
@@ -116,68 +118,78 @@ public class Player_Controller : MonoBehaviour
         if (actionable)
         {
             // Movement
+            {
+                // move forward
+                if (Input.GetKey(input_forward) && !ch.forward /*&& !ch.forward_stop*/)
+                {
+                    ch.forward = true;
+                    anim.SetFloat("Speed", 1);
+                }
+                // stop forward
+                else if (Input.GetKeyUp(input_forward) /*&& !ch.forward_stop*/)
+                {
+                    // ch.forward_stop = true;
+                    ch.forward = false;
+                    anim.SetFloat("Speed", 0);
+                }
+                // move backward
+                if (Input.GetKey(input_backward) && !ch.backward /*&& !ch.backward_stop*/)
+                {
+                    ch.backward = true;
+                    anim.SetFloat("Speed", 1);
+                }
+                // stop backward
+                else if (Input.GetKeyUp(input_backward) /*&& !ch.backward_stop*/)
+                {
+                    // ch.backward_stop = true;
+                    ch.backward = false;
+                    anim.SetFloat("Speed", 0);
+                }
 
-            // move forward
-            if (Input.GetKey(input_forward) && ch.forward == 0 && ch.forward_stop == 0)
-            {
-                ch.forward = Time.fixedDeltaTime;
-            }
-            // stop forward
-            else if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0)
-            {
-                ch.forward_stop = Time.fixedDeltaTime;
-                ch.forward = 0;
-            }
-            // move backward
-            if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
-            {
-                ch.backward = Time.fixedDeltaTime;
-            }
-            // stop backward
-            else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
-            {
-                ch.backward_stop = Time.fixedDeltaTime;
-                ch.backward = 0;
-            }
-
-            // SOCD Neutral
-            if (socd_neutral && ch.forward > 0 && ch.backward > 0)
-            {
-                Debug.Log("Neutral");
-                StopMovement();
-            }
-
-            // Actions
-
-            // attack
-            if (Input.GetKeyDown(input_attack) && ch.attack == 0)
-            {
-                actionable = false;
-                StopMovement();
-                ch.attack = Time.fixedDeltaTime;
+                // SOCD Neutral
+                if (socd_neutral && ch.forward && ch.backward)
+                {
+                    Debug.Log("Neutral");
+                    StopMovement();
+                }
             }
 
-            // stun
-            if (Input.GetKeyDown(input_stun) && ch.stun == 0)
+            // RPS Tools
             {
-                actionable = false;
-                StopMovement();
-                ch.stun = Time.fixedDeltaTime;
-            }
+                // attack
+                if (Input.GetKeyDown(input_attack) && !ch.attack)
+                {
+                    actionable = false;
+                    StopMovement();
+                    ch.attack = true;
+                    anim.SetTrigger("Attack");
+                }
 
-            // block
-            if (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0)
-            {
-                actionable = false;
-                StopMovement();
-                ch.block = Time.fixedDeltaTime;
+                // stun
+                if (Input.GetKeyDown(input_stun) && !ch.stun)
+                {
+                    actionable = false;
+                    StopMovement();
+                    ch.stun = true;
+                    anim.SetTrigger("Stun");
+                }
+
+                // block
+                if (Input.GetKey(input_block) && !ch.block /*&& !ch.block_stop*/)
+                {
+                    actionable = false;
+                    StopMovement();
+                    ch.block = true;
+                    anim.SetBool("Block", true);
+                }
             }
         }
 
-        if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
+        if (Input.GetKeyUp(input_block) /*&& !ch.block_stop*/)
         {
-            ch.block_stop = Time.fixedDeltaTime;
-            ch.block = 0;
+            // ch.block_stop = Time.fixedDeltaTime;
+            ch.block = false;
+            anim.SetBool("Block", false);
         }
     }
 
