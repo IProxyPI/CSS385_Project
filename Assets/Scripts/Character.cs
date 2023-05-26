@@ -18,10 +18,10 @@ public class Character : MonoBehaviour
     [SerializeField] private GameObject _attack_obj;
     [SerializeField] private GameObject _stun_obj;
     [SerializeField] private GameObject _block_obj;
-    // [SerializeField] private Transform _origin;
-    // private bool attack_active = false;
-    // private bool stun_active = false;
-    // private bool block_active = false;
+    [SerializeField] private Transform _origin;
+    private bool attack_active = false;
+    private bool stun_active = false;
+    private bool block_active = false;
 
     // Statuses
     public bool stunned = false;
@@ -87,7 +87,7 @@ public class Character : MonoBehaviour
                     _attack_obj.GetComponent<Renderer>().enabled = true;
                 }
                 
-                if (pc.anim.GetCurrentAnimatorStateInfo.IsTag("Idle"))
+                if (pc.anim.GetCurrentAnimatorStateInfo(1).IsTag("Idle"))
                 {
                     attack = false;
                     _attack_obj.GetComponent<Renderer>().enabled = false;
@@ -104,7 +104,7 @@ public class Character : MonoBehaviour
                     _stun_obj.GetComponent<Renderer>().enabled = true;
                 }
                 
-                if (pc.anim.GetCurrentAnimatorStateInfo.IsTag("Idle"))
+                if (pc.anim.GetCurrentAnimatorStateInfo(1).IsTag("Idle"))
                 {
                     stun = false;
                     _stun_obj.GetComponent<Renderer>().enabled = false;
@@ -155,12 +155,12 @@ public class Character : MonoBehaviour
         }
     }
 
-    // private void Toggle_Tool(GameObject action, bool state, bool isBlock)
-    // {
-    //     action.GetComponent<Renderer>().enabled = state;
-    //     if (!isBlock)
-    //     {
-    //         action.GetComponent<BoxCollider2D>().enabled = state;
-    //     }
-    // }
+    private void Toggle_Tool(GameObject action, bool state, bool isBlock)
+    {
+        action.GetComponent<Renderer>().enabled = state;
+        if (!isBlock)
+        {
+            action.GetComponent<BoxCollider2D>().enabled = state;
+        }
+    }
 }
