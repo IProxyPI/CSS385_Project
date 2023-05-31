@@ -66,14 +66,14 @@ public class Player_Controller : MonoBehaviour
     void Update()
     {
         // Each input function corresponds to a scene.  Ordered by frequency for better performance.
-        if (pm.scene_num == 1 && !paused)
-        {
+        // if (pm.scene_num == 1 && !paused)
+        // {
             ReadFightInputs();
-        }
-        else if ((pm.scene_num == 1 && paused) || pm.scene_num == 2)
-        {
-            ReadMenuInputs();
-        }
+        // }
+        // else if ((pm.scene_num == 1 && paused) || pm.scene_num == 2)
+        // {
+        //     ReadMenuInputs();
+        // }
         // else // (pm.scene_num == 0)
         // {
         //     ReadSelectFighterInputs();

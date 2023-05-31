@@ -39,6 +39,7 @@ public class ButtonController : MonoBehaviour
             playerText.text = "Player 2 Selecting";
             playerManager.NinjaP1.SetActive(true);
             pc1.GetComponent<Character>().sr = GameObject.Find("NinjaP1").GetComponent<SpriteRenderer>();
+            pc1.anim = GameObject.Find("NinjaP1").GetComponent<Animator>();
         }
         else if (player == 2)
         {
@@ -47,6 +48,7 @@ public class ButtonController : MonoBehaviour
             startable = true;
             playerManager.NinjaP2.SetActive(true);
             pc2.GetComponent<Character>().sr = GameObject.Find("NinjaP2").GetComponent<SpriteRenderer>();
+            pc2.anim = GameObject.Find("NinjaP2").GetComponent<Animator>();
         }
         Debug.Log("Btn Ninja!");
     }
@@ -61,6 +63,7 @@ public class ButtonController : MonoBehaviour
             playerText.text = "Player 2 Selecting";
             playerManager.SpearmanP1.SetActive(true);
             pc1.GetComponent<Character>().sr = GameObject.Find("SpearmanP1").GetComponent<SpriteRenderer>();
+            pc1.anim = GameObject.Find("SpearmanP1").GetComponent<Animator>();
         }
         else if (player == 2)
         {
@@ -69,6 +72,7 @@ public class ButtonController : MonoBehaviour
             startable = true;
             playerManager.SpearmanP2.SetActive(true);
             pc2.GetComponent<Character>().sr = GameObject.Find("SpearmanP2").GetComponent<SpriteRenderer>();
+            pc2.anim = GameObject.Find("SpearmanP2").GetComponent<Animator>();
         }
         Debug.Log("Btn Spear!");
     }

@@ -2139,7 +2139,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ch: {fileID: 962854167}
-  anim: {fileID: 467269720}
+  anim: {fileID: 0}
   rb: {fileID: 962854165}
   bc: {fileID: 962854166}
   facing_dir: 1
@@ -3204,7 +3204,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ch: {fileID: 1214886364}
-  anim: {fileID: 690427499}
+  anim: {fileID: 0}
   rb: {fileID: 1214886362}
   bc: {fileID: 1214886363}
   facing_dir: 1
