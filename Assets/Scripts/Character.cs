@@ -4,6 +4,7 @@ public class Character : MonoBehaviour
 {
     private Player_Controller pc;
     public Player_Controller opc;  // opponent pc
+    public SpriteRenderer sr;
     private string p1_name = "DummyPlayer1";
     private string p2_name = "DummyPlayer2";
 
@@ -28,6 +29,8 @@ public class Character : MonoBehaviour
     // Statuses
     public bool hurt = false;
     public bool stunned = false;
+    public float invincibility_timer = 0f;
+    private float invincibility_lock = 0.05f;
 
     // Start is called before the first frame update
     void Start()
@@ -51,12 +54,14 @@ public class Character : MonoBehaviour
         // Set RPS Tool object references
         if (pc.character_select == 0) // Spearman
         {
+            sr = GameObject.Find("Spearman" + pc.player_tag).GetComponent<SpriteRenderer>();
             _attack_obj = GameObject.Find("SpearmanAttack" + pc.player_tag);
             _stun_obj = GameObject.Find("SpearmanStun" + pc.player_tag);
             _block_obj = GameObject.Find("SpearmanBlock" + pc.player_tag);
         }
         else // (pc.character_select == 1) Ninja
         {
+            sr = GameObject.Find("Ninja" + pc.player_tag).GetComponent<SpriteRenderer>();
             _attack_obj = GameObject.Find("NinjaAttack" + pc.player_tag);
             _stun_obj = GameObject.Find("NinjaStun" + pc.player_tag);
             _block_obj = GameObject.Find("NinjaBlock" + pc.player_tag);
@@ -115,17 +120,17 @@ public class Character : MonoBehaviour
         {
             if (attack)
             {
-                Toggle_Action(ref attack, _attack_obj, true);
+                Toggle_Action(ref attack, _attack_obj, true, false);
             }
 
             if (stun)
             {
-                Toggle_Action(ref stun, _stun_obj, true);
+                Toggle_Action(ref stun, _stun_obj, true, false);
             }
 
             if (block)
             {
-                Toggle_Action(ref block, _block_obj, false);
+                Toggle_Action(ref block, _block_obj, false, false);
             }
         }
 
@@ -134,19 +139,40 @@ public class Character : MonoBehaviour
             if (hurt)
             {
                 stunned = false;
-                Toggle_Action(ref hurt, null, false);
+                Toggle_Action(ref hurt, null, false, true);
             }
 
             if (stunned)
             {
-                Toggle_Action(ref stunned, null, false);
+                Toggle_Action(ref stunned, null, false, false);
                 pc.rb.position = new Vector3(pc.transform.position.x - stagger, pc.transform.position.y, 0);
                 stagger *= -1;
+            }
+
+            if (sr != null)
+            {
+                if (invincibility_timer > 0)
+                {
+                    invincibility_timer -= Time.deltaTime;
+                    invincibility_lock -= Time.deltaTime;
+                    
+                    if (invincibility_lock <= 0)
+                    {
+                        sr.enabled = !sr.enabled;
+                        invincibility_lock = 0.05f;
+                        Debug.Log(sr.enabled);
+                    }
+                }
+                else if (!sr.enabled)
+                {
+                    invincibility_timer = 0;
+                    sr.enabled = !sr.enabled;
+                }
             }
         }
     }
 
-    private void Toggle_Action(ref bool action, GameObject tool_obj, bool has_collisions)
+    private void Toggle_Action(ref bool action, GameObject tool_obj, bool has_collisions, bool trigger_invincibility)
     {
         // if action has an associated RPS tool object
         if (tool_obj != null)
@@ -194,6 +220,12 @@ public class Character : MonoBehaviour
             unlocked = false;
             action = false;
             pc.actionable = true;
+
+            if (trigger_invincibility)
+            {
+                invincibility_timer = 2f;
+                opc.ch.invincibility_timer = 2f;
+            }
         }
         // if any non-Idle/Walk animation has started
         else if (!pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk"))
