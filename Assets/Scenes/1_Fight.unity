@@ -2598,8 +2598,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff93f59f33983c478ae435543ebbb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  opc: {fileID: 0}
   forward: 0
   backward: 0
+  friction: 0.5
   unlocked: 0
   attack: 0
   stun: 0
@@ -3368,8 +3370,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff93f59f33983c478ae435543ebbb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  opc: {fileID: 0}
   forward: 0
   backward: 0
+  friction: 0.5
   unlocked: 0
   attack: 0
   stun: 0

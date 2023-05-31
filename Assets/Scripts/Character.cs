@@ -3,7 +3,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     private Player_Controller pc;
-    private Player_Controller opc;  // opponent pc
+    public Player_Controller opc;  // opponent pc
     private string p1_name = "DummyPlayer1";
     private string p2_name = "DummyPlayer2";
 
@@ -12,7 +12,9 @@ public class Character : MonoBehaviour
     public bool backward = false;
     private float step = 0.1f;
     private float stagger = 0.1f;
-    private float boundary = -10f;
+    private float boundary_backward = -10f;
+    private float boundary_forward = 8.5f;
+    public float friction = 0.5f;
 
     // RPS Tools
     public bool unlocked = false;
@@ -42,7 +44,8 @@ public class Character : MonoBehaviour
             opc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
             step *= -1;
             stagger *= -1;
-            boundary *= -1;
+            boundary_backward *= -1;
+            boundary_forward *= -1;
         }
         
         // Set RPS Tool object references
@@ -67,7 +70,7 @@ public class Character : MonoBehaviour
             // _stun_obj.GetComponent<Renderer>().enabled = false;
             // _block_obj.GetComponent<Renderer>().enabled = false;
 
-            // Tags already prevent players colliding with their own moves
+            // Tags already prevent players friction with their own moves
             // // Tells to ignore colliders with own moves
             // Physics2D.IgnoreCollision(_attack_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
             // Physics2D.IgnoreCollision(_stun_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
@@ -79,16 +82,30 @@ public class Character : MonoBehaviour
     {
         // Movement
         {
+            // forward
             if (forward && pc.actionable
-             && (pc.player_tag == "P1" && pc.rb.position.x - step <= opc.rb.position.x - 1.5
-              || pc.player_tag == "P2" && pc.rb.position.x - step >= opc.rb.position.x + 1.5))
+             && (pc.player_tag == "P1" && pc.rb.position.x + step <= boundary_forward
+              || pc.player_tag == "P2" && pc.rb.position.x + step >= boundary_forward))
             {
-                pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
+                // if not pushing opponent
+                if (pc.player_tag == "P1" && pc.rb.position.x + step < opc.rb.position.x - 1.5
+                 || pc.player_tag == "P2" && pc.rb.position.x + step > opc.rb.position.x + 1.5)
+                {
+                    pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
+                }
+                
+                // else if opponent isn't also moving forward 
+                else if (!opc.ch.forward)
+                {
+                    pc.rb.position = new Vector3(pc.transform.position.x + (step * friction), pc.transform.position.y, 0);
+                    opc.rb.position = new Vector3(opc.transform.position.x + (step * friction), opc.transform.position.y, 0);
+                }
             }
             
+            // backward
             if (backward && pc.actionable
-             && (pc.player_tag == "P1" && pc.rb.position.x - step >= boundary
-              || pc.player_tag == "P2" && pc.rb.position.x - step <= boundary))
+             && (pc.player_tag == "P1" && pc.rb.position.x - step >= boundary_backward
+              || pc.player_tag == "P2" && pc.rb.position.x - step <= boundary_backward))
             {
                 pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
             }

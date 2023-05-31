@@ -93,7 +93,6 @@ public class Player_Controller : MonoBehaviour
     {
         if (col.tag == opponent_tag)
         {
-            Debug.Log(col.name + " collided with " + player_tag);
             if (col.name.Contains("Attack") && !ch.block)
             {
                 actionable = false;
