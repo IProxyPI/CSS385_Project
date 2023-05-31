@@ -100,6 +100,10 @@ public class Character : MonoBehaviour
         {
             // unhide
             tool_obj.GetComponent<Renderer>().enabled = true;
+            if (!block)
+            {
+                tool_obj.GetComponent<BoxCollider2D>().enabled = true;
+            }
         }
         
         // if unlocked && RPS tool animation ends
@@ -107,8 +111,12 @@ public class Character : MonoBehaviour
         {
             // reset all variables associated with the RPS tools
             unlocked = false;
-            tool = false;
             tool_obj.GetComponent<Renderer>().enabled = false;
+            if (!block)
+            {
+                tool_obj.GetComponent<BoxCollider2D>().enabled = false;
+            }
+            tool = false;
             pc.actionable = true;
         }
         // if non-Idle animation (e.g. RPS tool animation) has started
