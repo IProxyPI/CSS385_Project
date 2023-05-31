@@ -2111,7 +2111,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff93f59f33983c478ae435543ebbb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  opc: {fileID: 0}
+  opc: {fileID: 1214886365}
   sr: {fileID: 0}
   forward: 0
   backward: 0
@@ -3176,7 +3176,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ff93f59f33983c478ae435543ebbb83, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  opc: {fileID: 0}
+  opc: {fileID: 962854168}
   sr: {fileID: 0}
   forward: 0
   backward: 0
@@ -3325,7 +3325,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 702d7a7a417f64c46aaaf53af1f327ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerManager: {fileID: 0}
+  playerManager: {fileID: 1314810452}
+  pc1: {fileID: 1214886365}
+  pc2: {fileID: 962854168}
   playerText: {fileID: 1434141590}
   readyButton: {fileID: 0}
   rvm: {fileID: 0}

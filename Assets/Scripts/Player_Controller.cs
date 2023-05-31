@@ -74,10 +74,10 @@ public class Player_Controller : MonoBehaviour
         {
             ReadMenuInputs();
         }
-        else // (pm.scene_num == 0)
-        {
-            ReadSelectFighterInputs();
-        }
+        // else // (pm.scene_num == 0)
+        // {
+        //     ReadSelectFighterInputs();
+        // }
     }
 
     // Called by ReadFightInputs()

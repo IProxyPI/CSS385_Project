@@ -43,8 +43,9 @@ public class Player_Manager : MonoBehaviour
             scene_num = 2;
             Destroy(gameObject);
         }
-        else // (scene.name = scene_select_fighter)
+        else if (scene.name == scene_0)
         {
+            scene_num = 0;
             DontDestroyOnLoad(gameObject);
             Debug.Log("SELECT YOUR FIGHTER!");
         }

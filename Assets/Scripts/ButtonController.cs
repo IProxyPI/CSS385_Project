@@ -10,6 +10,7 @@ public class ButtonController : MonoBehaviour
     private int player;
     private bool startable;
     public Player_Manager playerManager;
+    public Player_Controller pc1, pc2;
     public TMP_Text playerText;
     public Button readyButton;
     public Round_Vis_Manager rvm;
@@ -37,6 +38,7 @@ public class ButtonController : MonoBehaviour
             player1 = "Ninja";
             playerText.text = "Player 2 Selecting";
             playerManager.NinjaP1.SetActive(true);
+            pc1.GetComponent<Character>().sr = GameObject.Find("NinjaP1").GetComponent<SpriteRenderer>();
         }
         else if (player == 2)
         {
@@ -44,6 +46,7 @@ public class ButtonController : MonoBehaviour
             playerText.text = "Ready?";
             startable = true;
             playerManager.NinjaP2.SetActive(true);
+            pc2.GetComponent<Character>().sr = GameObject.Find("NinjaP2").GetComponent<SpriteRenderer>();
         }
         Debug.Log("Btn Ninja!");
     }
@@ -57,6 +60,7 @@ public class ButtonController : MonoBehaviour
             player1 = "Spearman";
             playerText.text = "Player 2 Selecting";
             playerManager.SpearmanP1.SetActive(true);
+            pc1.GetComponent<Character>().sr = GameObject.Find("SpearmanP1").GetComponent<SpriteRenderer>();
         }
         else if (player == 2)
         {
@@ -64,7 +68,7 @@ public class ButtonController : MonoBehaviour
             playerText.text = "Ready?";
             startable = true;
             playerManager.SpearmanP2.SetActive(true);
-
+            pc2.GetComponent<Character>().sr = GameObject.Find("SpearmanP2").GetComponent<SpriteRenderer>();
         }
         Debug.Log("Btn Spear!");
     }
@@ -78,12 +82,16 @@ public class ButtonController : MonoBehaviour
             player2 = "";
             startable = false;
             playerText.text = "Player 2 Selecting";
+            playerManager.SpearmanP2.SetActive(false);
+            playerManager.NinjaP2.SetActive(false);
         }
         else if (player == 2)
         {
             player = 1;
             player1 = "";
             playerText.text = "Player 1 Selecting";
+            playerManager.SpearmanP1.SetActive(false);
+            playerManager.NinjaP1.SetActive(false);
         }
         Debug.Log("Btn undo!");
     }
