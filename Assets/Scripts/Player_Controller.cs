@@ -125,19 +125,6 @@ public class Player_Controller : MonoBehaviour
         {
             // Movement
             {
-                // move forward
-                if (Input.GetKey(input_forward) && !ch.forward /*&& !ch.forward_stop*/)
-                {
-                    ch.forward = true;
-                    anim.SetFloat("Speed", 1);
-                }
-                // stop forward
-                else if (Input.GetKeyUp(input_forward) /*&& !ch.forward_stop*/)
-                {
-                    // ch.forward_stop = true;
-                    ch.forward = false;
-                    anim.SetFloat("Speed", 0);
-                }
                 // move backward
                 if (Input.GetKey(input_backward) && !ch.backward /*&& !ch.backward_stop*/)
                 {
@@ -147,15 +134,25 @@ public class Player_Controller : MonoBehaviour
                 // stop backward
                 else if (Input.GetKeyUp(input_backward) /*&& !ch.backward_stop*/)
                 {
-                    // ch.backward_stop = true;
                     ch.backward = false;
+                    anim.SetFloat("Speed", 0);
+                }
+                // move forward
+                if (Input.GetKey(input_forward) && !ch.forward /*&& !ch.forward_stop*/)
+                {
+                    ch.forward = true;
+                    anim.SetFloat("Speed", 1);
+                }
+                // stop forward
+                else if (Input.GetKeyUp(input_forward) /*&& !ch.forward_stop*/)
+                {
+                    ch.forward = false;
                     anim.SetFloat("Speed", 0);
                 }
 
                 // SOCD Neutral
                 if (socd_neutral && ch.forward && ch.backward)
                 {
-                    Debug.Log("Neutral");
                     StopMovement();
                 }
             }
