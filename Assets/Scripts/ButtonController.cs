@@ -36,12 +36,14 @@ public class ButtonController : MonoBehaviour
             ++player;
             player1 = "Ninja";
             playerText.text = "Player 2 Selecting";
+            playerManager.NinjaP1.SetActive(true);
         }
         else if (player == 2)
         {
             player2 = "Ninja";
             playerText.text = "Ready?";
             startable = true;
+            playerManager.NinjaP2.SetActive(true);
         }
         Debug.Log("Btn Ninja!");
     }
@@ -54,12 +56,15 @@ public class ButtonController : MonoBehaviour
             ++player;
             player1 = "Spearman";
             playerText.text = "Player 2 Selecting";
+            playerManager.SpearmanP1.SetActive(true);
         }
         else if (player == 2)
         {
             player2 = "Spearman";
             playerText.text = "Ready?";
             startable = true;
+            playerManager.SpearmanP2.SetActive(true);
+
         }
         Debug.Log("Btn Spear!");
     }

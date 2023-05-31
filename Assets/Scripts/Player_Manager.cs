@@ -8,7 +8,7 @@ public class Player_Manager : MonoBehaviour
     // Scenes
     [SerializeField] private string scene_0 = "0_Select_Fighter";
     [SerializeField] private string scene_1 = "1_Fight";
-    [SerializeField] private string scene_2 = "2_Select_Next";
+    [SerializeField] private string scene_2 = "2_Victory";
     public int scene_num = 0;
 
     // Background / Round Visuals
@@ -21,6 +21,12 @@ public class Player_Manager : MonoBehaviour
     private Player_Controller p1;
     private Player_Controller p2;
     private int players_ready = 0;
+
+    // Character Selection
+    public GameObject NinjaP1;
+    public GameObject NinjaP2;
+    public GameObject SpearmanP1;
+    public GameObject SpearmanP2;
 
     void Start()
     {
@@ -35,9 +41,11 @@ public class Player_Manager : MonoBehaviour
         else if (scene.name == scene_2)
         {
             scene_num = 2;
+            Destroy(gameObject);
         }
         else // (scene.name = scene_select_fighter)
         {
+            DontDestroyOnLoad(gameObject);
             Debug.Log("SELECT YOUR FIGHTER!");
         }
         
@@ -47,6 +55,7 @@ public class Player_Manager : MonoBehaviour
         // Store references to both player scripts
         p1 = GameObject.Find(p1_name).GetComponent<Player_Controller>();
         p2 = GameObject.Find(p2_name).GetComponent<Player_Controller>();
+
     }
 
     void Update()
