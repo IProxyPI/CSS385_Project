@@ -27,20 +27,29 @@ public class Character : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Set Player_Controller reference
         if (gameObject.name == p1_name)
         {
             pc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
-            _attack_obj = GameObject.Find("Attack1");
-            _stun_obj = GameObject.Find("Stun1");
-            _block_obj = GameObject.Find("Block1");
         }
         else // (gameObject.name == p2_name)
         {
             pc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
-            _attack_obj = GameObject.Find("Attack2");
-            _stun_obj = GameObject.Find("Stun2");
-            _block_obj = GameObject.Find("Block2");
             step = -step;
+        }
+        
+        // Set RPS Tool object references
+        if (pc.character_select == 0) // Spearman
+        {
+            _attack_obj = GameObject.Find("SpearmanAttack" + pc.player_tag);
+            _stun_obj = GameObject.Find("SpearmanStun" + pc.player_tag);
+            _block_obj = GameObject.Find("SpearmanBlock" + pc.player_tag);
+        }
+        else // (pc.character_select == 1) Ninja
+        {
+            _attack_obj = GameObject.Find("NinjaAttack" + pc.player_tag);
+            _stun_obj = GameObject.Find("NinjaStun" + pc.player_tag);
+            _block_obj = GameObject.Find("NinjaBlock" + pc.player_tag);
         }
 
         // Unnecessary?
@@ -108,34 +117,51 @@ public class Character : MonoBehaviour
 
     private void Toggle_Action(ref bool action, GameObject tool_obj, bool has_collisions)
     {
-        // if hidden
-        if (tool_obj != null && !tool_obj.GetComponent<Renderer>().enabled)
+        // if action has an associated RPS tool object
+        if (tool_obj != null)
         {
-            // unhide
-            tool_obj.GetComponent<Renderer>().enabled = true;
-            if (has_collisions)
+            // if it is hidden and animation is starting block or entering attack/stun active frames
+            if (!tool_obj.GetComponent<Renderer>().enabled
+             && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag(null)
+              || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Active")))
             {
-                tool_obj.GetComponent<BoxCollider2D>().enabled = true;
+                // unhide it
+                tool_obj.GetComponent<Renderer>().enabled = true;
+
+                // if it has collisions
+                if (has_collisions)
+                {
+                    // enable them
+                    tool_obj.GetComponent<BoxCollider2D>().enabled = true;
+                }
+            }
+
+            // else if unlocked (see below) and animation is ending block or entering attack/stun endlag
+            else if (unlocked 
+                  && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk")
+                   || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Endlag")))
+            {
+                // hide it
+                tool_obj.GetComponent<Renderer>().enabled = false;
+
+                // if it has collisions
+                if (has_collisions)
+                {
+                    // disable them
+                    tool_obj.GetComponent<BoxCollider2D>().enabled = false;
+                }
             }
         }
-        
-        // if unlocked && RPS action animation ends
+
+        // if unlocked (see below) && the action animation ends
         if (unlocked && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk"))
         {
-            // reset all variables associated with the RPS tools
+            // reset variables associated with the action
             unlocked = false;
-            if (tool_obj != null)
-            {
-                tool_obj.GetComponent<Renderer>().enabled = false;
-            }
-            if (has_collisions)
-            {
-                tool_obj.GetComponent<BoxCollider2D>().enabled = false;
-            }
             action = false;
             pc.actionable = true;
         }
-        // if non-Idle/Walk animation (e.g. RPS action animation) has started
+        // if any non-Idle/Walk animation has started
         else if (!pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk"))
         {
             // unlock

@@ -9,7 +9,7 @@ public class Player_Controller : MonoBehaviour
     public Rigidbody2D rb;
     public BoxCollider2D bc;
     public int facing_dir = 1;                      // 1 = left side facing right; -1 = right side facing left
-    private int character_select = 0;               // 0 = Spearman, 1 = Ninja
+    public int character_select = 0;               // 0 = Spearman, 1 = Ninja
     private bool character_select_change = false;
     public int menu_select = 0;                     // 0 = scene_fight, 1 = scene_select_fighter, 2 = quit application
     public bool menu_select_change = false;
