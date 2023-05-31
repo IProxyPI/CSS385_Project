@@ -36,7 +36,6 @@ public class Player_Controller : MonoBehaviour
     void Start()
     {
         pm = GameObject.Find("Players").GetComponent<Player_Manager>();
-        ch = gameObject.AddComponent<Spearman>() as Spearman;
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
 
@@ -45,6 +44,7 @@ public class Player_Controller : MonoBehaviour
 
         if (gameObject.name == "DummyPlayer2")
         {
+            ch = gameObject.AddComponent<Ninja>() as Ninja;
             facing_dir = -1;
             player_tag = "P2";
             opponent_tag = "P1";
@@ -54,6 +54,10 @@ public class Player_Controller : MonoBehaviour
             input_attack = KeyCode.M;
             input_stun = KeyCode.Comma;
             input_block = KeyCode.Period;
+        }
+        else
+        {
+            ch = gameObject.AddComponent<Spearman>() as Spearman;
         }
         // gameObject.tag = player_tag;
     }
@@ -84,23 +88,26 @@ public class Player_Controller : MonoBehaviour
         anim.SetFloat("Speed", 0);
     }
     
-    // Attacked or Stunned
+    // Hurt or Stunned
     private void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log(col.name + " collided with " + player_tag);
         if (col.tag == opponent_tag)
         {
+            Debug.Log(col.name + " collided with " + player_tag);
             if (col.name.Contains("Attack") && !ch.block)
             {
+                actionable = false;
+                StopMovement();
+                anim.SetTrigger("Hurt");
                 ch.hurt = true;
-                anim.SetBool("Hurt", true);
                 lives--;
             }
             else if (col.name.Contains("Stun") && !ch.attack)
             {
                 actionable = false;
+                StopMovement();
+                anim.SetTrigger("Stunned");
                 ch.stunned = true;
-                // anim.SetBool("Stunned", true);
             }
         }
     }

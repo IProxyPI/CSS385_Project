@@ -264,7 +264,7 @@ Animator:
   m_GameObject: {fileID: 295452272}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5428ee6f05ba381458a98e0863d79fd8, type: 2}
+  m_Controller: {fileID: 9100000, guid: 26599d0e473c5d7448edfa574c5a7fc1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1080,7 +1080,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &924985302
 Transform:
   m_ObjectHideFlags: 0
@@ -2063,7 +2063,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ch: {fileID: 1704182260}
-  anim: {fileID: 924985303}
+  anim: {fileID: 1720844179}
   rb: {fileID: 1704182254}
   bc: {fileID: 1704182255}
   facing_dir: 1
@@ -2098,8 +2098,8 @@ MonoBehaviour:
   _attack_obj: {fileID: 318239566}
   _stun_obj: {fileID: 966249754}
   _block_obj: {fileID: 59508165}
-  stunned: 0
   hurt: 0
+  stunned: 0
 --- !u!1 &1720844177
 GameObject:
   m_ObjectHideFlags: 0
@@ -2117,7 +2117,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1720844178
 Transform:
   m_ObjectHideFlags: 0
@@ -2143,7 +2143,7 @@ Animator:
   m_GameObject: {fileID: 1720844177}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 5428ee6f05ba381458a98e0863d79fd8, type: 2}
+  m_Controller: {fileID: 9100000, guid: 26599d0e473c5d7448edfa574c5a7fc1, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -2525,8 +2525,8 @@ MonoBehaviour:
   _attack_obj: {fileID: 1607670444970005751}
   _stun_obj: {fileID: 5827938642302955258}
   _block_obj: {fileID: 7076236591022042448}
-  stunned: 0
   hurt: 0
+  stunned: 0
 --- !u!212 &981396064487911097
 SpriteRenderer:
   m_ObjectHideFlags: 0

@@ -21,8 +21,8 @@ public class Character : MonoBehaviour
     [SerializeField] private GameObject _block_obj;
 
     // Statuses
-    public bool stunned = false;
     public bool hurt = false;
+    public bool stunned = false;
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +46,7 @@ public class Character : MonoBehaviour
         // Unnecessary?
         {
             // Already disabled by default in all scenes
-            // // Ensures all RPS tool renderers are disabled
+            // // Ensures all RPS action renderers are disabled
             // _attack_obj.GetComponent<Renderer>().enabled = false;
             // _stun_obj.GetComponent<Renderer>().enabled = false;
             // _block_obj.GetComponent<Renderer>().enabled = false;
@@ -63,12 +63,12 @@ public class Character : MonoBehaviour
     {
         // Movement
         {
-            if (forward)
+            if (forward && pc.actionable)
             {
                 pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
             }
             
-            if (backward)
+            if (backward && pc.actionable)
             {
                 pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
             }
@@ -78,49 +78,65 @@ public class Character : MonoBehaviour
         {
             if (attack)
             {
-                Toggle_Tool(ref attack, _attack_obj);
+                Toggle_Action(ref attack, _attack_obj, true);
             }
 
             if (stun)
             {
-                Toggle_Tool(ref stun, _stun_obj);
+                Toggle_Action(ref stun, _stun_obj, true);
             }
 
             if (block)
             {
-                Toggle_Tool(ref block, _block_obj);
+                Toggle_Action(ref block, _block_obj, false);
+            }
+        }
+
+        // Statuses
+        {
+            if (hurt)
+            {
+                Toggle_Action(ref hurt, null, false);
+            }
+
+            if (stunned)
+            {
+                Toggle_Action(ref stunned, null, false);
             }
         }
     }
 
-    private void Toggle_Tool(ref bool tool, GameObject tool_obj)
+    private void Toggle_Action(ref bool action, GameObject tool_obj, bool has_collisions)
     {
         // if hidden
-        if (!tool_obj.GetComponent<Renderer>().enabled)
+        if (tool_obj != null && !tool_obj.GetComponent<Renderer>().enabled)
         {
             // unhide
             tool_obj.GetComponent<Renderer>().enabled = true;
-            if (!block)
+            if (has_collisions)
             {
                 tool_obj.GetComponent<BoxCollider2D>().enabled = true;
             }
         }
         
-        // if unlocked && RPS tool animation ends
-        if (unlocked && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+        // if unlocked && RPS action animation ends
+        if (unlocked && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk"))
         {
             // reset all variables associated with the RPS tools
             unlocked = false;
-            tool_obj.GetComponent<Renderer>().enabled = false;
-            if (!block)
+            if (tool_obj != null)
+            {
+                tool_obj.GetComponent<Renderer>().enabled = false;
+            }
+            if (has_collisions)
             {
                 tool_obj.GetComponent<BoxCollider2D>().enabled = false;
             }
-            tool = false;
+            action = false;
             pc.actionable = true;
         }
-        // if non-Idle animation (e.g. RPS tool animation) has started
-        else if (!pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+        // if non-Idle/Walk animation (e.g. RPS action animation) has started
+        else if (!pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk"))
         {
             // unlock
             unlocked = true;
