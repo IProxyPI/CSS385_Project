@@ -45,11 +45,13 @@ public class Character : MonoBehaviour
 
         // Unnecessary?
         {
+            // Already disabled by default in all scenes
             // // Ensures all RPS tool renderers are disabled
             // _attack_obj.GetComponent<Renderer>().enabled = false;
             // _stun_obj.GetComponent<Renderer>().enabled = false;
             // _block_obj.GetComponent<Renderer>().enabled = false;
 
+            // Tags already prevent players colliding with their own moves
             // // Tells to ignore colliders with own moves
             // Physics2D.IgnoreCollision(_attack_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
             // Physics2D.IgnoreCollision(_stun_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
