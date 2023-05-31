@@ -328,7 +328,7 @@ MonoBehaviour:
   playerManager: {fileID: 0}
   playerText: {fileID: 0}
   readyButton: {fileID: 0}
-  rvm: {fileID: 0}
+  rvm: {fileID: 1371714114}
 --- !u!1 &779098825
 GameObject:
   m_ObjectHideFlags: 0
