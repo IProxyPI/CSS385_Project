@@ -3,6 +3,7 @@ using UnityEngine;
 public class Character : MonoBehaviour
 {
     private Player_Controller pc;
+    private Player_Controller opc;  // opponent pc
     private string p1_name = "DummyPlayer1";
     private string p2_name = "DummyPlayer2";
 
@@ -10,6 +11,8 @@ public class Character : MonoBehaviour
     public bool forward = false;
     public bool backward = false;
     private float step = 0.1f;
+    private float stagger = 0.1f;
+    private float boundary = -10f;
 
     // RPS Tools
     public bool unlocked = false;
@@ -31,11 +34,15 @@ public class Character : MonoBehaviour
         if (gameObject.name == p1_name)
         {
             pc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
+            opc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
         }
         else // (gameObject.name == p2_name)
         {
             pc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
-            step = -step;
+            opc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
+            step *= -1;
+            stagger *= -1;
+            boundary *= -1;
         }
         
         // Set RPS Tool object references
@@ -72,12 +79,16 @@ public class Character : MonoBehaviour
     {
         // Movement
         {
-            if (forward && pc.actionable)
+            if (forward && pc.actionable
+             && (pc.player_tag == "P1" && pc.rb.position.x - step <= opc.rb.position.x - 1.5
+              || pc.player_tag == "P2" && pc.rb.position.x - step >= opc.rb.position.x + 1.5))
             {
                 pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
             }
             
-            if (backward && pc.actionable)
+            if (backward && pc.actionable
+             && (pc.player_tag == "P1" && pc.rb.position.x - step >= boundary
+              || pc.player_tag == "P2" && pc.rb.position.x - step <= boundary))
             {
                 pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
             }
@@ -105,12 +116,15 @@ public class Character : MonoBehaviour
         {
             if (hurt)
             {
+                stunned = false;
                 Toggle_Action(ref hurt, null, false);
             }
 
             if (stunned)
             {
                 Toggle_Action(ref stunned, null, false);
+                pc.rb.position = new Vector3(pc.transform.position.x - stagger, pc.transform.position.y, 0);
+                stagger *= -1;
             }
         }
     }
@@ -133,6 +147,9 @@ public class Character : MonoBehaviour
                 {
                     // enable them
                     tool_obj.GetComponent<BoxCollider2D>().enabled = true;
+
+                    // dash forward
+                    pc.rb.position = new Vector3(pc.transform.position.x + (4 * step), pc.transform.position.y, 0);
                 }
             }
 
