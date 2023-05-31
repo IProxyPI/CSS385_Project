@@ -52,7 +52,7 @@ public class Player_Manager : MonoBehaviour
     void Update()
     {
         // Possible in scene_fight
-        if (p1.ch.hurt > 0 || p2.ch.hurt > 0)
+        if (p1.ch.hurt || p2.ch.hurt)
         {
             rvm.Update_Round_State(p1.lives, p2.lives);
         }

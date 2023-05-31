@@ -12,6 +12,7 @@ public class ButtonController : MonoBehaviour
     public Player_Manager playerManager;
     public TMP_Text playerText;
     public Button readyButton;
+    public Round_Vis_Manager rvm;
     private string player1, player2;
 
     void Start()
@@ -105,6 +106,7 @@ public class ButtonController : MonoBehaviour
     // Go to character selection screen
     public void OnCharacterSelectClick()
     {
+        rvm.Start_Game();
         SceneManager.LoadScene("0_Select_Fighter");
         player1 = "";
         player2 = "";

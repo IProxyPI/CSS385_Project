@@ -178,6 +178,7 @@ MonoBehaviour:
   playerManager: {fileID: 0}
   playerText: {fileID: 0}
   readyButton: {fileID: 0}
+  rvm: {fileID: 0}
 --- !u!114 &257963609
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -327,6 +328,7 @@ MonoBehaviour:
   playerManager: {fileID: 0}
   playerText: {fileID: 0}
   readyButton: {fileID: 0}
+  rvm: {fileID: 0}
 --- !u!1 &779098825
 GameObject:
   m_ObjectHideFlags: 0
@@ -616,6 +618,7 @@ MonoBehaviour:
   playerManager: {fileID: 0}
   playerText: {fileID: 0}
   readyButton: {fileID: 0}
+  rvm: {fileID: 1371714114}
 --- !u!114 &1050159944
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -883,6 +886,17 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7a149021989fabe4ebb6d21a57928d2d, type: 3}
+--- !u!114 &1371714114 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7272204806035427905, guid: 7a149021989fabe4ebb6d21a57928d2d, type: 3}
+  m_PrefabInstance: {fileID: 1371714113}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b89b0d7b7fa80b84e839b2b68e478d58, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1472322789
 GameObject:
   m_ObjectHideFlags: 0

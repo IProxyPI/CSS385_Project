@@ -5,6 +5,7 @@ public class Player_Controller : MonoBehaviour
     // Used in Start(), scene_select_fighter, scene_fight's pause, and/or scene_select_next
     private Player_Manager pm;
     public Character ch;
+    public Animator anim;
     public Rigidbody2D rb;
     public BoxCollider2D bc;
     public int facing_dir = 1;                      // 1 = left side facing right; -1 = right side facing left
@@ -35,7 +36,6 @@ public class Player_Controller : MonoBehaviour
     void Start()
     {
         pm = GameObject.Find("Players").GetComponent<Player_Manager>();
-        ch = gameObject.AddComponent<Spearman>() as Spearman;
         rb = GetComponent<Rigidbody2D>();
         bc = GetComponent<BoxCollider2D>();
 
@@ -44,6 +44,7 @@ public class Player_Controller : MonoBehaviour
 
         if (gameObject.name == "DummyPlayer2")
         {
+            ch = gameObject.AddComponent<Ninja>() as Ninja;
             facing_dir = -1;
             player_tag = "P2";
             opponent_tag = "P1";
@@ -53,6 +54,10 @@ public class Player_Controller : MonoBehaviour
             input_attack = KeyCode.M;
             input_stun = KeyCode.Comma;
             input_block = KeyCode.Period;
+        }
+        else
+        {
+            ch = gameObject.AddComponent<Spearman>() as Spearman;
         }
         // gameObject.tag = player_tag;
     }
@@ -78,27 +83,31 @@ public class Player_Controller : MonoBehaviour
     // Called by ReadFightInputs()
     private void StopMovement()
     {
-        ch.forward = 0;
-        ch.forward_stop = 0;
-        ch.backward = 0;
-        ch.backward_stop = 0;
+        ch.forward = false;
+        ch.backward = false;
+        anim.SetFloat("Speed", 0);
     }
     
-    // Attacked or Stunned
+    // Hurt or Stunned
     private void OnTriggerEnter2D(Collider2D col)
     {
-        Debug.Log(col.name + " collided with " + player_tag);
         if (col.tag == opponent_tag)
         {
-            if (col.name.Contains("Attack") && ch.block == 0)
-            {
-                ch.hurt = Time.fixedDeltaTime;
-                lives--;
-            }
-            else if (col.name.Contains("Stun") && ch.attack == 0)
+            Debug.Log(col.name + " collided with " + player_tag);
+            if (col.name.Contains("Attack") && !ch.block)
             {
                 actionable = false;
-                ch.stunned = Time.fixedDeltaTime;
+                StopMovement();
+                anim.SetTrigger("Hurt");
+                ch.hurt = true;
+                lives--;
+            }
+            else if (col.name.Contains("Stun") && !ch.attack)
+            {
+                actionable = false;
+                StopMovement();
+                anim.SetTrigger("Stunned");
+                ch.stunned = true;
             }
         }
     }
@@ -116,68 +125,76 @@ public class Player_Controller : MonoBehaviour
         if (actionable)
         {
             // Movement
+            {
+                // move forward
+                if (Input.GetKey(input_forward) && !ch.forward /*&& !ch.forward_stop*/)
+                {
+                    ch.forward = true;
+                    anim.SetFloat("Speed", 1);
+                }
+                // stop forward
+                else if (Input.GetKeyUp(input_forward) /*&& !ch.forward_stop*/)
+                {
+                    // ch.forward_stop = true;
+                    ch.forward = false;
+                    anim.SetFloat("Speed", 0);
+                }
+                // move backward
+                if (Input.GetKey(input_backward) && !ch.backward /*&& !ch.backward_stop*/)
+                {
+                    ch.backward = true;
+                    anim.SetFloat("Speed", 1);
+                }
+                // stop backward
+                else if (Input.GetKeyUp(input_backward) /*&& !ch.backward_stop*/)
+                {
+                    // ch.backward_stop = true;
+                    ch.backward = false;
+                    anim.SetFloat("Speed", 0);
+                }
 
-            // move forward
-            if (Input.GetKey(input_forward) && ch.forward == 0 && ch.forward_stop == 0)
-            {
-                ch.forward = Time.fixedDeltaTime;
-            }
-            // stop forward
-            else if (Input.GetKeyUp(input_forward) && ch.forward_stop == 0)
-            {
-                ch.forward_stop = Time.fixedDeltaTime;
-                ch.forward = 0;
-            }
-            // move backward
-            if (Input.GetKey(input_backward) && ch.backward == 0 && ch.backward_stop == 0)
-            {
-                ch.backward = Time.fixedDeltaTime;
-            }
-            // stop backward
-            else if (Input.GetKeyUp(input_backward) && ch.backward_stop == 0)
-            {
-                ch.backward_stop = Time.fixedDeltaTime;
-                ch.backward = 0;
-            }
-
-            // SOCD Neutral
-            if (socd_neutral && ch.forward > 0 && ch.backward > 0)
-            {
-                Debug.Log("Neutral");
-                StopMovement();
-            }
-
-            // Actions
-
-            // attack
-            if (Input.GetKeyDown(input_attack) && ch.attack == 0)
-            {
-                actionable = false;
-                StopMovement();
-                ch.attack = Time.fixedDeltaTime;
+                // SOCD Neutral
+                if (socd_neutral && ch.forward && ch.backward)
+                {
+                    Debug.Log("Neutral");
+                    StopMovement();
+                }
             }
 
-            // stun
-            if (Input.GetKeyDown(input_stun) && ch.stun == 0)
+            // RPS Tools
             {
-                actionable = false;
-                StopMovement();
-                ch.stun = Time.fixedDeltaTime;
-            }
+                // attack
+                if (Input.GetKeyDown(input_attack) && !ch.attack)
+                {
+                    actionable = false;
+                    StopMovement();
+                    anim.SetTrigger("Attack");
+                    ch.attack = true;
+                }
 
-            // block
-            if (Input.GetKey(input_block) && ch.block == 0 && ch.block_stop == 0)
-            {
-                actionable = false;
-                StopMovement();
-                ch.block = Time.fixedDeltaTime;
+                // stun
+                if (Input.GetKeyDown(input_stun) && !ch.stun)
+                {
+                    actionable = false;
+                    StopMovement();
+                    anim.SetTrigger("Stun");
+                    ch.stun = true;
+                }
+
+                // block
+                if (Input.GetKey(input_block) && !ch.block /*&& !ch.block_stop*/)
+                {
+                    actionable = false;
+                    StopMovement();
+                    anim.SetBool("Block", true);
+                    ch.block = true;
+                }
             }
         }
 
-        if (Input.GetKeyUp(input_block) && ch.block_stop == 0)
+        if (Input.GetKeyUp(input_block) /*&& !ch.block_stop*/)
         {
-            ch.block_stop = Time.fixedDeltaTime;
-            ch.block = 0;
+            anim.SetBool("Block", false);
         }
     }
 
