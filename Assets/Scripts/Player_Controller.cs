@@ -91,7 +91,7 @@ public class Player_Controller : MonoBehaviour
     // Hurt or Stunned
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag == opponent_tag)
+        if (col.tag == opponent_tag && ch.invincibility_timer <= 0)
         {
             if (col.name.Contains("Attack") && !ch.block)
             {
