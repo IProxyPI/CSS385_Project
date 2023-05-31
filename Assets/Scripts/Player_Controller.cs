@@ -161,8 +161,8 @@ public class Player_Controller : MonoBehaviour
                 {
                     actionable = false;
                     StopMovement();
-                    ch.attack = true;
                     anim.SetTrigger("Attack");
+                    ch.attack = true;
                 }
 
                 // stun
@@ -170,8 +170,8 @@ public class Player_Controller : MonoBehaviour
                 {
                     actionable = false;
                     StopMovement();
-                    ch.stun = true;
                     anim.SetTrigger("Stun");
+                    ch.stun = true;
                 }
 
                 // block
@@ -179,16 +179,14 @@ public class Player_Controller : MonoBehaviour
                 {
                     actionable = false;
                     StopMovement();
-                    ch.block = true;
                     anim.SetBool("Block", true);
+                    ch.block = true;
                 }
             }
         }
 
         if (Input.GetKeyUp(input_block) /*&& !ch.block_stop*/)
         {
-            // ch.block_stop = Time.fixedDeltaTime;
-            ch.block = false;
             anim.SetBool("Block", false);
         }
     }

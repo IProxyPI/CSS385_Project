@@ -12,16 +12,13 @@ public class Character : MonoBehaviour
     private float step = 0.1f;
 
     // RPS Tools
+    public bool unlocked = false;
     public bool attack = false;
     public bool stun = false;
     public bool block = false;
     [SerializeField] private GameObject _attack_obj;
     [SerializeField] private GameObject _stun_obj;
     [SerializeField] private GameObject _block_obj;
-    [SerializeField] private Transform _origin;
-    private bool attack_active = false;
-    private bool stun_active = false;
-    private bool block_active = false;
 
     // Statuses
     public bool stunned = false;
@@ -46,15 +43,17 @@ public class Character : MonoBehaviour
             step = -step;
         }
 
-        // Turn off renderer and collision for moves
-        // Block is purely visual as it's a state
-        Toggle_Tool(_attack_obj, false, false);
-        Toggle_Tool(_stun_obj, false, false);
-        Toggle_Tool(_block_obj, false, true);
+        // Unnecessary?
+        {
+            // // Ensures all RPS tool renderers are disabled
+            // _attack_obj.GetComponent<Renderer>().enabled = false;
+            // _stun_obj.GetComponent<Renderer>().enabled = false;
+            // _block_obj.GetComponent<Renderer>().enabled = false;
 
-        // Tells to ignore colliders with own moves
-        Physics2D.IgnoreCollision(_attack_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-        Physics2D.IgnoreCollision(_stun_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+            // // Tells to ignore colliders with own moves
+            // Physics2D.IgnoreCollision(_attack_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+            // Physics2D.IgnoreCollision(_stun_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
+        }
     }
 
     // Update is called once per frame
@@ -62,13 +61,11 @@ public class Character : MonoBehaviour
     {
         // Movement
         {
-            // forward
             if (forward)
             {
                 pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
             }
             
-            // backward
             if (backward)
             {
                 pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
@@ -77,90 +74,46 @@ public class Character : MonoBehaviour
 
         // RPS Tools
         {
-            // attack
             if (attack)
             {
-                // if hidden
-                if (!_attack_obj.GetComponent<Renderer>().enabled)
-                {
-                    // unhide
-                    _attack_obj.GetComponent<Renderer>().enabled = true;
-                }
-                
-                if (pc.anim.GetCurrentAnimatorStateInfo(1).IsTag("Idle"))
-                {
-                    attack = false;
-                    _attack_obj.GetComponent<Renderer>().enabled = false;
-                }
+                Toggle_Tool(ref attack, _attack_obj);
             }
 
-            // stun
             if (stun)
             {
-                // if hidden
-                if (!_stun_obj.GetComponent<Renderer>().enabled)
-                {
-                    // unhide
-                    _stun_obj.GetComponent<Renderer>().enabled = true;
-                }
-                
-                if (pc.anim.GetCurrentAnimatorStateInfo(1).IsTag("Idle"))
-                {
-                    stun = false;
-                    _stun_obj.GetComponent<Renderer>().enabled = false;
-                }
+                Toggle_Tool(ref stun, _stun_obj);
             }
 
-            // block
             if (block)
             {
-                // if hidden
-                if (!_block_obj.GetComponent<Renderer>().enabled)
-                {
-                    // unhide
-                    _block_obj.GetComponent<Renderer>().enabled = true;
-                }
-            }
-            if (!block)
-            {
-                // if not hidden
-                if (_block_obj.GetComponent<Renderer>().enabled)
-                {
-                    // hide
-                    _block_obj.GetComponent<Renderer>().enabled = false;
-                }
+                Toggle_Tool(ref block, _block_obj);
             }
         }
     }
 
-    private void Tool_Handler(bool action, GameObject tool_obj, ref bool tool_instantiated)
+    private void Toggle_Tool(ref bool tool, GameObject tool_obj)
     {
-        // if stopping tool use
+        // if hidden
+        if (!tool_obj.GetComponent<Renderer>().enabled)
         {
-            if (block_active)
-            {
-                block_active = false;
-                Toggle_Tool(_block_obj, block_active, true);
-            }
-            // if animation ends
-            {
-                if (tool_obj != null)
-                {
-                    tool_instantiated = false;
-                    Toggle_Tool(tool_obj, tool_instantiated, false);
-                }
-                action = false;
-                pc.actionable = true;
-            }
+            // unhide
+            tool_obj.GetComponent<Renderer>().enabled = true;
         }
-    }
-
-    private void Toggle_Tool(GameObject action, bool state, bool isBlock)
-    {
-        action.GetComponent<Renderer>().enabled = state;
-        if (!isBlock)
+        
+        // if unlocked && RPS tool animation ends
+        if (unlocked && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
         {
-            action.GetComponent<BoxCollider2D>().enabled = state;
+            // reset all variables associated with the RPS tools
+            unlocked = false;
+            tool = false;
+            tool_obj.GetComponent<Renderer>().enabled = false;
+            pc.actionable = true;
+        }
+        // if non-Idle animation (e.g. RPS tool animation) has started
+        else if (!pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle"))
+        {
+            // unlock
+            unlocked = true;
         }
     }
 }
