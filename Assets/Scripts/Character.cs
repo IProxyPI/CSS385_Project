@@ -30,6 +30,7 @@ public class Character : MonoBehaviour
     public bool hurt = false;
     public bool stunned = false;
     public float invincibility_timer = 0f;
+    private float invincibility_lock = 0.05f;
 
     // Start is called before the first frame update
     void Start()
@@ -153,7 +154,14 @@ public class Character : MonoBehaviour
                 if (invincibility_timer > 0)
                 {
                     invincibility_timer -= Time.deltaTime;
-                    sr.enabled = !sr.enabled;
+                    invincibility_lock -= Time.deltaTime;
+                    
+                    if (invincibility_lock <= 0)
+                    {
+                        sr.enabled = !sr.enabled;
+                        invincibility_lock = 0.05f;
+                        Debug.Log(sr.enabled);
+                    }
                 }
                 else if (!sr.enabled)
                 {
@@ -215,8 +223,8 @@ public class Character : MonoBehaviour
 
             if (trigger_invincibility)
             {
-                invincibility_timer = 5f;
-                opc.ch.invincibility_timer = 5f;
+                invincibility_timer = 2f;
+                opc.ch.invincibility_timer = 2f;
             }
         }
         // if any non-Idle/Walk animation has started
