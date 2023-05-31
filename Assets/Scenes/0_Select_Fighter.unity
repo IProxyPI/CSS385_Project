@@ -272,7 +272,7 @@ GameObject:
   - component: {fileID: 32619662}
   - component: {fileID: 32619661}
   m_Layer: 0
-  m_Name: NinjaStunP2
+  m_Name: NinjaStunP1
   m_TagString: P2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1637,7 +1637,7 @@ GameObject:
   - component: {fileID: 664335471}
   - component: {fileID: 664335470}
   m_Layer: 0
-  m_Name: NinjaBlockP2
+  m_Name: NinjaBlockP1
   m_TagString: P2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3950,7 +3950,7 @@ GameObject:
   - component: {fileID: 1508665548}
   - component: {fileID: 1508665547}
   m_Layer: 0
-  m_Name: NinjaAttackP2
+  m_Name: NinjaAttackP1
   m_TagString: P2
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
