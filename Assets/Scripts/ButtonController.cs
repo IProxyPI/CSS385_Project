@@ -107,7 +107,7 @@ public class ButtonController : MonoBehaviour
     public void OnCharacterSelectClick()
     {
         rvm.Start_Game();
-        SceneManager.LoadScene("0_Select_Fighter");
+        SceneManager.LoadScene("1_Fight");
         player1 = "";
         player2 = "";
         player = 1;
