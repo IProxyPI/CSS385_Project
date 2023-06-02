@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Character : MonoBehaviour
 {
@@ -22,9 +23,9 @@ public class Character : MonoBehaviour
     public bool attack = false;
     public bool stun = false;
     public bool block = false;
-    [SerializeField] private GameObject _attack_obj;
-    [SerializeField] private GameObject _stun_obj;
-    [SerializeField] private GameObject _block_obj;
+    public GameObject _attack_obj;
+    public GameObject _stun_obj;
+    public GameObject _block_obj;
 
     // Statuses
     public bool hurt = false;
@@ -51,22 +52,6 @@ public class Character : MonoBehaviour
             boundary_forward *= -1;
         }
         
-        // Set RPS Tool object references
-        if (pc.character_select == 0) // Spearman
-        {
-            sr = GameObject.Find("Spearman" + pc.player_tag).GetComponent<SpriteRenderer>();
-            _attack_obj = GameObject.Find("SpearmanAttack" + pc.player_tag);
-            _stun_obj = GameObject.Find("SpearmanStun" + pc.player_tag);
-            _block_obj = GameObject.Find("SpearmanBlock" + pc.player_tag);
-        }
-        else // (pc.character_select == 1) Ninja
-        {
-            sr = GameObject.Find("Ninja" + pc.player_tag).GetComponent<SpriteRenderer>();
-            _attack_obj = GameObject.Find("NinjaAttack" + pc.player_tag);
-            _stun_obj = GameObject.Find("NinjaStun" + pc.player_tag);
-            _block_obj = GameObject.Find("NinjaBlock" + pc.player_tag);
-        }
-
         // Unnecessary?
         {
             // Already disabled by default in all scenes
@@ -84,7 +69,43 @@ public class Character : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+    {        
+        // // RPS Tool object reference assignment
+        // {
+        //     if (sr == null)
+        //     {
+        //         if (pc.player_tag == "P1" && pc.character_select == 0)
+        //         {
+        //             sr = Player_Manager.Instance.SpearmanP1.GetComponent<SpriteRenderer>();
+        //             _attack_obj = Player_Manager.Instance.SpearmanP1.gameObject.transform.GetChild(0).gameObject;
+        //             _stun_obj = Player_Manager.Instance.SpearmanP1.gameObject.transform.GetChild(1).gameObject;
+        //             _block_obj = Player_Manager.Instance.SpearmanP1.gameObject.transform.GetChild(2).gameObject;
+        //         }
+        //         else if (pc.player_tag == "P1" && pc.character_select == 1)
+        //         {
+        //             Debug.Log("hello"); 
+        //             sr = Player_Manager.Instance.NinjaP1.GetComponent<SpriteRenderer>();
+        //             _attack_obj = Player_Manager.Instance.NinjaP1.gameObject.transform.GetChild(0).gameObject;
+        //             _stun_obj = Player_Manager.Instance.NinjaP1.gameObject.transform.GetChild(1).gameObject;
+        //             _block_obj = Player_Manager.Instance.NinjaP1.gameObject.transform.GetChild(2).gameObject;
+        //         }
+        //         else if (pc.player_tag == "P2" && pc.character_select == 0)
+        //         {
+        //             sr = Player_Manager.Instance.SpearmanP1.GetComponent<SpriteRenderer>();
+        //             _attack_obj = Player_Manager.Instance.SpearmanP2.gameObject.transform.GetChild(0).gameObject;
+        //             _stun_obj = Player_Manager.Instance.SpearmanP2.gameObject.transform.GetChild(1).gameObject;
+        //             _block_obj = Player_Manager.Instance.SpearmanP2.gameObject.transform.GetChild(2).gameObject;
+        //         }
+        //         else if (pc.player_tag == "P2" && pc.character_select == 1)
+        //         {
+        //             sr = Player_Manager.Instance.NinjaP2.GetComponent<SpriteRenderer>();
+        //             _attack_obj = Player_Manager.Instance.NinjaP2.gameObject.transform.GetChild(0).gameObject;
+        //             _stun_obj = Player_Manager.Instance.NinjaP2.gameObject.transform.GetChild(1).gameObject;
+        //             _block_obj = Player_Manager.Instance.NinjaP2.gameObject.transform.GetChild(2).gameObject;
+        //         }
+        //     }
+        // }
+
         // Movement
         {
             // forward
@@ -160,7 +181,6 @@ public class Character : MonoBehaviour
                     {
                         sr.enabled = !sr.enabled;
                         invincibility_lock = 0.05f;
-                        Debug.Log(sr.enabled);
                     }
                 }
                 else if (!sr.enabled)
