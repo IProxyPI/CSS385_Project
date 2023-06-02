@@ -16,8 +16,8 @@ public class Player_Manager : MonoBehaviour
     private Round_Vis_Manager rvm;
     
     // Players
-    [SerializeField] private string p1_name = "DummyPlayer1";
-    [SerializeField] private string p2_name = "DummyPlayer2";
+    [SerializeField] public GameObject DummyPlayer1, DummyPlayer2;
+    //[SerializeField] private string p2_name = "DummyPlayer2";
     private Player_Controller p1;
     private Player_Controller p2;
     private int players_ready = 0;
@@ -41,7 +41,7 @@ public class Player_Manager : MonoBehaviour
         else if (scene.name == scene_2)
         {
             scene_num = 2;
-            Destroy(gameObject);
+            //Destroy(gameObject);
         }
         else if (scene.name == scene_0)
         {
@@ -54,13 +54,32 @@ public class Player_Manager : MonoBehaviour
         rvm = GameObject.Find(bgm_name).GetComponent<Round_Vis_Manager>();
 
         // Store references to both player scripts
-        p1 = GameObject.Find(p1_name).GetComponent<Player_Controller>();
-        p2 = GameObject.Find(p2_name).GetComponent<Player_Controller>();
+        p1 = GameObject.Find("DummyPlayer1").GetComponent<Player_Controller>();
+        p2 = GameObject.Find("DummyPlayer2").GetComponent<Player_Controller>();
 
     }
 
     void Update()
     {
+        // Update Scene status
+        Scene scene = SceneManager.GetActiveScene();
+        if (scene.name == scene_1)
+        {
+            scene_num = 1;
+            //Destroy(gameObject);
+        }
+        else if (scene.name == scene_2)
+        {
+            scene_num = 2;
+            Destroy(gameObject);
+        }
+        else if (scene.name == scene_0)
+        {
+            scene_num = 0;
+            DontDestroyOnLoad(gameObject);
+            //Debug.Log("SELECT YOUR FIGHTER!");
+        }
+        
         // Possible in scene_fight
         if (p1.ch.hurt || p2.ch.hurt)
         {
@@ -68,22 +87,22 @@ public class Player_Manager : MonoBehaviour
         }
 
         // Possible in scene_select_fighter, scene_fight pause, or scene_select_next
-        if (p1.menu_select_change)
-        {
-            MenuSelectOutcome(p1);
-        }
-        if (p1.menu_choice_change)
-        {
-            MenuChoiceOutcome(p1);
-        }
-        if (p2.menu_select_change)
-        {
-            MenuSelectOutcome(p2);
-        }
-        if (p2.menu_choice_change)
-        {
-            MenuChoiceOutcome(p2);
-        }
+        // if (p1.menu_select_change)
+        // {
+        //     MenuSelectOutcome(p1);
+        // }
+        // if (p1.menu_choice_change)
+        // {
+        //     MenuChoiceOutcome(p1);
+        // }
+        // if (p2.menu_select_change)
+        // {
+        //     MenuSelectOutcome(p2);
+        // }
+        // if (p2.menu_choice_change)
+        // {
+        //     MenuChoiceOutcome(p2);
+        // }
     }
 
     // private void HurtOutcome(Player_Controller p)
@@ -111,68 +130,68 @@ public class Player_Manager : MonoBehaviour
         // animation stuff
     }
 
-    private void MenuChoiceOutcome(Player_Controller p)
-    {
-        // p chooses to stay on the current scene
-        if (p.menu_choice == -1)
-        {
-            // p undoes their vote to load scene_fight
-            Debug.Log(p.player_tag + " undid ready");
-            players_ready--;
-            p.menu_choice = 0;
-        }
+    // private void MenuChoiceOutcome(Player_Controller p)
+    // {
+    //     // p chooses to stay on the current scene
+    //     if (p.menu_choice == -1)
+    //     {
+    //         // p undoes their vote to load scene_fight
+    //         Debug.Log(p.player_tag + " undid ready");
+    //         players_ready--;
+    //         p.menu_choice = 0;
+    //     }
 
-        // p chooses to load or stay on scene_fight
-        if (p.menu_choice == 1)
-        {
-            // p votes to load scene_fight
-            if (scene_num == 0 || scene_num == 2)
-            {
-                Debug.Log(p.player_tag + " ready!");
-                players_ready++;
-                if (players_ready == 2)
-                {
-                    // Load scene_fight
-                    Debug.Log("FIGHT!");
-                    scene_num = 1;
-                    SceneManager.LoadScene(scene_1, LoadSceneMode.Single);
+    //     // p chooses to load or stay on scene_fight
+    //     if (p.menu_choice == 1)
+    //     {
+    //         // p votes to load scene_fight
+    //         if (scene_num == 0 || scene_num == 2)
+    //         {
+    //             Debug.Log(p.player_tag + " ready!");
+    //             players_ready++;
+    //             if (players_ready == 2)
+    //             {
+    //                 // Load scene_fight
+    //                 Debug.Log("FIGHT!");
+    //                 scene_num = 1;
+    //                 SceneManager.LoadScene(scene_1, LoadSceneMode.Single);
 
-                    // Reset counter
-                    players_ready = 0;
-                }
-            }
+    //                 // Reset counter
+    //                 players_ready = 0;
+    //             }
+    //         }
             
-            // p, as the pauser, wants to resume
-            else // (scene_num == 1)
-            {
-                // Resume scene_fight
-                Debug.Log(p.player_tag + " unpaused");
-                // Destroy pause menu prefab
-                p.paused = false;
-                p.menu_select = 0;
-                p.menu_choice = 0;
-            }
-        }
+    //         // p, as the pauser, wants to resume
+    //         else // (scene_num == 1)
+    //         {
+    //             // Resume scene_fight
+    //             Debug.Log(p.player_tag + " unpaused");
+    //             // Destroy pause menu prefab
+    //             p.paused = false;
+    //             p.menu_select = 0;
+    //             p.menu_choice = 0;
+    //         }
+    //     }
 
-        // p chooses to load scene_select_fighter
-        else if (p.menu_choice == 2)
-        {
-            // Load scene_select_fighter (from either other scene)
-            Debug.Log("SELECT YOUR FIGHTER!");
-            scene_num = 2;
-            SceneManager.LoadScene(scene_0, LoadSceneMode.Single);
-            p.menu_select = 0;
-            p.menu_choice = 0;
-        }
+    //     // p chooses to load scene_select_fighter
+    //     else if (p.menu_choice == 2)
+    //     {
+    //         // Load scene_select_fighter (from either other scene)
+    //         Debug.Log("SELECT YOUR FIGHTER!");
+    //         scene_num = 2;
+    //         SceneManager.LoadScene(scene_0, LoadSceneMode.Single);
+    //         p.menu_select = 0;
+    //         p.menu_choice = 0;
+    //     }
 
-        // p chooses to quit out of the application
-        else if (p.menu_choice == 3)
-        {
-            Debug.Log("BUH-BYE!");
-            Application.Quit();
-        }
+    //     // p chooses to quit out of the application
+    //     else if (p.menu_choice == 3)
+    //     {
+    //         Debug.Log("BUH-BYE!");
+    //         Application.Quit();
+    //     }
 
-        // Reset counter
-        p.menu_choice_change = false;
-    }
+    //     // Reset counter
+    //     p.menu_choice_change = false;
+    // }
 }

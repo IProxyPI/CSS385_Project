@@ -7,6 +7,7 @@ public class Character : MonoBehaviour
     public SpriteRenderer sr;
     private string p1_name = "DummyPlayer1";
     private string p2_name = "DummyPlayer2";
+    public GameObject DummyPlayer1, DummyPlayer2;
 
     // Movement
     public bool forward = false;
@@ -31,6 +32,7 @@ public class Character : MonoBehaviour
     public bool stunned = false;
     public float invincibility_timer = 0f;
     private float invincibility_lock = 0.05f;
+    public bool roundStarted = false;
 
     // Start is called before the first frame update
     void Start()
@@ -52,20 +54,20 @@ public class Character : MonoBehaviour
         }
         
         // Set RPS Tool object references
-        if (pc.character_select == 0) // Spearman
-        {
-            sr = GameObject.Find("Spearman" + pc.player_tag).GetComponent<SpriteRenderer>();
-            _attack_obj = GameObject.Find("SpearmanAttack" + pc.player_tag);
-            _stun_obj = GameObject.Find("SpearmanStun" + pc.player_tag);
-            _block_obj = GameObject.Find("SpearmanBlock" + pc.player_tag);
-        }
-        else // (pc.character_select == 1) Ninja
-        {
-            sr = GameObject.Find("Ninja" + pc.player_tag).GetComponent<SpriteRenderer>();
-            _attack_obj = GameObject.Find("NinjaAttack" + pc.player_tag);
-            _stun_obj = GameObject.Find("NinjaStun" + pc.player_tag);
-            _block_obj = GameObject.Find("NinjaBlock" + pc.player_tag);
-        }
+        // if (DummyPlayer1.GetComponent<Spearman>().enabled) // Spearman
+        // {
+        //     sr = GameObject.Find("Spearman" + pc.player_tag).GetComponent<SpriteRenderer>();
+        //     _attack_obj = GameObject.Find("SpearmanAttack" + pc.player_tag);
+        //     _stun_obj = GameObject.Find("SpearmanStun" + pc.player_tag);
+        //     _block_obj = GameObject.Find("SpearmanBlock" + pc.player_tag);
+        // }
+        // else if(DummyPlayer1.GetComponent<Ninja>().enabled) // Ninja
+        // {
+        //     sr = GameObject.Find("Ninja" + pc.player_tag).GetComponent<SpriteRenderer>();
+        //     _attack_obj = GameObject.Find("NinjaAttack" + pc.player_tag);
+        //     _stun_obj = GameObject.Find("NinjaStun" + pc.player_tag);
+        //     _block_obj = GameObject.Find("NinjaBlock" + pc.player_tag);
+        // }
 
         // Unnecessary?
         {
@@ -85,6 +87,20 @@ public class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (DummyPlayer1.GetComponent<Spearman>().enabled) // Spearman
+        {
+            sr = GameObject.Find("Spearman" + pc.player_tag).GetComponent<SpriteRenderer>();
+            _attack_obj = GameObject.Find("SpearmanAttack" + pc.player_tag);
+            _stun_obj = GameObject.Find("SpearmanStun" + pc.player_tag);
+            _block_obj = GameObject.Find("SpearmanBlock" + pc.player_tag);
+        }
+        else if(DummyPlayer1.GetComponent<Ninja>().enabled) // Ninja
+        {
+            sr = GameObject.Find("Ninja" + pc.player_tag).GetComponent<SpriteRenderer>();
+            _attack_obj = GameObject.Find("NinjaAttack" + pc.player_tag);
+            _stun_obj = GameObject.Find("NinjaStun" + pc.player_tag);
+            _block_obj = GameObject.Find("NinjaBlock" + pc.player_tag);
+        }
         // Movement
         {
             // forward

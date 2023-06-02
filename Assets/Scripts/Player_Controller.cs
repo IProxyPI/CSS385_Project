@@ -44,7 +44,7 @@ public class Player_Controller : MonoBehaviour
 
         if (gameObject.name == "DummyPlayer2")
         {
-            ch = gameObject.AddComponent<Ninja>() as Ninja;
+            //ch = gameObject.AddComponent<Ninja>() as Ninja;
             facing_dir = -1;
             player_tag = "P2";
             opponent_tag = "P1";
@@ -57,7 +57,6 @@ public class Player_Controller : MonoBehaviour
         }
         else
         {
-            ch = gameObject.AddComponent<Spearman>() as Spearman;
         }
         // gameObject.tag = player_tag;
     }
@@ -66,18 +65,18 @@ public class Player_Controller : MonoBehaviour
     void Update()
     {
         // Each input function corresponds to a scene.  Ordered by frequency for better performance.
-        // if (pm.scene_num == 1 && !paused)
-        // {
+        if (pm.scene_num == 1 && !paused)
+        {
             ReadFightInputs();
-        // }
-        // else if ((pm.scene_num == 1 && paused) || pm.scene_num == 2)
-        // {
-        //     ReadMenuInputs();
-        // }
-        // else // (pm.scene_num == 0)
-        // {
-        //     ReadSelectFighterInputs();
-        // }
+        }
+        else if ((pm.scene_num == 1 && paused) || pm.scene_num == 2)
+        {
+            ReadMenuInputs();
+        }
+        else // (pm.scene_num == 0)
+        {
+            //ReadSelectFighterInputs();
+        }
     }
 
     // Called by ReadFightInputs()
@@ -242,22 +241,22 @@ public class Player_Controller : MonoBehaviour
             }
             if (character_select_change)
             {
-                // Not sure if this works, but would future-proof code for additional characters if so
-                // Destroy(gameObject.GetComponent<Character>());
+                // // Not sure if this works, but would future-proof code for additional characters if so
+                // // Destroy(gameObject.GetComponent<Character>());
 
-                // This should probably be moved to Player_Manager.cs
-                if (character_select == 0)
-                {
-                    Debug.Log(player_tag + " selects Spearman");
-                    Destroy(gameObject.GetComponent<Ninja>());
-                    ch = gameObject.AddComponent<Spearman>() as Spearman;
-                }
-                else // (character_select == 1)
-                {
-                    Debug.Log(player_tag + " selects Ninja");
-                    Destroy(gameObject.GetComponent<Spearman>());
-                    ch = gameObject.AddComponent<Ninja>() as Ninja;
-                }
+                // // This should probably be moved to Player_Manager.cs
+                // if (character_select == 0)
+                // {
+                //     Debug.Log(player_tag + " selects Spearman");
+                //     Destroy(gameObject.GetComponent<Ninja>());
+                //     ch = gameObject.AddComponent<Spearman>() as Spearman;
+                // }
+                // else // (character_select == 1)
+                // {
+                //     Debug.Log(player_tag + " selects Ninja");
+                //     Destroy(gameObject.GetComponent<Spearman>());
+                //     ch = gameObject.AddComponent<Ninja>() as Ninja;
+                // }
 
                 // See comment in the top line of this if statement's scope
                 // ch = gameObject.GetComponent<Character>();
