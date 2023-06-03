@@ -68,9 +68,12 @@ public class Player_Manager : MonoBehaviour
     void Update()
     {
         scene = SceneManager.GetActiveScene();
-        if (scene.name == scene_1 && rvm == null)
+        if (scene.name == scene_1)
         {
-            rvm = GameObject.Find(bgm_name).GetComponent<Round_Vis_Manager>();
+            if (rvm == null)
+            {
+                rvm = GameObject.Find(bgm_name).GetComponent<Round_Vis_Manager>();
+            }
         }
         else if (scene.name == scene_2)
         {
@@ -81,13 +84,18 @@ public class Player_Manager : MonoBehaviour
         }
 
         // Possible in scene_fight
-        if (p1.ch.hurt || p2.ch.hurt)
+        if (p1.ch.hurt || p1.ch.dead || p2.ch.hurt || p2.ch.dead)
         {
             rvm.Update_Round_State(p1.lives, p2.lives);
-            if (p1.lives == 0 || p2.lives == 0)
+            if (p1.ch.dead || p2.ch.dead)
             {
-                rvm = null;
+                p1.lives = 2;
+                p2.lives = 2;
             }
+            // if (p1.lives == 0 || p2.lives == 0)
+            // {
+            //     rvm = null;
+            // }
         }
 
         // // Possible in scene_select_fighter, scene_fight pause, or scene_select_next

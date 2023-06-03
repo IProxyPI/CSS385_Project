@@ -2123,9 +2123,10 @@ MonoBehaviour:
   _attack_obj: {fileID: 260766189}
   _stun_obj: {fileID: 999533447}
   _block_obj: {fileID: 1032222452}
-  hurt: 0
   stunned: 0
-  invincibility_timer: 0
+  hurt: 0
+  invincibility_timer: -1
+  dead: 0
 --- !u!114 &962854168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2147,8 +2148,9 @@ MonoBehaviour:
   player_tag: P2
   opponent_tag: P1
   lives: 2
-  actionable: 1
+  actionable: 0
   socd_neutral: 1
+  tools_usable: 1
 --- !u!212 &962854169
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3183,9 +3185,10 @@ MonoBehaviour:
   _attack_obj: {fileID: 507215160}
   _stun_obj: {fileID: 615244612}
   _block_obj: {fileID: 674371373}
-  hurt: 0
   stunned: 0
-  invincibility_timer: 0
+  hurt: 0
+  invincibility_timer: -1
+  dead: 0
 --- !u!114 &1214886365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3207,8 +3210,9 @@ MonoBehaviour:
   player_tag: P1
   opponent_tag: P2
   lives: 2
-  actionable: 1
+  actionable: 0
   socd_neutral: 1
+  tools_usable: 1
 --- !u!212 &1214886366
 SpriteRenderer:
   m_ObjectHideFlags: 0

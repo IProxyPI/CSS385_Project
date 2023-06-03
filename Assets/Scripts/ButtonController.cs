@@ -122,6 +122,8 @@ public class ButtonController : MonoBehaviour
     {
         if (startable)
         {
+            pc1.actionable = true;
+            pc2.actionable = true;
             playerText.text = "Player 1 Selecting";
             player = 1;
             startable = false;

@@ -28,10 +28,11 @@ public class Character : MonoBehaviour
     public GameObject _block_obj;
 
     // Statuses
-    public bool hurt = false;
     public bool stunned = false;
-    public float invincibility_timer = 0f;
+    public bool hurt = false;
+    public float invincibility_timer = -1f;
     private float invincibility_lock = 0.05f;
+    public bool dead = false;
 
     // Start is called before the first frame update
     void Start()
@@ -157,17 +158,18 @@ public class Character : MonoBehaviour
 
         // Statuses
         {
-            if (hurt)
-            {
-                stunned = false;
-                Toggle_Action(ref hurt, null, false, true);
-            }
-
             if (stunned)
             {
                 Toggle_Action(ref stunned, null, false, false);
                 pc.rb.position = new Vector3(pc.transform.position.x - stagger, pc.transform.position.y, 0);
                 stagger *= -1;
+            }
+
+            if (hurt)
+            {
+                stunned = false;
+                // invincibility_timer = 2f;
+                Toggle_Action(ref hurt, null, false, true);
             }
 
             if (sr != null)
@@ -183,11 +185,23 @@ public class Character : MonoBehaviour
                         invincibility_lock = 0.05f;
                     }
                 }
-                else if (!sr.enabled)
+                else
                 {
-                    invincibility_timer = 0;
-                    sr.enabled = !sr.enabled;
+                    if (invincibility_timer > -1)
+                    {
+                        pc.tools_usable = true;
+                        invincibility_timer = -1;
+                    }
+                    if (!sr.enabled)
+                    {
+                        sr.enabled = !sr.enabled;
+                    }
                 }
+            }
+
+            if (dead)
+            {
+                stunned = false;
             }
         }
     }
@@ -238,13 +252,21 @@ public class Character : MonoBehaviour
         {
             // reset variables associated with the action
             unlocked = false;
+            if (!opc.ch.hurt && !opc.ch.dead)
+            {
+                pc.actionable = true;
+            }
             action = false;
-            pc.actionable = true;
 
             if (trigger_invincibility)
             {
-                invincibility_timer = 2f;
-                opc.ch.invincibility_timer = 2f;
+                pc.actionable = true;
+                pc.tools_usable = false;
+                // invincibility_timer = 2f;
+
+                opc.actionable = true;
+                opc.tools_usable = false;
+                // opc.ch.invincibility_timer = 2f;
             }
         }
         // if any non-Idle/Walk animation has started

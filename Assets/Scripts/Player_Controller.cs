@@ -24,8 +24,9 @@ public class Player_Controller : MonoBehaviour
     public string opponent_tag = "P2";
     public int lives = 2;
     // public bool paused = false;
-    public bool actionable = true;
+    public bool actionable = false;
     public bool socd_neutral = false;               // False = L/R -> L, True = L/R -> N (Facing R)
+    public bool tools_usable = true;
     private KeyCode input_pause = KeyCode.Space;
     private KeyCode input_forward = KeyCode.S;
     private KeyCode input_backward = KeyCode.A;
@@ -116,15 +117,30 @@ public class Player_Controller : MonoBehaviour
     // Hurt or Stunned
     private void OnTriggerEnter2D(Collider2D col)
     {
-        if (col.tag == opponent_tag && ch.invincibility_timer <= 0)
+        if (col.tag == opponent_tag && ch.invincibility_timer == -1)
         {
             if (col.name.Contains("Attack") && !ch.block)
             {
-                actionable = false;
-                StopMovement();
-                anim.SetTrigger("Hurt");
-                ch.hurt = true;
+                pm.p1.actionable = false;
+                pm.p1.StopMovement();
+
+                pm.p2.actionable = false;
+                pm.p2.StopMovement();
+                
                 lives--;
+                
+                if (lives == 1)
+                {
+                    pm.p1.ch.invincibility_timer = 2f;
+                    pm.p2.ch.invincibility_timer = 2f;
+                    anim.SetTrigger("Hurt");
+                    ch.hurt = true;
+                }
+                else if (lives == 0)
+                {
+                    anim.SetTrigger("Dead");
+                    ch.dead = true;
+                }
             }
             else if (col.name.Contains("Stun") && !ch.attack)
             {
@@ -138,7 +154,6 @@ public class Player_Controller : MonoBehaviour
 
     private void ReadFightInputs()
     {
-        
         // // Pause
         // if (Input.GetKeyDown(input_pause))
         // {
@@ -146,7 +161,7 @@ public class Player_Controller : MonoBehaviour
         //     // Initialize pause menu prefab
         //     paused = true;
         // }
-
+        
         if (actionable)
         {
             // Movement
@@ -184,6 +199,7 @@ public class Player_Controller : MonoBehaviour
             }
 
             // RPS Tools
+            if (tools_usable)
             {
                 // attack
                 if (Input.GetKeyDown(input_attack) && !ch.attack)
