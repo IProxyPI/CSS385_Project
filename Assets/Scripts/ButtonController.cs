@@ -10,6 +10,8 @@ public class ButtonController : MonoBehaviour
     private int player;
     private bool startable;
     public Player_Manager playerManager;
+    public Player_Controller pc1, pc2;
+    public Character ch1, ch2;
     public TMP_Text playerText;
     public Button readyButton;
     public Round_Vis_Manager rvm;
@@ -36,12 +38,26 @@ public class ButtonController : MonoBehaviour
             ++player;
             player1 = "Ninja";
             playerText.text = "Player 2 Selecting";
+            playerManager.NinjaP1.SetActive(true);
+            pc1.anim = GameObject.Find("NinjaP1").GetComponent<Animator>();
+            ch1 = pc1.GetComponent<Character>();
+            ch1.sr = GameObject.Find("NinjaP1").GetComponent<SpriteRenderer>();
+            ch1._attack_obj = GameObject.Find("NinjaAttackP1");
+            ch1._stun_obj = GameObject.Find("NinjaStunP1");
+            ch1._block_obj = GameObject.Find("NinjaBlockP1");
         }
         else if (player == 2)
         {
             player2 = "Ninja";
             playerText.text = "Ready?";
             startable = true;
+            playerManager.NinjaP2.SetActive(true);
+            pc2.anim = GameObject.Find("NinjaP2").GetComponent<Animator>();
+            ch2 = pc2.GetComponent<Character>();
+            ch2.sr = GameObject.Find("NinjaP2").GetComponent<SpriteRenderer>();
+            ch2._attack_obj = GameObject.Find("NinjaAttackP2");
+            ch2._stun_obj = GameObject.Find("NinjaStunP2");
+            ch2._block_obj = GameObject.Find("NinjaBlockP2");
         }
         Debug.Log("Btn Ninja!");
     }
@@ -54,12 +70,26 @@ public class ButtonController : MonoBehaviour
             ++player;
             player1 = "Spearman";
             playerText.text = "Player 2 Selecting";
+            playerManager.SpearmanP1.SetActive(true);
+            pc1.anim = GameObject.Find("SpearmanP1").GetComponent<Animator>();
+            ch1 = pc1.GetComponent<Character>();
+            ch1.sr = GameObject.Find("SpearmanP1").GetComponent<SpriteRenderer>();
+            ch1._attack_obj = GameObject.Find("SpearmanAttackP1");
+            ch1._stun_obj = GameObject.Find("SpearmanStunP1");
+            ch1._block_obj = GameObject.Find("SpearmanBlockP1");
         }
         else if (player == 2)
         {
             player2 = "Spearman";
             playerText.text = "Ready?";
             startable = true;
+            playerManager.SpearmanP2.SetActive(true);
+            pc2.anim = GameObject.Find("SpearmanP2").GetComponent<Animator>();
+            ch2 = pc2.GetComponent<Character>();
+            ch2.sr = GameObject.Find("SpearmanP2").GetComponent<SpriteRenderer>();
+            ch2._attack_obj = GameObject.Find("SpearmanAttackP2");
+            ch2._stun_obj = GameObject.Find("SpearmanStunP2");
+            ch2._block_obj = GameObject.Find("SpearmanBlockP2");
         }
         Debug.Log("Btn Spear!");
     }
@@ -73,12 +103,16 @@ public class ButtonController : MonoBehaviour
             player2 = "";
             startable = false;
             playerText.text = "Player 2 Selecting";
+            playerManager.SpearmanP2.SetActive(false);
+            playerManager.NinjaP2.SetActive(false);
         }
         else if (player == 2)
         {
             player = 1;
             player1 = "";
             playerText.text = "Player 1 Selecting";
+            playerManager.SpearmanP1.SetActive(false);
+            playerManager.NinjaP1.SetActive(false);
         }
         Debug.Log("Btn undo!");
     }
@@ -88,6 +122,8 @@ public class ButtonController : MonoBehaviour
     {
         if (startable)
         {
+            pc1.actionable = true;
+            pc2.actionable = true;
             playerText.text = "Player 1 Selecting";
             player = 1;
             startable = false;
