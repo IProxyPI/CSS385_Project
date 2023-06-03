@@ -13,6 +13,8 @@ public class Camera_Behavior : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        Player1 = GameObject.Find("DummyPlayer1");
+        Player2 = GameObject.Find("DummyPlayer2");
         position = transform.position;
         position.z = -10;
     }
