@@ -27,8 +27,9 @@ public class Round_Vis_Manager : MonoBehaviour
     private int victory_condition = 3; // Round wins required to win the game
 
     private float freezer = 0;
-    private float end_of_round_countdown = 2f;
     private bool round_over = false;
+    public float end_of_round_countdown = 2f;
+    public bool round_loading;
 
     private int p1hp = 2;
     private int p2hp = 2;
@@ -159,6 +160,14 @@ public class Round_Vis_Manager : MonoBehaviour
             {
                 if (Game_Data.p1_wins < victory_condition && Game_Data.p2_wins < victory_condition)
                 {
+                    Player_Manager.Instance.p1.anim.SetTrigger("Exit");
+                    Player_Manager.Instance.p2.anim.SetTrigger("Exit");
+                    Player_Manager.Instance.p1.rb.position = new Vector3(-5, Player_Manager.Instance.p1.transform.position.y, 0);
+                    Player_Manager.Instance.p2.rb.position = new Vector3( 5, Player_Manager.Instance.p2.transform.position.y, 0);
+                    Player_Manager.Instance.p1.ch.invincibility_timer = 0;
+                    Player_Manager.Instance.p2.ch.invincibility_timer = 0;
+                    Player_Manager.Instance.p1.actionable = true;
+                    Player_Manager.Instance.p2.actionable = true;
                     SceneManager.LoadScene("1_Fight");
                 }
                 else

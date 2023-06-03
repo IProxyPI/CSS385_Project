@@ -9,17 +9,18 @@ public class Player_Manager : MonoBehaviour
     [SerializeField] private string scene_0 = "0_Select_Fighter";
     [SerializeField] private string scene_1 = "1_Fight";
     [SerializeField] private string scene_2 = "2_Victory";
-    public int scene_num = 0;
+    private Scene scene;
+    // public int scene_num = 0;
 
     // Background / Round Visuals
     [SerializeField] private string bgm_name = "Background_Manager";
     private Round_Vis_Manager rvm;
     
     // Players
-    [SerializeField] public GameObject DummyPlayer1, DummyPlayer2;
-    //[SerializeField] private string p2_name = "DummyPlayer2";
-    private Player_Controller p1;
-    private Player_Controller p2;
+    [SerializeField] private string p1_name = "DummyPlayer1";
+    [SerializeField] private string p2_name = "DummyPlayer2";
+    public Player_Controller p1;
+    public Player_Controller p2;
     private int players_ready = 0;
 
     // Character Selection
@@ -28,65 +29,76 @@ public class Player_Manager : MonoBehaviour
     public GameObject SpearmanP1;
     public GameObject SpearmanP2;
 
+    public static Player_Manager Instance;
+
     void Start()
     {
-        // Update scene_num if starting from a different scene for dev debug
-        // (UPON COMPLETION: REMOVE if, else if, THEIR CONTENTS, AND else.
-        //                   LEAVE else'S CONTENTS.)
-        Scene scene = SceneManager.GetActiveScene();
-        if (scene.name == scene_1)
-        {
-            scene_num = 1;
-        }
-        else if (scene.name == scene_2)
-        {
-            scene_num = 2;
-            //Destroy(gameObject);
-        }
-        else if (scene.name == scene_0)
-        {
-            scene_num = 0;
-            DontDestroyOnLoad(gameObject);
-            Debug.Log("SELECT YOUR FIGHTER!");
-        }
+        // // Update scene_num if starting from a different scene for dev debug
+        // // (UPON COMPLETION: REMOVE if, else if, THEIR CONTENTS, AND else.
+        // //                   LEAVE else'S CONTENTS.)
+        // Scene scene = SceneManager.GetActiveScene();
+        // if (scene.name == scene_1)
+        // {
+        //     scene_num = 1;
+        // }
+        // else if (scene.name == scene_2)
+        // {
+        //     scene_num = 2;
+        //     Destroy(gameObject);
+        // }
+        // else if (scene.name == scene_0)
+        // {
+        //     scene_num = 0;
+        //     Instance = this;
+        //     DontDestroyOnLoad(gameObject);
+        //     Debug.Log("SELECT YOUR FIGHTER!");
+        // }
         
-        // Store reference to background manager's round visual manager
-        rvm = GameObject.Find(bgm_name).GetComponent<Round_Vis_Manager>();
+        // // Store reference to background manager's round visual manager
+        // rvm = GameObject.Find(bgm_name).GetComponent<Round_Vis_Manager>();
 
         // Store references to both player scripts
         p1 = GameObject.Find("DummyPlayer1").GetComponent<Player_Controller>();
         p2 = GameObject.Find("DummyPlayer2").GetComponent<Player_Controller>();
 
+        Instance = this;
+        DontDestroyOnLoad(gameObject);
     }
 
     void Update()
     {
-        // Update Scene status
-        Scene scene = SceneManager.GetActiveScene();
+        scene = SceneManager.GetActiveScene();
         if (scene.name == scene_1)
         {
-            scene_num = 1;
-            //Destroy(gameObject);
+            if (rvm == null)
+            {
+                rvm = GameObject.Find(bgm_name).GetComponent<Round_Vis_Manager>();
+            }
         }
         else if (scene.name == scene_2)
         {
-            scene_num = 2;
-            Destroy(gameObject);
-        }
-        else if (scene.name == scene_0)
-        {
-            scene_num = 0;
-            DontDestroyOnLoad(gameObject);
-            //Debug.Log("SELECT YOUR FIGHTER!");
-        }
-        
-        // Possible in scene_fight
-        if (p1.ch.hurt || p2.ch.hurt)
-        {
-            rvm.Update_Round_State(p1.lives, p2.lives);
+            SpearmanP1.SetActive(false);
+            SpearmanP2.SetActive(false);
+            NinjaP1.SetActive(false);
+            NinjaP2.SetActive(false);
         }
 
-        // Possible in scene_select_fighter, scene_fight pause, or scene_select_next
+        // Possible in scene_fight
+        if (p1.ch.hurt || p1.ch.dead || p2.ch.hurt || p2.ch.dead)
+        {
+            rvm.Update_Round_State(p1.lives, p2.lives);
+            if (p1.ch.dead || p2.ch.dead)
+            {
+                p1.lives = 2;
+                p2.lives = 2;
+            }
+            // if (p1.lives == 0 || p2.lives == 0)
+            // {
+            //     rvm = null;
+            // }
+        }
+
+        // // Possible in scene_select_fighter, scene_fight pause, or scene_select_next
         // if (p1.menu_select_change)
         // {
         //     MenuSelectOutcome(p1);
@@ -121,14 +133,14 @@ public class Player_Manager : MonoBehaviour
     //     }
     // }
 
-    private void MenuSelectOutcome(Player_Controller p)
-    {
-        // // p moves their selection forward
-        // animation stuff
+    // private void MenuSelectOutcome(Player_Controller p)
+    // {
+    //     // // p moves their selection forward
+    //     // animation stuff
 
-        // // p moves their selection backward
-        // animation stuff
-    }
+    //     // // p moves their selection backward
+    //     // animation stuff
+    // }
 
     // private void MenuChoiceOutcome(Player_Controller p)
     // {

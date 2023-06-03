@@ -2152,10 +2152,10 @@ MonoBehaviour:
   _attack_obj: {fileID: 260766189}
   _stun_obj: {fileID: 999533447}
   _block_obj: {fileID: 1032222452}
-  hurt: 0
   stunned: 0
-  invincibility_timer: 0
-  roundStarted: 0
+  hurt: 0
+  invincibility_timer: -1
+  dead: 0
 --- !u!114 &962854168
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2168,22 +2168,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78da68cf86588124a8b701149256508a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pm: {fileID: 0}
   ch: {fileID: 962854167}
   anim: {fileID: 0}
   rb: {fileID: 962854165}
   bc: {fileID: 962854166}
   facing_dir: 1
-  character_select: 1
-  menu_select: 0
-  menu_select_change: 0
-  menu_choice: 0
-  menu_choice_change: 0
   player_tag: P2
   opponent_tag: P1
   lives: 2
-  paused: 0
-  actionable: 1
+  actionable: 0
   socd_neutral: 1
+  tools_usable: 1
 --- !u!212 &962854169
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3282,10 +3278,10 @@ MonoBehaviour:
   _attack_obj: {fileID: 507215160}
   _stun_obj: {fileID: 615244612}
   _block_obj: {fileID: 674371373}
-  hurt: 0
   stunned: 0
-  invincibility_timer: 0
-  roundStarted: 0
+  hurt: 0
+  invincibility_timer: -1
+  dead: 0
 --- !u!114 &1214886365
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3298,22 +3294,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78da68cf86588124a8b701149256508a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pm: {fileID: 0}
   ch: {fileID: 1214886364}
   anim: {fileID: 0}
   rb: {fileID: 1214886362}
   bc: {fileID: 1214886363}
   facing_dir: 1
-  character_select: 0
-  menu_select: 0
-  menu_select_change: 0
-  menu_choice: 0
-  menu_choice_change: 0
   player_tag: P1
   opponent_tag: P2
   lives: 2
-  paused: 0
-  actionable: 1
+  actionable: 0
   socd_neutral: 1
+  tools_usable: 1
 --- !u!212 &1214886366
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -3483,6 +3475,8 @@ MonoBehaviour:
   playerManager: {fileID: 1314810452}
   pc1: {fileID: 1214886365}
   pc2: {fileID: 962854168}
+  ch1: {fileID: 0}
+  ch2: {fileID: 0}
   playerText: {fileID: 1434141590}
   readyButton: {fileID: 1582038770}
   rvm: {fileID: 1537053956}
@@ -3650,11 +3644,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scene_0: 0_Select_Fighter
   scene_1: 1_Fight
-  scene_2: 2_Select_Next
-  scene_num: 0
+  scene_2: 2_Victory
   bgm_name: Background_Manager
-  DummyPlayer1: {fileID: 1214886360}
-  DummyPlayer2: {fileID: 962854163}
+  p1_name: DummyPlayer1
+  p2_name: DummyPlayer2
+  p1: {fileID: 0}
+  p2: {fileID: 0}
   NinjaP1: {fileID: 602546047}
   NinjaP2: {fileID: 467269718}
   SpearmanP1: {fileID: 690427498}
