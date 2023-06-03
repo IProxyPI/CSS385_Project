@@ -58,8 +58,8 @@ public class Player_Manager : MonoBehaviour
         // rvm = GameObject.Find(bgm_name).GetComponent<Round_Vis_Manager>();
 
         // Store references to both player scripts
-        p1 = GameObject.Find(p1_name).GetComponent<Player_Controller>();
-        p2 = GameObject.Find(p2_name).GetComponent<Player_Controller>();
+        p1 = GameObject.Find("DummyPlayer1").GetComponent<Player_Controller>();
+        p2 = GameObject.Find("DummyPlayer2").GetComponent<Player_Controller>();
 
         Instance = this;
         DontDestroyOnLoad(gameObject);

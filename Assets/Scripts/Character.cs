@@ -8,6 +8,7 @@ public class Character : MonoBehaviour
     public SpriteRenderer sr;
     private string p1_name = "DummyPlayer1";
     private string p2_name = "DummyPlayer2";
+    public GameObject DummyPlayer1, DummyPlayer2;
 
     // Movement
     public bool forward = false;

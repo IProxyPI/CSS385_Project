@@ -37,6 +37,7 @@ public class Round_Vis_Manager : MonoBehaviour
     public AudioSource track_1;
     public AudioSource track_2;
     public AudioSource track_3;
+    public Player_Manager playManage;
     
     [SerializeField] private Background_Manager bgm;
         
