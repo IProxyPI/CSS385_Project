@@ -45,6 +45,8 @@ public class ButtonController : MonoBehaviour
             ch1._attack_obj = GameObject.Find("NinjaAttackP1");
             ch1._stun_obj = GameObject.Find("NinjaStunP1");
             ch1._block_obj = GameObject.Find("NinjaBlockP1");
+            ch1.step = 0.4f;
+            ch1.dash = 1f;
         }
         else if (player == 2)
         {
@@ -58,6 +60,8 @@ public class ButtonController : MonoBehaviour
             ch2._attack_obj = GameObject.Find("NinjaAttackP2");
             ch2._stun_obj = GameObject.Find("NinjaStunP2");
             ch2._block_obj = GameObject.Find("NinjaBlockP2");
+            ch2.step = -0.4f;
+            ch2.dash = -1f;
         }
         Debug.Log("Btn Ninja!");
     }
@@ -77,6 +81,8 @@ public class ButtonController : MonoBehaviour
             ch1._attack_obj = GameObject.Find("SpearmanAttackP1");
             ch1._stun_obj = GameObject.Find("SpearmanStunP1");
             ch1._block_obj = GameObject.Find("SpearmanBlockP1");
+            ch1.step = 0.1f;
+            ch1.dash = 4f;
         }
         else if (player == 2)
         {
@@ -90,6 +96,8 @@ public class ButtonController : MonoBehaviour
             ch2._attack_obj = GameObject.Find("SpearmanAttackP2");
             ch2._stun_obj = GameObject.Find("SpearmanStunP2");
             ch2._block_obj = GameObject.Find("SpearmanBlockP2");
+            ch2.step = -0.1f;
+            ch2.dash = -4f;
         }
         Debug.Log("Btn Spear!");
     }

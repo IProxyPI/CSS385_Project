@@ -12,8 +12,11 @@ public class Character : MonoBehaviour
     // Movement
     public bool forward = false;
     public bool backward = false;
-    private float step = 0.1f;
-    private float stagger = 0.1f;
+    public float step = 0f;
+    public float dash = 0f; 
+    private float stagger = -0.2f;
+    private float stagger_forward = 0.1f;
+    private float stagger_backward = -0.2f;
     private float boundary_backward = -10f;
     private float boundary_forward = 8.5f;
     public float friction = 0.5f;
@@ -29,6 +32,7 @@ public class Character : MonoBehaviour
 
     // Statuses
     public bool stunned = false;
+    private bool stunned_unchecked = false;
     public bool hurt = false;
     public float invincibility_timer = -1f;
     private float invincibility_lock = 0.05f;
@@ -47,8 +51,8 @@ public class Character : MonoBehaviour
         {
             pc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
             opc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
-            step *= -1;
-            stagger *= -1;
+            stagger_forward *= -1;
+            stagger_backward *= -1;
             boundary_backward *= -1;
             boundary_forward *= -1;
         }
@@ -110,31 +114,15 @@ public class Character : MonoBehaviour
         // Movement
         {
             // forward
-            if (forward && pc.actionable
-             && (pc.player_tag == "P1" && pc.rb.position.x + step <= boundary_forward
-              || pc.player_tag == "P2" && pc.rb.position.x + step >= boundary_forward))
+            if (forward && pc.actionable)
             {
-                // if not pushing opponent
-                if (pc.player_tag == "P1" && pc.rb.position.x + step < opc.rb.position.x - 1.5
-                 || pc.player_tag == "P2" && pc.rb.position.x + step > opc.rb.position.x + 1.5)
-                {
-                    pc.rb.position = new Vector3(pc.transform.position.x + step, pc.transform.position.y, 0);
-                }
-                
-                // else if opponent isn't also moving forward 
-                else if (!opc.ch.forward)
-                {
-                    pc.rb.position = new Vector3(pc.transform.position.x + (step * friction), pc.transform.position.y, 0);
-                    opc.rb.position = new Vector3(opc.transform.position.x + (step * friction), opc.transform.position.y, 0);
-                }
+                Move(pc.facing_dir, step, boundary_forward);
             }
             
             // backward
-            if (backward && pc.actionable
-             && (pc.player_tag == "P1" && pc.rb.position.x - step >= boundary_backward
-              || pc.player_tag == "P2" && pc.rb.position.x - step <= boundary_backward))
+            if (backward && pc.actionable)
             {
-                pc.rb.position = new Vector3(pc.transform.position.x - step, pc.transform.position.y, 0);
+                Move(-pc.facing_dir, -step, boundary_backward);
             }
         }
 
@@ -163,11 +151,28 @@ public class Character : MonoBehaviour
         {
             if (stunned)
             {
+                stunned_unchecked = true;
                 Debug.Log(pc.player_tag + ": Toggle_Action(ref stunned, _block_obj, false, false)");
                 block = false;
                 Toggle_Action(ref stunned, _block_obj, false, false);
-                pc.rb.position = new Vector3(pc.transform.position.x - stagger, pc.transform.position.y, 0);
-                stagger *= -1;
+                
+                pc.rb.position = new Vector3(pc.transform.position.x + stagger, pc.transform.position.y, 0);
+                if (stagger == stagger_backward)
+                {
+                    stagger = stagger_forward;
+                }
+                else
+                {
+                    stagger = stagger_backward;
+                };
+            }
+            else if (stunned_unchecked)
+            {
+                if ((pc.player_tag == "P1" && pc.transform.position.x < boundary_backward)
+                  || pc.player_tag == "P2" && pc.transform.position.x > boundary_backward)
+                {
+                    pc.rb.position = new Vector3(boundary_backward, pc.transform.position.y, 0);
+                }
             }
 
             if (hurt)
@@ -212,6 +217,45 @@ public class Character : MonoBehaviour
         }
     }
 
+    private void Move(int direction, float distance, float boundary)
+    {
+        Debug.Log(Time.deltaTime + " Distance before: " + distance);
+        // if distance goes beyond boundary
+        if (direction > 0 && (pc.rb.position.x + distance > boundary)
+         || direction < 0 && (pc.rb.position.x + distance < boundary))
+        {
+            // reduce distance to boundary limit
+            float res = (boundary - pc.rb.position.x) / direction;
+
+            // prevents funny glitch; comment out all but "distance = res" and back up to left boundary to see
+            if (Mathf.Abs(distance) < Mathf.Abs(res))
+            {
+                distance = res;
+            }
+            else
+            {
+                distance = 0;
+            }
+        }
+        Debug.Log(Time.deltaTime + " Distance after: " + distance);
+
+        // if not pushing opponent forward
+        if ((pc.player_tag == "P1" && pc.rb.position.x + distance < opc.rb.position.x - 1.5)
+         || (pc.player_tag == "P2" && pc.rb.position.x + distance > opc.rb.position.x + 1.5))
+        {
+            // move at regular speed
+            pc.rb.position = new Vector3(pc.transform.position.x + distance, pc.transform.position.y, 0);
+        }
+
+        // else if opponent isn't also moving forward 
+        else if (forward && !opc.ch.forward)
+        {
+            // move at speed reduced by 'friction'
+            pc.rb.position  = new Vector3(pc.transform.position.x  + (distance * friction), pc.transform.position.y,  0);
+            opc.rb.position = new Vector3(opc.transform.position.x + (distance * friction), opc.transform.position.y, 0);
+        }
+    }
+
     private void Toggle_Action(ref bool action, GameObject tool_obj, bool has_collisions, bool trigger_invincibility)
     {
         // if action has an associated RPS tool object
@@ -237,7 +281,7 @@ public class Character : MonoBehaviour
                     tool_obj.GetComponent<BoxCollider2D>().enabled = true;
 
                     // dash forward
-                    pc.rb.position = new Vector3(pc.transform.position.x + (4 * step), pc.transform.position.y, 0);
+                    Move(pc.facing_dir, dash, boundary_forward);
                 }
             }
 
