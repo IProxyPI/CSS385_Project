@@ -199,10 +199,17 @@ public class Character : MonoBehaviour
         }
 
         // else if opponent isn't also moving forward 
-        else if (!backward && !opc.ch.forward)
+        else if (!backward)
         {
-            // move at speed reduced by 'friction'
-            pc.rb.position  = new Vector3(pc.transform.position.x  + (distance * friction), pc.transform.position.y,  0);
+            float distanceToOpp = (opc.transform.position.x - (1.5f * direction)) - pc.transform.position.x;
+            distance -= distanceToOpp;
+            if (opc.ch.forward)
+            {
+                distance = 0;
+            }
+
+            // move at regular speed until opponent's position is reached, then push them against 'friction' if they're not already equalizing push
+            pc.rb.position  = new Vector3(pc.transform.position.x  + distanceToOpp + (distance * friction), pc.transform.position.y,  0);
             opc.rb.position = new Vector3(opc.transform.position.x + (distance * friction), opc.transform.position.y, 0);
         }
     }
@@ -214,8 +221,8 @@ public class Character : MonoBehaviour
         {
             // if it is hidden and animation is starting block or entering attack/stun active frames
             if (!tool_obj.GetComponent<Renderer>().enabled
-             && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Active")
-              || (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Block") && block)))    // 'block' is necessary for stunned's calls for Toggle_Action
+             && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Block")
+             || (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Active") && !stunned)))
             {
                 // unhide it
                 tool_obj.GetComponent<Renderer>().enabled = true;
