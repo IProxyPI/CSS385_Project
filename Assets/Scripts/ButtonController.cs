@@ -13,6 +13,7 @@ public class ButtonController : MonoBehaviour
     public Player_Controller pc1, pc2;
     public Character ch1, ch2;
     public TMP_Text playerText;
+    public TMP_Text gameModeText;
     public Button readyButton;
     public Round_Vis_Manager rvm;
     private string player1, player2;
@@ -30,6 +31,29 @@ public class ButtonController : MonoBehaviour
     {
     }
 
+    // Changes P2 Input Type
+    public void OnGameModeButtonClick()
+    {
+        if (pc2.isAI)
+        {
+            pc2.isAI = true;
+            gameModeText.text = "Multiplayer Mode";
+            if (playerText.text == "Selecting for AI")
+            {
+                playerText.text = "Player 2 Selecting";
+            }
+        }
+        else
+        {
+            pc2.isAI = true;
+            gameModeText.text = "Single-player Mode";
+            if (playerText.text == "Player 2 Selecting")
+            {
+                playerText.text = "Selecting for AI";
+            }
+        }
+    }
+    
     // Current player picks ninja
     public void OnNinjaButtonClick()
     {
@@ -37,7 +61,14 @@ public class ButtonController : MonoBehaviour
         {
             ++player;
             player1 = "Ninja";
-            playerText.text = "Player 2 Selecting";
+            if (pc2.isAI)
+            {
+                playerText.text = "Selecting for AI";
+            }
+            else
+            {
+                playerText.text = "Player 2 Selecting";
+            }
             playerManager.NinjaP1.SetActive(true);
             pc1.anim = GameObject.Find("NinjaP1").GetComponent<Animator>();
             ch1 = pc1.GetComponent<Character>();
@@ -73,7 +104,14 @@ public class ButtonController : MonoBehaviour
         {
             ++player;
             player1 = "Spearman";
-            playerText.text = "Player 2 Selecting";
+            if (pc2.isAI)
+            {
+                playerText.text = "Selecting for AI";
+            }
+            else
+            {
+                playerText.text = "Player 2 Selecting";
+            }
             playerManager.SpearmanP1.SetActive(true);
             pc1.anim = GameObject.Find("SpearmanP1").GetComponent<Animator>();
             ch1 = pc1.GetComponent<Character>();
@@ -110,7 +148,14 @@ public class ButtonController : MonoBehaviour
             player = 2;
             player2 = "";
             startable = false;
-            playerText.text = "Player 2 Selecting";
+            if (pc2.isAI)
+            {
+                playerText.text = "Selecting for AI";
+            }
+            else
+            {
+                playerText.text = "Player 2 Selecting";
+            }
             playerManager.SpearmanP2.SetActive(false);
             playerManager.NinjaP2.SetActive(false);
         }

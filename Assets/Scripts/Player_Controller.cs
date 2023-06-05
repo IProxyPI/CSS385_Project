@@ -6,6 +6,7 @@ public class Player_Controller : MonoBehaviour
     // Used in Start(), scene_select_fighter, scene_fight's pause, and/or scene_select_next
     public Player_Manager pm;
     public Character ch;
+    public bool isAI = false;
     public Animator anim;
     public Rigidbody2D rb;
     public BoxCollider2D bc;
@@ -47,6 +48,7 @@ public class Player_Controller : MonoBehaviour
 
         if (gameObject.name == "DummyPlayer2")
         {
+            isAI = true;
             facing_dir = -1;
             player_tag = "P2";
             opponent_tag = "P1";
@@ -94,6 +96,7 @@ public class Player_Controller : MonoBehaviour
         // Each input function corresponds to a scene.  Ordered by frequency for better performance.
         // if (pm.scene_num == 1 && !paused)
         // {
+            getAIInputs();
             ReadFightInputs();
         // }
         // else if ((pm.scene_num == 1 && paused) || pm.scene_num == 2)
@@ -150,6 +153,14 @@ public class Player_Controller : MonoBehaviour
                 ch.stunned = true;
             }
         }
+    }
+
+    private void getAIInputs()
+    {
+        if (rb.position.x - pm.p1.rb.position.x > 5)
+        {
+            
+        }   
     }
 
     private void ReadFightInputs()
