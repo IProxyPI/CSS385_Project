@@ -142,16 +142,19 @@ public class Character : MonoBehaviour
         {
             if (attack)
             {
+                Debug.Log(pc.player_tag + ": Toggle_Action(ref attack, _attack_obj, true, false)");
                 Toggle_Action(ref attack, _attack_obj, true, false);
             }
 
             if (stun)
             {
+                Debug.Log(pc.player_tag + ": Toggle_(ref stun, _stun_obj, true, false)");
                 Toggle_Action(ref stun, _stun_obj, true, false);
             }
 
             if (block)
             {
+                Debug.Log(pc.player_tag + ": Toggle_Action(ref block, _block_obj, false, false)");
                 Toggle_Action(ref block, _block_obj, false, false);
             }
         }
@@ -160,13 +163,16 @@ public class Character : MonoBehaviour
         {
             if (stunned)
             {
-                Toggle_Action(ref stunned, null, false, false);
+                Debug.Log(pc.player_tag + ": Toggle_Action(ref stunned, _block_obj, false, false)");
+                block = false;
+                Toggle_Action(ref stunned, _block_obj, false, false);
                 pc.rb.position = new Vector3(pc.transform.position.x - stagger, pc.transform.position.y, 0);
                 stagger *= -1;
             }
 
             if (hurt)
             {
+                Debug.Log(pc.player_tag + ": Toggle_Action(ref hurt, null, false, false)");
                 stunned = false;
                 // invincibility_timer = 2f;
                 Toggle_Action(ref hurt, null, false, true);
@@ -211,17 +217,22 @@ public class Character : MonoBehaviour
         // if action has an associated RPS tool object
         if (tool_obj != null)
         {
+            Debug.Log(pc.player_tag + ": object exists");
             // if it is hidden and animation is starting block or entering attack/stun active frames
             if (!tool_obj.GetComponent<Renderer>().enabled
-             && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag(null)
+             && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Block")
               || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Active")))
             {
+                Debug.Log(pc.player_tag + ": object unhidden");
+
                 // unhide it
                 tool_obj.GetComponent<Renderer>().enabled = true;
 
                 // if it has collisions
                 if (has_collisions)
                 {
+                    Debug.Log(pc.player_tag + ": object colliders enabled");
+
                     // enable them
                     tool_obj.GetComponent<BoxCollider2D>().enabled = true;
 
@@ -232,15 +243,21 @@ public class Character : MonoBehaviour
 
             // else if unlocked (see below) and animation is ending block or entering attack/stun endlag
             else if (unlocked 
-                  && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk")
-                   || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Endlag")))
+                  && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder")
+                   || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Endlag"))
+                  || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Effect")
+                  || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Dead"))
             {
+                Debug.Log(pc.player_tag + ": object hidden");
+                
                 // hide it
                 tool_obj.GetComponent<Renderer>().enabled = false;
 
                 // if it has collisions
                 if (has_collisions)
                 {
+                    Debug.Log(pc.player_tag + ": object colliders disabled");
+                    
                     // disable them
                     tool_obj.GetComponent<BoxCollider2D>().enabled = false;
                 }
@@ -248,18 +265,30 @@ public class Character : MonoBehaviour
         }
 
         // if unlocked (see below) && the action animation ends
-        if (unlocked && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk"))
+        if (unlocked && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder"))
         {
+            // DEBUG: Victim not reaching here
+            Debug.Log(pc.player_tag + ": action has ended");
+            
             // reset variables associated with the action
             unlocked = false;
             if (!opc.ch.hurt && !opc.ch.dead)
             {
+                // DEBUG: Attacker Not reaching here
+                Debug.Log(pc.player_tag + ": now actionable, if opponent is not hurt or dead");
                 pc.actionable = true;
             }
+            // if (block && stunned)
+            // {
+            //     stunned = false;
+            // }
+            Debug.Log(pc.player_tag + ": action reset to false");
             action = false;
 
             if (trigger_invincibility)
             {
+                Debug.Log("P1+P2: Action enabled, Tools disabled");
+
                 pc.actionable = true;
                 pc.tools_usable = false;
                 // invincibility_timer = 2f;
@@ -270,8 +299,9 @@ public class Character : MonoBehaviour
             }
         }
         // if any non-Idle/Walk animation has started
-        else if (!pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Idle/Walk"))
+        else if (action && !pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder"))
         {
+            Debug.Log(pc.player_tag + ": unlocked; now checking to see if action has ended");
             // unlock
             unlocked = true;
         }

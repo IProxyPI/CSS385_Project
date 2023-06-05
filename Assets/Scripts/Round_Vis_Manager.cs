@@ -161,10 +161,12 @@ public class Round_Vis_Manager : MonoBehaviour
                 {
                     Player_Manager.Instance.p1.anim.SetTrigger("Exit");
                     Player_Manager.Instance.p2.anim.SetTrigger("Exit");
-                    Player_Manager.Instance.p1.rb.position = new Vector3(-5, Player_Manager.Instance.p1.transform.position.y, 0);
-                    Player_Manager.Instance.p2.rb.position = new Vector3( 5, Player_Manager.Instance.p2.transform.position.y, 0);
+                    Player_Manager.Instance.p1.ch.dead = false;
+                    Player_Manager.Instance.p2.ch.dead = false;
                     Player_Manager.Instance.p1.ch.invincibility_timer = 0;
                     Player_Manager.Instance.p2.ch.invincibility_timer = 0;
+                    Player_Manager.Instance.p1.rb.position = new Vector3(-5, Player_Manager.Instance.p1.transform.position.y, 0);
+                    Player_Manager.Instance.p2.rb.position = new Vector3( 5, Player_Manager.Instance.p2.transform.position.y, 0);
                     Player_Manager.Instance.p1.actionable = true;
                     Player_Manager.Instance.p2.actionable = true;
                     SceneManager.LoadScene("1_Fight");
