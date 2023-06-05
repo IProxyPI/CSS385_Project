@@ -164,7 +164,7 @@ public class ButtonController : MonoBehaviour
     {
         SceneManager.LoadScene("MainMenu");
         Debug.Log("Btn Main Menu!");
-
+        Destroy(Player_Manager.Instance.gameObject);
     }
 
     // Go to controls
