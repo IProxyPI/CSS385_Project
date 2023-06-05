@@ -18,7 +18,7 @@ public class Character : MonoBehaviour
     private float stagger_forward = 0.1f;
     private float stagger_backward = -0.2f;
     private float boundary_backward = -10f;
-    private float boundary_forward = 8.5f;
+    private float boundary_forward = 8.4f;
     public float friction = 0.5f;
 
     // RPS Tools
@@ -56,61 +56,11 @@ public class Character : MonoBehaviour
             boundary_backward *= -1;
             boundary_forward *= -1;
         }
-        
-        // Unnecessary?
-        {
-            // Already disabled by default in all scenes
-            // // Ensures all RPS action renderers are disabled
-            // _attack_obj.GetComponent<Renderer>().enabled = false;
-            // _stun_obj.GetComponent<Renderer>().enabled = false;
-            // _block_obj.GetComponent<Renderer>().enabled = false;
-
-            // Tags already prevent players friction with their own moves
-            // // Tells to ignore colliders with own moves
-            // Physics2D.IgnoreCollision(_attack_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-            // Physics2D.IgnoreCollision(_stun_obj.GetComponent<Collider2D>(), GetComponent<Collider2D>());
-        }
     }
 
     // Update is called once per frame
     void Update()
     {        
-        // // RPS Tool object reference assignment
-        // {
-        //     if (sr == null)
-        //     {
-        //         if (pc.player_tag == "P1" && pc.character_select == 0)
-        //         {
-        //             sr = Player_Manager.Instance.SpearmanP1.GetComponent<SpriteRenderer>();
-        //             _attack_obj = Player_Manager.Instance.SpearmanP1.gameObject.transform.GetChild(0).gameObject;
-        //             _stun_obj = Player_Manager.Instance.SpearmanP1.gameObject.transform.GetChild(1).gameObject;
-        //             _block_obj = Player_Manager.Instance.SpearmanP1.gameObject.transform.GetChild(2).gameObject;
-        //         }
-        //         else if (pc.player_tag == "P1" && pc.character_select == 1)
-        //         {
-        //             Debug.Log("hello"); 
-        //             sr = Player_Manager.Instance.NinjaP1.GetComponent<SpriteRenderer>();
-        //             _attack_obj = Player_Manager.Instance.NinjaP1.gameObject.transform.GetChild(0).gameObject;
-        //             _stun_obj = Player_Manager.Instance.NinjaP1.gameObject.transform.GetChild(1).gameObject;
-        //             _block_obj = Player_Manager.Instance.NinjaP1.gameObject.transform.GetChild(2).gameObject;
-        //         }
-        //         else if (pc.player_tag == "P2" && pc.character_select == 0)
-        //         {
-        //             sr = Player_Manager.Instance.SpearmanP1.GetComponent<SpriteRenderer>();
-        //             _attack_obj = Player_Manager.Instance.SpearmanP2.gameObject.transform.GetChild(0).gameObject;
-        //             _stun_obj = Player_Manager.Instance.SpearmanP2.gameObject.transform.GetChild(1).gameObject;
-        //             _block_obj = Player_Manager.Instance.SpearmanP2.gameObject.transform.GetChild(2).gameObject;
-        //         }
-        //         else if (pc.player_tag == "P2" && pc.character_select == 1)
-        //         {
-        //             sr = Player_Manager.Instance.NinjaP2.GetComponent<SpriteRenderer>();
-        //             _attack_obj = Player_Manager.Instance.NinjaP2.gameObject.transform.GetChild(0).gameObject;
-        //             _stun_obj = Player_Manager.Instance.NinjaP2.gameObject.transform.GetChild(1).gameObject;
-        //             _block_obj = Player_Manager.Instance.NinjaP2.gameObject.transform.GetChild(2).gameObject;
-        //         }
-        //     }
-        // }
-
         // Movement
         {
             // forward
@@ -130,19 +80,16 @@ public class Character : MonoBehaviour
         {
             if (attack)
             {
-                Debug.Log(pc.player_tag + ": Toggle_Action(ref attack, _attack_obj, true, false)");
                 Toggle_Action(ref attack, _attack_obj, true, false);
             }
 
             if (stun)
             {
-                Debug.Log(pc.player_tag + ": Toggle_(ref stun, _stun_obj, true, false)");
                 Toggle_Action(ref stun, _stun_obj, true, false);
             }
 
             if (block)
             {
-                Debug.Log(pc.player_tag + ": Toggle_Action(ref block, _block_obj, false, false)");
                 Toggle_Action(ref block, _block_obj, false, false);
             }
         }
@@ -152,7 +99,6 @@ public class Character : MonoBehaviour
             if (stunned)
             {
                 stunned_unchecked = true;
-                Debug.Log(pc.player_tag + ": Toggle_Action(ref stunned, _block_obj, false, false)");
                 block = false;
                 Toggle_Action(ref stunned, _block_obj, false, false);
                 
@@ -177,7 +123,6 @@ public class Character : MonoBehaviour
 
             if (hurt)
             {
-                Debug.Log(pc.player_tag + ": Toggle_Action(ref hurt, null, false, false)");
                 stunned = false;
                 // invincibility_timer = 2f;
                 Toggle_Action(ref hurt, null, false, true);
@@ -219,7 +164,6 @@ public class Character : MonoBehaviour
 
     private void Move(int direction, float distance, float boundary)
     {
-        Debug.Log(Time.deltaTime + " Distance before: " + distance);
         // if distance goes beyond boundary
         if (direction > 0 && (pc.rb.position.x + distance > boundary)
          || direction < 0 && (pc.rb.position.x + distance < boundary))
@@ -228,7 +172,8 @@ public class Character : MonoBehaviour
             float res = (boundary - pc.rb.position.x) / direction;
 
             // prevents funny glitch; comment out all but "distance = res" and back up to left boundary to see
-            if (Mathf.Abs(distance) < Mathf.Abs(res))
+            Debug.Log(distance + " " + res);
+            if (Mathf.Abs(distance) > Mathf.Abs(res))
             {
                 distance = res;
             }
@@ -237,7 +182,6 @@ public class Character : MonoBehaviour
                 distance = 0;
             }
         }
-        Debug.Log(Time.deltaTime + " Distance after: " + distance);
 
         // if not pushing opponent forward
         if ((pc.player_tag == "P1" && pc.rb.position.x + distance < opc.rb.position.x - 1.5)
@@ -261,22 +205,17 @@ public class Character : MonoBehaviour
         // if action has an associated RPS tool object
         if (tool_obj != null)
         {
-            Debug.Log(pc.player_tag + ": object exists");
             // if it is hidden and animation is starting block or entering attack/stun active frames
             if (!tool_obj.GetComponent<Renderer>().enabled
              && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Block")
               || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Active")))
             {
-                Debug.Log(pc.player_tag + ": object unhidden");
-
                 // unhide it
                 tool_obj.GetComponent<Renderer>().enabled = true;
 
                 // if it has collisions
                 if (has_collisions)
                 {
-                    Debug.Log(pc.player_tag + ": object colliders enabled");
-
                     // enable them
                     tool_obj.GetComponent<BoxCollider2D>().enabled = true;
 
@@ -292,16 +231,12 @@ public class Character : MonoBehaviour
                   || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Effect")
                   || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Dead"))
             {
-                Debug.Log(pc.player_tag + ": object hidden");
-                
                 // hide it
                 tool_obj.GetComponent<Renderer>().enabled = false;
 
                 // if it has collisions
                 if (has_collisions)
                 {
-                    Debug.Log(pc.player_tag + ": object colliders disabled");
-                    
                     // disable them
                     tool_obj.GetComponent<BoxCollider2D>().enabled = false;
                 }
@@ -311,41 +246,26 @@ public class Character : MonoBehaviour
         // if unlocked (see below) && the action animation ends
         if (unlocked && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder"))
         {
-            // DEBUG: Victim not reaching here
-            Debug.Log(pc.player_tag + ": action has ended");
-            
             // reset variables associated with the action
             unlocked = false;
             if (!opc.ch.hurt && !opc.ch.dead)
             {
-                // DEBUG: Attacker Not reaching here
-                Debug.Log(pc.player_tag + ": now actionable, if opponent is not hurt or dead");
                 pc.actionable = true;
             }
-            // if (block && stunned)
-            // {
-            //     stunned = false;
-            // }
-            Debug.Log(pc.player_tag + ": action reset to false");
             action = false;
 
             if (trigger_invincibility)
             {
-                Debug.Log("P1+P2: Action enabled, Tools disabled");
-
                 pc.actionable = true;
                 pc.tools_usable = false;
-                // invincibility_timer = 2f;
 
                 opc.actionable = true;
                 opc.tools_usable = false;
-                // opc.ch.invincibility_timer = 2f;
             }
         }
         // if any non-Idle/Walk animation has started
         else if (action && !pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder"))
         {
-            Debug.Log(pc.player_tag + ": unlocked; now checking to see if action has ended");
             // unlock
             unlocked = true;
         }
