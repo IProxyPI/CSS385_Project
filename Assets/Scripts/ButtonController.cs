@@ -157,7 +157,6 @@ public class ButtonController : MonoBehaviour
         player = 1;
         startable = false;
         Debug.Log("Btn Select!");
-
     }
 
     // Go to main menu
