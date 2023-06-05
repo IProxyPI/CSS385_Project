@@ -18,11 +18,11 @@ public class Character : MonoBehaviour
     private float stagger_forward = 0.1f;
     private float stagger_backward = -0.2f;
     private float boundary_backward = -10f;
-    private float boundary_forward = 8.4f;
+    private float boundary_forward = 8.4f;  // .1f more than push distance to avoid clipping
     public float friction = 0.5f;
 
     // RPS Tools
-    public bool unlocked = false;
+    public float unlocked = -1f;
     public bool attack = false;
     public bool stun = false;
     public bool block = false;
@@ -60,7 +60,16 @@ public class Character : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {        
+    {
+        if (unlocked > 0)
+        {
+            unlocked -= Time.deltaTime;
+        }
+        else
+        {
+            unlocked = -1;
+        }
+
         // Movement
         {
             // forward
@@ -124,7 +133,6 @@ public class Character : MonoBehaviour
             if (hurt)
             {
                 stunned = false;
-                // invincibility_timer = 2f;
                 Toggle_Action(ref hurt, null, false, true);
             }
 
@@ -145,8 +153,8 @@ public class Character : MonoBehaviour
                 {
                     if (invincibility_timer > -1)
                     {
-                        pc.tools_usable = true;
                         invincibility_timer = -1;
+                        pc.tools_usable = true;
                     }
                     if (!sr.enabled)
                     {
@@ -172,10 +180,9 @@ public class Character : MonoBehaviour
             float res = (boundary - pc.rb.position.x) / direction;
 
             // prevents funny glitch; comment out all but "distance = res" and back up to left boundary to see
-            Debug.Log(distance + " " + res);
             if (Mathf.Abs(distance) > Mathf.Abs(res))
             {
-                distance = res;
+                distance = res * direction;
             }
             else
             {
@@ -207,8 +214,8 @@ public class Character : MonoBehaviour
         {
             // if it is hidden and animation is starting block or entering attack/stun active frames
             if (!tool_obj.GetComponent<Renderer>().enabled
-             && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Block")
-              || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Active")))
+             && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Active")
+              || (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Block") && block)))    // 'block' is necessary for stunned's calls for Toggle_Action
             {
                 // unhide it
                 tool_obj.GetComponent<Renderer>().enabled = true;
@@ -225,7 +232,7 @@ public class Character : MonoBehaviour
             }
 
             // else if unlocked (see below) and animation is ending block or entering attack/stun endlag
-            else if (unlocked 
+            else if (unlocked > 0 
                   && (pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder")
                    || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Endlag"))
                   || pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("Effect")
@@ -244,10 +251,9 @@ public class Character : MonoBehaviour
         }
 
         // if unlocked (see below) && the action animation ends
-        if (unlocked && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder"))
+        if (unlocked > 0 && pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder"))
         {
             // reset variables associated with the action
-            unlocked = false;
             if (!opc.ch.hurt && !opc.ch.dead)
             {
                 pc.actionable = true;
@@ -267,7 +273,7 @@ public class Character : MonoBehaviour
         else if (action && !pc.anim.GetCurrentAnimatorStateInfo(0).IsTag("AnimEnder"))
         {
             // unlock
-            unlocked = true;
+            unlocked = 2f;
         }
     }
 }

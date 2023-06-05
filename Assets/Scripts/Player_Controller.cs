@@ -121,6 +121,7 @@ public class Player_Controller : MonoBehaviour
         {
             if (col.name.Contains("Attack") && !ch.block)
             {
+                Debug.Log(player_tag + ": actionable = false (pc.OnTriggerEnter2D)");
                 pm.p1.actionable = false;
                 pm.p1.StopMovement();
 
@@ -169,24 +170,35 @@ public class Player_Controller : MonoBehaviour
                 // move backward
                 if (Input.GetKey(input_backward) && !ch.backward /*&& !ch.backward_stop*/)
                 {
+                    tools_usable = false;
                     ch.backward = true;
                     anim.SetFloat("Speed", 1);
                 }
                 // stop backward
                 else if (Input.GetKeyUp(input_backward) /*&& !ch.backward_stop*/)
                 {
+                    if (ch.invincibility_timer < 0)
+                    {
+                        tools_usable = true;
+                    }
                     ch.backward = false;
                     anim.SetFloat("Speed", 0);
                 }
                 // move forward
                 if (Input.GetKey(input_forward) && !ch.forward /*&& !ch.forward_stop*/)
                 {
+
+                    tools_usable = false;
                     ch.forward = true;
                     anim.SetFloat("Speed", 1);
                 }
                 // stop forward
                 else if (Input.GetKeyUp(input_forward) /*&& !ch.forward_stop*/)
                 {
+                    if (ch.invincibility_timer < 0)
+                    {
+                        tools_usable = true;
+                    }
                     ch.forward = false;
                     anim.SetFloat("Speed", 0);
                 }
@@ -204,6 +216,7 @@ public class Player_Controller : MonoBehaviour
                 // attack
                 if (Input.GetKeyDown(input_attack) && !ch.attack)
                 {
+                    Debug.Log(player_tag + ": actionable = false (pc.ReadFightInputs)");
                     actionable = false;
                     StopMovement();
                     anim.SetTrigger("Attack");
