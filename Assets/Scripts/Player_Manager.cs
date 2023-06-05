@@ -98,6 +98,19 @@ public class Player_Manager : MonoBehaviour
             // }
         }
 
+        if (p1.staggered_opp)
+        {
+            p2.anim.SetTrigger("Stunned");
+            p2.ch.staggering = true;
+            p1.staggered_opp = false;
+        }
+        if (p2.staggered_opp)
+        {
+            p1.anim.SetTrigger("Stunned");
+            p1.ch.staggering = true;
+            p2.staggered_opp = false;
+        }
+
         // // Possible in scene_select_fighter, scene_fight pause, or scene_select_next
         // if (p1.menu_select_change)
         // {

@@ -23,6 +23,8 @@ public class Player_Controller : MonoBehaviour
     public string player_tag = "P1";
     public string opponent_tag = "P2";
     public int lives = 2;
+    public bool staggered_opp = false;
+
     // public bool paused = false;
     public bool actionable = false;
     public bool socd_neutral = false;               // False = L/R -> L, True = L/R -> N (Facing R)
@@ -119,27 +121,34 @@ public class Player_Controller : MonoBehaviour
     {
         if (col.tag == opponent_tag && ch.invincibility_timer == -1)
         {
-            if (col.name.Contains("Attack") && !ch.block)
+            if (col.name.Contains("Attack"))
             {
-                pm.p1.actionable = false;
-                pm.p1.StopMovement();
+                if (!ch.block)
+                {
+                    pm.p1.actionable = false;
+                    pm.p1.StopMovement();
 
-                pm.p2.actionable = false;
-                pm.p2.StopMovement();
-                
-                lives--;
-                
-                if (lives == 1)
-                {
-                    pm.p1.ch.invincibility_timer = 2f;
-                    pm.p2.ch.invincibility_timer = 2f;
-                    anim.SetTrigger("Hurt");
-                    ch.hurt = true;
+                    pm.p2.actionable = false;
+                    pm.p2.StopMovement();
+                    
+                    lives--;
+                    
+                    if (lives == 1)
+                    {
+                        pm.p1.ch.invincibility_timer = 2f;
+                        pm.p2.ch.invincibility_timer = 2f;
+                        anim.SetTrigger("Hurt");
+                        ch.hurt = true;
+                    }
+                    else if (lives == 0)
+                    {
+                        anim.SetTrigger("Dead");
+                        ch.dead = true;
+                    }
                 }
-                else if (lives == 0)
+                else
                 {
-                    anim.SetTrigger("Dead");
-                    ch.dead = true;
+                    staggered_opp = true;
                 }
             }
             else if (col.name.Contains("Stun") && !ch.attack)

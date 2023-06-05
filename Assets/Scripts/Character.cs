@@ -14,9 +14,10 @@ public class Character : MonoBehaviour
     public bool backward = false;
     public float step = 0f;
     public float dash = 0f; 
-    private float stagger = -0.2f;
-    private float stagger_forward = 0.1f;
-    private float stagger_backward = -0.2f;
+    private float jitter = -0.2f;
+    private float jitter_forward = 0.1f;
+    private float jitter_backward = -0.2f;
+    public bool staggering = false;
     private float boundary_backward = -10f;
     private float boundary_forward = 8.5f;
     public float friction = 0.5f;
@@ -51,8 +52,8 @@ public class Character : MonoBehaviour
         {
             pc = GameObject.Find(p2_name).GetComponent<Player_Controller>();
             opc = GameObject.Find(p1_name).GetComponent<Player_Controller>();
-            stagger_forward *= -1;
-            stagger_backward *= -1;
+            jitter_forward *= -1;
+            jitter_backward *= -1;
             boundary_backward *= -1;
             boundary_forward *= -1;
         }
@@ -156,14 +157,14 @@ public class Character : MonoBehaviour
                 block = false;
                 Toggle_Action(ref stunned, _block_obj, false, false);
                 
-                pc.rb.position = new Vector3(pc.transform.position.x + stagger, pc.transform.position.y, 0);
-                if (stagger == stagger_backward)
+                pc.rb.position = new Vector3(pc.transform.position.x + jitter, pc.transform.position.y, 0);
+                if (jitter == jitter_backward)
                 {
-                    stagger = stagger_forward;
+                    jitter = jitter_forward;
                 }
                 else
                 {
-                    stagger = stagger_backward;
+                    jitter = jitter_backward;
                 };
             }
             else if (stunned_unchecked)
@@ -173,6 +174,12 @@ public class Character : MonoBehaviour
                 {
                     pc.rb.position = new Vector3(boundary_backward, pc.transform.position.y, 0);
                 }
+            }
+
+            if (staggering)
+            {
+                attack = false;
+                Toggle_Action(ref stunned, _attack_obj, true, false);
             }
 
             if (hurt)
