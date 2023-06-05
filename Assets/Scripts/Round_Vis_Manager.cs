@@ -173,6 +173,7 @@ public class Round_Vis_Manager : MonoBehaviour
                 }
                 else
                 {
+                    Destroy(Player_Manager.Instance.gameObject);
                     SceneManager.LoadScene("2_Victory");
                 }
             }
