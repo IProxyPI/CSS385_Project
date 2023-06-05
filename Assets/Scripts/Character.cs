@@ -248,7 +248,7 @@ public class Character : MonoBehaviour
         }
 
         // else if opponent isn't also moving forward 
-        else if (forward && !opc.ch.forward)
+        else if (!backward && !opc.ch.forward)
         {
             // move at speed reduced by 'friction'
             pc.rb.position  = new Vector3(pc.transform.position.x  + (distance * friction), pc.transform.position.y,  0);
